@@ -1,0 +1,11 @@
+# no pkg or src.pkg
+*.pkg.tar*
+*.src.tar.gz
+# no build stuff
+src/
+pkg/
+# no backups
+*~
+# no sources, hoping this won't be to vague
+*.tar*
+*.zip

@@ -1,42 +1,81 @@
 # Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
 # Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
 
-pkgname=anomaly
+pkgname='anomaly'
 pkgver=1327984913
-pkgrel=3
-pkgdesc="Tower Offense at its best! (requires copy of the full game)"
+pkgrel=1
+pkgdesc="[Humble Bundle Android] Tower Offense at its best!"
 arch=('i686' 'x86_64')
+ [[ $CARCH == 'i686' ]]   && _arch='i386'
+ [[ $CARCH == 'x86_64' ]] && _arch='amd64'
 url="http://www.anomalythegame.com"
 license=('custom')
-groups=('humblebundleandroid')
 options=("!strip")
 
-if [ "$CARCH" = "i686" ]; then
-	source=("file://linux-anomaly-i386-1327984913.tar.gz")
-	md5sums=('705569fe43db8d7d771572fe905d2123')
-elif [ "$CARCH" = "x86_64" ]; then
-	source=("file://linux-anomaly-amd64.tar.gz")
-	md5sums=('5cf109cd3c55075cf8a642eab87ccec4')
-fi
+PKGEXT=".pkg.tar"
+ [[ $CARCH == 'i686' ]]   && _archive="linux-anomaly-${_arch}-${pkgver}.tar.gz" \
+                          && _archive_md5='705569fe43db8d7d771572fe905d2123'
+ [[ $CARCH == 'x86_64' ]] && _archive="linux-anomaly-${_arch}.tar.gz" \
+                          && _archive_md5='5cf109cd3c55075cf8a642eab87ccec4'
+_bundle=('humblebundleandroid')
 
-build () {
-	cd "$srcdir"
+_humble() {
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        echo "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri
+        mv ${_archive}* ${_archive}
+        break
+      else
+        echo "\"${_key}\" environment variable required for download handling not found."
+      fi
+    done
+    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+      echo "Unable to download \"${_archive}\"."
+      exit 1
+    fi
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5
+}
 
-	install -d "$pkgdir/opt"
-	cp -a Anomaly "$pkgdir/opt/"
+build() {
+  cd "${srcdir}"
+  _humble
 
-	cd "$pkgdir/opt/Anomaly"
-	INSTALL_PATH="\/opt\/Anomaly"
+  tar xzf "${_archive}" || true
 
-	sed 's/\$INSTALL_PATH\$/'${INSTALL_PATH}'/' anomaly.desktop.in > anomaly.desktop
-	sed 's/\$INSTALL_PATH\$/'${INSTALL_PATH}'/' anomaly.in > anomaly
-	rm anomaly.desktop.in anomaly.in
-
-	chmod +x anomaly
-	install -d "$pkgdir/usr/bin"
-	ln -s "/opt/Anomaly/anomaly" "$pkgdir/usr/bin/anomaly"
-	install -Dm644 anomaly.desktop "$pkgdir/usr/share/applications/anomaly.desktop"
-	rm anomaly.desktop
+  unset _archive
 }
 
 
+package() {
+	cd "${srcdir}/Anomaly"
+
+	INSTALL_PATH="/opt/anomaly"
+
+	sed 's:\$INSTALL_PATH\$:'${INSTALL_PATH}':' anomaly.desktop.in > anomaly.desktop
+	sed 's:\$INSTALL_PATH\$:'${INSTALL_PATH}':' anomaly.in > anomaly
+	rm anomaly.desktop.in anomaly.in install.sh uninstall.sh
+
+	chmod +x anomaly
+
+	install -d "${pkgdir}/opt/${pkgname}"
+  cp -dpr --no-preserve=ownership * "${pkgdir}/opt/${pkgname}"
+
+	install -d "${pkgdir}/usr/bin"
+	ln -s "/opt/anomaly/anomaly" "${pkgdir}/usr/bin/anomaly"
+	install -Dm644 anomaly.desktop "${pkgdir}/usr/share/applications/anomaly.desktop"
+	rm anomaly.desktop
+}
+
+# vim: sts=2 ts=2 sw=2 et

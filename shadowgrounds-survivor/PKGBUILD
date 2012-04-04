@@ -15,15 +15,14 @@ md5sums=('5e54db6c4c1689b7ad33f16d01adca8a'
          '9c7028540e363b94d12579f7d76dd7d2'
          '8bf1f57c63c554d30929f977803b07cf')
 
- [ $CARCH = 'i686' ]   && depends=('libglade' 'mesa' 'openal')
-if [ $CARCH = 'x86_64' ]; then
+ [[ $CARCH = 'i686' ]]   && depends=('libglade' 'mesa' 'openal')
+if [[ $CARCH = 'x86_64' ]]; then
     depends=('lib32-libglade' 'lib32-mesa' 'lib32-openal')
-     [ -f "/usr/lib/libpulse.so" ] && depends=("${depends[@]}" 'lib32-libpulse' 'lib32-alsa-plugins')
-    pacman -Q nvidia-utils >/dev/null 2>&1
-     [ $? = 0 ] && depends=("${depends[@]}" 'lib32-nvidia-utils')
+     [[ -f "/usr/lib/libpulse.so" ]] && depends=("${depends[@]}" 'lib32-libpulse' 'lib32-alsa-plugins')
+     [[ -f "/usr/lib/libnvidia-cfg.so" ]] && depends=("${depends[@]}" 'lib32-nvidia-utils')
 fi 
 
-PKGEXT="pkg.tar"
+PKGEXT=".pkg.tar"
 _archive="survivorUpdate1.run"
 _archive_md5='6c38a1f3fe555b4d3f3e0a9a81a7d743'
 

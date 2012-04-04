@@ -68,7 +68,7 @@ build() {
 package(){
   # directories
   install -d "${pkgdir}/opt/${pkgname}"
-  cd "{srcdir}/${pkgname}"
+  cd "${srcdir}/${pkgname}"
   rm lib32/libopenal* lib32/libasound* lib32/libvorbis* lib32/libogg*
   cp -dpr --no-preserve=ownership data Config lib32 Profiles "${pkgdir}/opt/${pkgname}"
 

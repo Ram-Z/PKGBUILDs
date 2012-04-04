@@ -1,0 +1,24 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributer: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
+# Contributer: kittykatt <kittykatt@kittykatt.tk>
+pkgname=screenfetch
+_pkgname=screenfetch-dev
+pkgver=2.4.5
+pkgrel=1
+pkgdesc="Bash screenshot info grabber (DE, WM, theme, uptime, ...)"
+arch=("any")
+url="http://git.silverirc.com/cgit.cgi/screenfetch-dev.git/"
+license=('GPL')
+conflicts=('screenfetch-git')
+depends=('bash' 'xorg-utils')
+optdepends=('scrot: To take screenshot')
+source=("http://git.silverirc.com/cgit.cgi/screenfetch-dev.git/snapshot/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('49ff7a781d3967f400cf816b9ef2a41d')
+
+package() {
+  cd "$srcdir/${_pkgname}-${pkgver}"
+
+  install -Dm755 screenfetch-dev ${pkgdir}/usr/bin/screenfetch
+}
+
+# vim: sts=2 ts=2 sw=2 et

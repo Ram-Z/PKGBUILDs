@@ -1,0 +1,3 @@
+post_install() {
+    echo "ATTENTION: Syntax highlighting is only activated if the environment variable LESS is existing and contains the option -R or -r or less is called with one of these options."
+}

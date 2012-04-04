@@ -1,0 +1,63 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributer: AlexanderR <rvacheva at nxt dot ru>
+
+pkgname=renpy
+pkgver=6.13.9
+pkgrel=1
+pkgdesc="Ren'Py is a visual novel engine that helps you use words, images, and sounds to tell stories with the computer. This package contains both player and development tools."
+arch=('any')
+license=('MIT')
+url='http://www.renpy.org'
+# are python-pygame and ttf-dejavu required by renpy or games itself?
+depends=('python-renpy=6.13.9' 'python-pygame' 'ttf-dejavu')
+optdepends=('jedit: game development'
+	'zenity: filechooser support')
+options=(!strip !zipman)
+conflicts=('renpy-bin' 'renpy64')
+replaces=('renpy64')
+install=renpy.install
+changelog=ChangeLog
+source=("http://www.renpy.org/dl/$pkgver/renpy-$pkgver-source.tar.bz2"
+	"${pkgname}.desktop"
+	"${pkgname}."{sh,csh}
+	'python2.diff'
+	'jedit-external.diff'
+	'renpy-launcher.sh')
+
+md5sums=('593928bfbeb3902b77cbded795e0bb9a'
+         'a9beb35fa6c6d8af7ba5d2a764c33158'
+         'd206d24b78e207a2c3b603fef14ac47f'
+         '8b9922e26e567248a2a5adc1d0cdfdd4'
+         '0476b16220e6faeb031e1dbfe45249b4'
+         'b8d015e4b6b649d81b2f7fe5c7f0b7fd'
+         'dfa92cdecc15e5c1ddee387fbbbb2d9c')
+
+build() {
+  cd "$srcdir/renpy-$pkgver"
+
+  patch -p1 < ../python2.diff
+  patch -p1 < ../jedit-external.diff
+
+  # fonts are provided by ttf-dejavu
+  rm launcher/DejaVuSerif.ttf common/DejaVuSans.ttf common/DejaVuSans.txt
+
+  # fix permission issue
+  chmod +r tutorial/game/renpyallstars.ogg
+}
+
+package(){
+  mkdir -p "$pkgdir/"{usr/share/{$pkgname,doc/$pkgname},etc/profile.d}
+
+  cd "$srcdir"
+
+  install -m755 ${pkgname}.{sh,csh} "$pkgdir/etc/profile.d"
+  install -D -m755 $pkgname-launcher.sh "$pkgdir/usr/bin/$pkgname"
+  install -D -m644 ${pkgname}.desktop "$pkgdir/usr/share/applications/${pkgname}.desktop"
+
+  cd renpy-$pkgver
+
+  cp -r launcher renpy common renpy.py  template the_question tutorial "$pkgdir/usr/share/$pkgname"
+  cp -r doc/* "$pkgdir/usr/share/doc/$pkgname"
+  install -D -m644 launcher/logo.png "$pkgdir/usr/share/pixmaps/${pkgname}.png"
+  install -D -m644 'LICENSE.txt' "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

@@ -1,0 +1,85 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributer: Wido <widowild at myopera dot com>
+
+pkgname=spacechem
+_pkgname=SpaceChem
+pkgver=1012_1
+_pkgver=1012-1
+pkgrel=1
+pkgdesc="[Humble Frozen Synapse Bundle] An obscenely addictive, design-based puzzle game about building machines and fighting monsters in the name of science!"
+url="http://www.gameolith.com/game/spacechem/"
+license=('custom: "commercial"')
+arch=('i686' 'x86_64')
+depends=('mono' 'sdl' 'sdl_image' 'sdl_mixer' 'xclip')
+options=("!strip")
+source=('spacechem.sh'
+        'spacechem.desktop')
+md5sums=('dff2d4a980e324c46198fb9193a23099'
+         'b458899c445a8baa8238b9594ebee6c1')
+PKGEXT=('.pkg.tar')
+
+_archive="${_pkgname}-${_pkgver}-hib.tar.gz"
+_archive_md5="cf2c8d832bdc8391b5223b9549ad4aa7"
+
+_bundle=('humblebundlesynapse')
+
+_humble() {
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        echo "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri
+        mv ${_archive}* ${_archive}
+        break
+      else
+        echo "\"${_key}\" environment variable required for download handling not found."
+      fi
+    done
+    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+      echo "Unable to download \"${_archive}\"."
+      exit 1
+    fi
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5
+}
+
+build() {
+  cd "${srcdir}"
+  _humble
+
+  tar xzf "${_archive}" || true
+
+  ar x "${_pkgname}-i386.deb"
+  tar xzf data.tar.gz
+  rm -R ${srcdir}/usr
+
+  unset _archive
+}
+
+package(){
+  cd ${srcdir}
+
+  install -d ${pkgdir}/opt/${pkgname}
+  cp -dpr --no-preserve=ownership "${srcdir}/opt/zachtronicsindustries/${pkgname}" "${pkgdir}/opt/"
+
+  # Install Launcher
+  install -Dm 755 ${pkgname}.sh ${pkgdir}/usr/bin/${pkgname}
+
+  # Install Desktop
+  install -D -m644 ${pkgname}.desktop \
+      ${pkgdir}/usr/share/applications/${pkgname}.desktop
+
+  # Install license
+  install -Dm 644 ${pkgdir}/opt/${pkgname}/readme/LICENSE.txt ${pkgdir}/usr/share/licenses/${pkgname}/license
+}
+
+# vim: sts=2 ts=2 sw=2 et

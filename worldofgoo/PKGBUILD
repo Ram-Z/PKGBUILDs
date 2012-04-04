@@ -1,0 +1,88 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributer: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
+# Contributer: trya <tryagainprod@gmail.com>
+# Contributor: Todd Partridge <toddrpartridge@gmail.com>
+
+pkgname=worldofgoo
+pkgver=1.41
+pkgrel=1
+pkgdesc="[Humble Bundle 1,Android] A physics based puzzle/construction game"
+arch=('i686' 'x86_64')
+url="http://www.2dboy.com"
+license=('custom')
+depends=('mesa' 'sdl_mixer' 'hicolor-icon-theme')
+optdepends=('worldofgoo-gootool: for creating and installing fan levels')
+install="worldofgoo.install"
+source=('WorldOfGoo.desktop')
+md5sums=('25080af1fe369a296e15e568f2480124')
+options=("!strip")
+PKGEXT='.pkg.tar' 
+
+_archive='WorldOfGooSetup.1.41.tar.gz'
+_archive_md5='f5afa40893d0fbcc37885191404f6d8c'
+_bundle=('humblebundle1' 'humblebundleandroid')
+
+_humble() {
+  for bundle in ${_bundle[@]}; do
+    case ${bundle} in
+      "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+      *) continue;;
+    esac
+    if [ -n "${!_key}" ]; then
+      echo "Getting your unique ${pkgname} download location."
+      _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+      break
+    else
+      echo "\"${_key}\" environment variable required for download handling not found."
+    fi
+  done
+  if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+    echo "Unable to download \"${_archive}\"."
+    exit 1
+  fi
+  unset _key
+}
+
+build() {
+  _humble
+
+  cd "${srcdir}"
+  if [ ! -f "${_archive}" ]; then
+    wget $_uri
+    mv ${_archive}* ${_archive}
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  tar xzf "${_archive}" || true
+  unset _archive _archive_md5 _uri
+}
+
+package() {
+  cd "$srcdir"
+
+  # data
+  install -d "$pkgdir/opt"
+  cp -a WorldOfGoo "$pkgdir/opt"
+
+  # patch and link to startup script
+  sed -e 's|export LD_LIBRARY_PATH|#export LD_LIBRARY_PATH|' -i "$pkgdir/opt/WorldOfGoo/WorldOfGoo"
+  install -d "$pkgdir/usr/bin"
+  ln -s /opt/WorldOfGoo/WorldOfGoo "$pkgdir/usr/bin/worldofgoo"
+
+  # icons and desktop launcher
+  install -Dm644 WorldOfGoo.desktop "$pkgdir/usr/share/applications/WorldOfGoo.desktop"
+  for i in 16x16 22x22 32x32 48x48 64x64 128x128; do
+    install -d "$pkgdir/usr/share/icons/hicolor/$i/apps"
+    ln -s /opt/WorldOfGoo/icons/$i.png "$pkgdir/usr/share/icons/hicolor/$i/apps/WorldOfGoo.png"
+  done
+  install -d "$pkgdir/usr/share/icons/hicolor/scalable/apps"
+  ln -s /opt/WorldOfGoo/icons/scalable.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/WorldOfGoo.svg"
+
+  # license
+  install -d "$pkgdir/usr/share/licenses/worldofgoo"
+  ln -s /opt/WorldOfGoo/eula.txt "$pkgdir/usr/share/licenses/worldofgoo"
+}
+
+# vim: sts=2 ts=2 sw=2 et

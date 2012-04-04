@@ -1,0 +1,76 @@
+# Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
+
+pkgname=avadon
+pkgver=1331768904
+pkgrel=1
+pkgdesc="[Humble Bundle Android2] An epic, Indie fantasy role-playing saga."
+arch=('i686' 'x86_64')
+ [ $CARCH = 'i686' ]   && _arch='x86'
+ [ $CARCH = 'x86_64' ] && _arch='amd64'
+url="http://www.spidweb.com/avadon/"
+license=('custom: commercial')
+depends=('sdl' 'openal')
+options=('!strip')
+source=('Avadon.desktop')
+md5sums=('15d01ed19a81f4b7e04e6a0b07fc9600')
+PKGEXT=".pkg.tar"
+
+_archive="${pkgname}-linux-${pkgver}-bin"
+_archive_md5="dba7e32cdd8b70f26c4b51f63f858302"
+
+_bundle=('humblebundleandroid2')
+
+_humble() {
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        echo "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri
+        mv ${_archive}* ${_archive}
+        break
+      else
+        echo "\"${_key}\" environment variable required for download handling not found."
+      fi
+    done
+    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+      echo "Unable to download \"${_archive}\"."
+      exit 1
+    fi
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5
+}
+
+build() {
+  cd "${srcdir}"
+  _humble
+
+  unzip -o "${_archive}" || true
+
+  unset _archive
+}
+
+package() {
+  cd "$srcdir/data"
+
+  install -d "${pkgdir}/opt/${pkgname}"
+  install -Dm755 "Avadon-${_arch}" "${pkgdir}/opt/${pkgname}/Avadon"
+  install -Dm644 "Avadon.png" "icon.bmp" "README-linux.txt" "${pkgdir}/opt/${pkgname}"
+
+  cp -dpr --no-preserve=ownership "avadon files" "${pkgdir}/opt/${pkgname}"
+
+  install -Dm644 "${srcdir}/Avadon.desktop"  "${pkgdir}/usr/share/applications/Avadon.desktop"
+
+  install -d "${pkgdir}/usr/bin"
+  ln -s "/opt/${pkgname}/Avadon" "${pkgdir}/usr/bin/avadon"
+}
+
+# vim:set ts=2 sw=2 et:

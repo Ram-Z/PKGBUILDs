@@ -1,0 +1,6 @@
+post_install() {
+  echo "You may find it useful to make diff automatically call colordiff. Add the following line to ~/.bashrc (or equivalent):
+  alias diff=colordiff"
+}
+
+# vim:set ts=2 sw=2 et:

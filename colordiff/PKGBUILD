@@ -1,0 +1,21 @@
+# Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
+
+pkgname=colordiff
+pkgver=1.0.9
+pkgrel=1
+pkgdesc="A tool to colorize diff output"
+arch=('any')
+url="http://colordiff.sourceforge.net/"
+license=('GPL')
+depends=('diffutils')
+makedepends=('xmlto')
+install="colordiff.install"
+source=("http://colordiff.sourceforge.net/${pkgname}-${pkgver}.tar.gz")
+md5sums=('31864847eaa4e900f72bbb6bbc64f1ec')
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" INSTALL_DIR="/usr/bin" MAN_DIR="/usr/share/man/man1" install
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,85 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+
+pkgname=edge
+pkgver=20120208_1
+_pkgver=20120208-1
+pkgrel=1
+pkgdesc="[Humble Bundle Android] a casual puzzle-platformer that challenges you to roll your cube through over 100 levels"
+url="http://www.mobigame.net/"
+license=('custom: "commercial"')
+arch=('i686' 'x86_64')
+ [ $CARCH = 'i686' ]   && _arch=i386
+ [ $CARCH = 'x86_64' ] && _arch=amd64
+depends=('openal' 'sdl')
+options=('!strip')
+PKGEXT=".pkg.tar"
+
+_archive="${pkgname}-${_pkgver}-${_arch}.tar.gz"
+ [ $CARCH = 'i686' ]   && _archive_md5='3d82f928f5e685d9022be4bb2104dbb8'
+ [ $CARCH = 'x86_64' ] && _archive_md5='9bba72abc97f1cb5bf8223a3bcc828b8'
+ 
+_bundle=('humblebundleandroid')
+ 
+_humble() {
+  for bundle in ${_bundle[@]}; do
+    case ${bundle} in
+      "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+      *) continue;;
+    esac
+    if [ -n "${!_key}" ]; then
+      echo "Getting your unique ${pkgname} download location."
+      _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+      break
+    else
+      echo "\"${_key}\" environment variable required for download handling not found."
+    fi
+  done
+  if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+    echo "Unable to download \"${_archive}\"."
+    exit 1
+  fi
+  unset _key _bundle
+}
+ 
+build() {
+  _humble
+ 
+  cd "${srcdir}"
+  if [ ! -f "${_archive}" ]; then
+    wget $_uri
+    mv ${_archive}* ${_archive}
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  tar xzf "${_archive}"
+  unset _archive _archive_md5 _uri
+}
+
+
+package()
+{
+  cd ${srcdir}/${pkgname}
+
+  ESCAPED_PATH=$(echo "${CURRENT_DIR}" |  sed 's/\//\\\//g')
+
+  sed 's:\$INSTALL_PATH\$:/usr/bin:' EDGE.desktop.in > EDGE.desktop
+  sed -i 's:/usr/bin/EDGE.png:/usr/share/pixmaps/edge.png:' EDGE.desktop
+  sed 's:\$INSTALL_PATH\$:/opt/edge:' edge.in > edge
+
+  install -dm755 ${pkgdir}/opt/${pkgname}
+
+  cp -rdp --no-preserve=ownership audio/ config/ default/ effects/ fx/ images/ levels/ \
+    localization/ models/ music/ sprites/ textures/ "${pkgdir}/opt/${pkgname}/"
+
+  install -m755 EDGE.bin "${pkgdir}/opt/${pkgname}/"
+  install -m644 cos.bin EDGE.png font.bin namespace.txt README "${pkgdir}/opt/${pkgname}/"
+
+  install -Dm755 edge ${pkgdir}/usr/bin/edge
+
+  install -Dm644 EDGE.png ${pkgdir}/usr/share/pixmaps/edge.png
+  install -Dm644 EDGE.desktop ${pkgdir}/usr/share/applications/edge.desktop
+}
+
+# vim: sts=2 ts=2 sw=2 et

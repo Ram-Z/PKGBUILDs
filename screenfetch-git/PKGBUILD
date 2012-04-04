@@ -1,0 +1,46 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
+# Contributor: kittykatt <kittykatt@kittykatt.us>
+
+pkgname=screenfetch-git
+pkgver=20120329
+pkgrel=1
+pkgdesc="Bash screenshot info grabber (DE, WM, theme, uptime, ...) GIT Version"
+arch=("any")
+url="http://git.silverirc.com/cgit.cgi/screenfetch-dev.git/"
+license=('GPL')
+conflicts=('screenfetch')
+depends=('bash' 'xorg-utils')
+optdepends=('scrot: To take screenshot')
+makedepends=('git')
+
+_gitroot="git://git.silverirc.com/screenfetch-dev.git"
+_gitname="screenfetch-dev"
+
+build() {
+	# Git
+	cd "$srcdir"
+	msg "Connecting to GIT server...."
+
+	if [ -d $_gitname ] ; then
+		cd $_gitname && git pull origin
+		msg "The local files are updated."
+	else
+		git clone $_gitroot $_gitname
+	fi
+
+	msg "GIT checkout done or server timeout"
+	msg "Starting make..."
+
+	rm -rf "$srcdir/$_gitname-build"
+	git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
+}
+
+package() {
+  cd "$srcdir/$_gitname-build"
+
+	# Install
+	install -Dm755 screenfetch-dev $pkgdir/usr/bin/screenfetch
+}
+
+# vim: sts=2 ts=2 sw=2 et

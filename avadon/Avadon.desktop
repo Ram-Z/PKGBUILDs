@@ -1,0 +1,6 @@
+[Desktop Entry]
+Categories=Game;StrategyGame;
+Name=Avadon: The Black Fortress
+Exec=/opt/avadon/Avadon
+Icon=/opt/avadon/Avadon.png
+Type=Application

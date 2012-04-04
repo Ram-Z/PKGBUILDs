@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Value=1.0
+Type=Application
+Name=Shadowgrounds: Survivor
+GenericName=Shadowgrounds: Survivor
+Comment=A sequel to Shadowgrounds
+Icon=/opt/shadowgrounds-survivor/Survivor.xpm
+Exec="/opt/shadowgrounds-survivor/survivor-launcher"
+Categories=Game;ActionGame;
+Path=/opt/shadowgrounds-survivor

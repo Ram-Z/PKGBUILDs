@@ -1,0 +1,42 @@
+# Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
+
+pkgname=transgui
+pkgver=3.2
+pkgrel=1
+pkgdesc="Cross platform remote GUI for the Transmission daemon"
+arch=('i686' 'x86_64')
+  [ "${CARCH}" = "i686" ]   && ARCH=i386
+  [ "${CARCH}" = "x86_64" ] && ARCH=x86_64
+url="http://code.google.com/p/transmisson-remote-gui/"
+license=('GPL2')
+depends=('gtk2')
+install="transgui.install"
+source=("http://transmisson-remote-gui.googlecode.com/files/${pkgname}-${pkgver}-${ARCH}-linux.zip"
+        "transgui.desktop"
+        "transgui.sh")
+  [ "${CARCH}" = "x86_64" ] && md5sums=('77c59716bff7d9c867bd6fe3357503b4'
+                                        '842162e5a3ee4eb6826e5b7c97f63184'
+                                        '99dc2528362993c19976d3337f8cb050')
+  [ "${CARCH}" = "i686" ]   && md5sums=('3635fadbfd3d34518fd5ad6758fd1e11'
+                                        '842162e5a3ee4eb6826e5b7c97f63184'
+                                        '99dc2528362993c19976d3337f8cb050')
+
+package() {
+  cd "${srcdir}"
+
+  local _instdir=${pkgdir}/opt/${pkgname}
+
+  install -Dm755 transgui ${_instdir}/transgui
+  install -dm755 ${_instdir}/lang/
+  install -Dm644 lang/transgui.* ${_instdir}/lang
+  install -Dm644 readme.txt ${_instdir}/readme.txt
+  install -Dm644 LICENSE.txt ${_instdir}/LICENSE.txt
+  install -Dm644 history.txt ${_instdir}/history.txt
+  install -Dm644 transgui.png ${_instdir}/transgui.png
+  install -dm755 ${pkgdir}/usr/share/pixmaps/
+  ln -s /opt/transgui/transgui.png ${pkgdir}/usr/share/pixmaps/transgui.png
+  install -Dm644 transgui.desktop ${pkgdir}/usr/share/applications/transgui.desktop
+  install -Dm755 transgui.sh ${pkgdir}/usr/bin/transgui
+}
+
+# vim:set ts=2 sw=2 et:

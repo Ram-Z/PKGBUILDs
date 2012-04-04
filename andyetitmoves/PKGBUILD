@@ -1,0 +1,80 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
+# Contributor: jose <jose1711 [at] gmail (dot) com>
+
+pkgname=andyetitmoves
+pkgver=1.2.2
+pkgrel=1
+pkgdesc="[Humble Bundle 3,4] Physics-based platform game"
+arch=('i686' 'x86_64')
+url="http://www.andyetitmoves.net/"
+license=("custom:shareware")
+source=("andyetitmoves.desktop")
+depends=("mesa" "libxft" "sdl_image" "libvorbis" "libpng12")
+options=('!strip')
+md5sums=('fc97c42e3d3832df62875529cf41791d')
+
+[ "$CARCH" = "i686"   ] && depends=(${depends[@]} openal libtheora)
+[ "$CARCH" = "x86_64" ] && depends=(${depends[@]} lib32-openal lib32-libtheora lib32-libpng12 lib32-libvorbis lib32-sdl_image)
+
+[ "$CARCH" = "i686"   ] && _archive="andyetitmoves-${pkgver}-1_i386.tar.gz"
+[ "$CARCH" = "x86_64" ] && _archive="andyetitmoves-${pkgver}-1_x86_64.tar.gz"
+
+[ "$CARCH" = "i686"   ] && _archive_md5='c530630520f062db1d402d99fb25a725'
+[ "$CARCH" = "x86_64" ] && _archive_md5='86544c86a117a653221c38ebfa58c68d'
+
+PKGEXT='.pkg.tar'
+_bundle=('humblebundle3' 'humblebundle4')
+
+_humble() {
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        echo "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri
+        mv ${_archive}* ${_archive}
+        break
+      else
+        echo "\"${_key}\" environment variable required for download handling not found."
+      fi
+    done
+    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+      echo "Unable to download \"${_archive}\"."
+      exit 1
+    fi
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5
+}
+
+build() {
+  cd "${srcdir}"
+  _humble
+
+  tar xzf ${_archive}
+
+  unset _archive _uri
+}
+
+package() {
+  cd "${srcdir}/AndYetItMoves"
+
+  install -dm755 "${pkgdir}/opt/${pkgname}"
+  cp -dpr --no-preserve=ownership * "${pkgdir}/opt/${pkgname}"
+
+  install -dm755 "${pkgdir}/usr/bin"
+  ln -s "/opt/${pkgname}/AndYetItMoves" "${pkgdir}/usr/bin/andyetitmoves"
+  install -D -m644 "icons/48x48.png" "${pkgdir}/usr/share/pixmaps/andyetitmoves.png"
+
+  install -D -m644 "${srcdir}/andyetitmoves.desktop" "${pkgdir}/usr/share/applications/andyetitmoves.desktop"
+}
+
+# vim: sts=2 ts=2 sw=2 et

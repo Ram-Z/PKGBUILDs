@@ -1,0 +1,83 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributer: Zachary A. Jones <jazzplayerl9@gmail.com>
+
+pkgname=uplink
+pkgver=1.6_1
+pkgrel=1
+pkgdesc="[Humble Bundle Introversion] Trust is a weakness - a futuristic computer crime game."
+arch=(i686 x86_64)
+ [ "$CARCH" = 'x86_64' ] && _arch='amd64'
+ [ "$CARCH" = 'i686' ]   && _arch='i386'
+url="http://www.introversion.co.uk/uplink"
+license=("custom")
+depends=('mesa' 'libjpeg-turbo' 'sdl_mixer' 'libtiff' 'freetype2')
+source=("uplink.desktop")
+md5sums=('9fd1da6598ff73ad72431e21ecd11696')
+PKGEXT='.pkg.tar' 
+
+_archive="uplink_${pkgver//_/-}_${_arch}.tar.gz"
+ [ "$CARCH" = 'x86_64' ] && _archi='x64' && _aarchi='x86_64' && _libi='lib64'
+ [ "$CARCH" = 'i686' ]   && _archi='x86' && _aarchi='x86'    && _libi='lib'
+
+ [ "$CARCH" = 'x86_64' ] && _archive_md5='8ee01e7d0d688339fbd84e2005d4625b'
+ [ "$CARCH" = 'i686' ]   && _archive_md5='db4f1b9506cff9e348dd52709f6a8ad7'
+
+_bundle=('humblebundleintroversion')
+
+_humble() {
+  for bundle in ${_bundle[@]}; do
+    case ${bundle} in
+      "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+      *) continue;;
+    esac
+    if [ -n "${!_key}" ]; then
+      echo "Getting your unique ${pkgname} download location."
+      _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+      break
+    else
+      echo "\"${_key}\" environment variable required for download handling not found."
+    fi
+  done
+  if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+    echo "Unable to download \"${_archive}\"."
+    exit 1
+  fi
+  unset _key
+}
+
+build() {
+  _humble
+
+  cd "${srcdir}"
+  if [ ! -f "${_archive}" ]; then
+    wget $_uri
+    mv ${_archive}* ${_archive}
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  tar xzf "${_archive}" || true
+  unset _archive _archive_md5 _uri
+}
+
+package() {
+  cd "${srcdir}"
+
+  install -d "$pkgdir/opt/uplink"
+  rm -rf "$srcdir/uplink-${_archi}/${_libi}"
+  cp -dpr --no-preserve=ownership "$srcdir/uplink-${_archi}/"* "${pkgdir}/opt/${pkgname}"
+
+  #Install Desktop File
+  install -m 644 -D "uplink.desktop" usr/share/applications/uplink.desktop
+
+  #Install License
+  install -d "${pkgdir}/usr/share/licenses/$pkgname"
+  install -m644 "${pkgname}-${_archi}/license.txt" "${pkgdir}/usr/share/licenses/$pkgname"
+  
+  #Link Executable
+  install -d "${pkgdir}/usr/bin"
+  ln -s "/opt/uplink/uplink.bin.${_aarchi}" "${pkgdir}/usr/bin/uplink"
+}
+
+# vim: sts=2 ts=2 sw=2 et

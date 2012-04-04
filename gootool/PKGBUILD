@@ -1,0 +1,42 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributer: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
+# Contributor: Matthew Bauer <mjbauer95@gmail.com>
+
+pkgname=gootool
+pkgver=1.0.3.441
+pkgrel=1
+pkgdesc="World of Goo hacking utility (worldofgoo)"
+arch=("any")
+url="http://goofans.com/download/utility/$pkgname"
+license=('custom')
+source=(http://goofans.com/download/145/1254/$pkgname-$pkgver-linux.tar.bz2
+	      application-x-goomod.xml
+	      gootool.desktop)
+depends=('java-runtime')
+optdepends=("worldofgoo: if you don't already have the game")
+md5sums=('0b20ce256fbf6440659457ac1c5611cd'
+         'a2d4a46c158e5c80bf4ac10b43b4100d'
+         '0461706a2a607fe39b701d3ccbc67b0f')
+
+package() {
+  cd "${srcdir}"
+
+	install -D -m644 "application-x-goomod.xml" "${pkgdir}/usr/share/mime/packages/application-x-goomod.xml"
+	install -D -m644 "gootool.desktop" "${pkgdir}/usr/share/applications/gootool.desktop"
+
+  cd "${pkgname}-${pkgver}"
+
+  # bin
+  install -d "${pkgdir}/usr/bin/"
+  install -Dm755 bin/{gootool,gooinfo} "${pkgdir}/usr/bin/"
+  # lib
+  cp -dpr --no-preserve=ownership lib "${pkgdir}/usr/share/${pkgname}"
+  # etc
+  install -Dm644 etc/logger_properties.txt "${pkgdir}/etc/${pkgname}/logger_properties.txt"
+  # doc
+  install -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  cp -dpr --no-preserve=ownership doc/LICENSE* "${pkgdir}/usr/share/licenses/${pkgname}/"
+  install -Dm644 "doc/CHANGELOG.txt" "${pkgdir}/usr/share/doc/${pkgname}"
+}
+
+# vim: sts=2 ts=2 sw=2 et

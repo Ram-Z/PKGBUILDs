@@ -1,0 +1,80 @@
+# Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
+
+pkgname=zenbound2
+pkgver=20120325
+pkgrel=1
+pkgdesc="[Humble Bundle Android2] A meditative puzzle game of wrapping rope around wooden sculptures."
+arch=('i686' 'x86_64')
+ [ $CARCH = 'i686' ]   && _arch='i386'
+ [ $CARCH = 'x86_64' ] && _arch='amd64'
+url="http://www.swordsandsoldiers.com/"
+license=('custom: commercial')
+depends=('sdl' 'openal')
+options=('!strip')
+PKGEXT=".pkg.tar"
+
+_archive="${pkgname}-${pkgver}-${_arch}.tar.gz"
+ [ $CARCH = 'i686' ]   && _archive_md5="e8ece37f5f5009afdb47633b1903b25e"
+ [ $CARCH = 'x86_64' ] && _archive_md5="a9de765573750498f7d4e1de749c4122"
+
+_bundle=('humblebundleandroid2')
+
+_humble() {
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        echo "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri
+        mv ${_archive}* ${_archive}
+        break
+      else
+        echo "\"${_key}\" environment variable required for download handling not found."
+      fi
+    done
+    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+      echo "Unable to download \"${_archive}\"."
+      exit 1
+    fi
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5
+}
+
+build() {
+  cd "${srcdir}"
+  _humble
+
+  tar xzf "${_archive}" || true
+
+  unset _archive
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+
+  local _install_path="/opt/${pkgname}"
+  local ESCAPED_PATH=$(echo "${_install_path}" |  sed 's/\//\\\//g')
+
+  sed 's/\$INSTALL_PATH\$/'${ESCAPED_PATH}'/' ZenBound2.desktop.in > ZenBound2.desktop
+  sed 's/\$INSTALL_PATH\$/'${ESCAPED_PATH}'/' zenbound2.in > zenbound2
+
+  install -d "${pkgdir}${_install_path}"
+  install -d "${pkgdir}/usr/bin/"
+  install -Dm755 "zenbound2" "${pkgdir}/usr/bin/"
+  install -Dm755 "ZenBound2.bin" "${pkgdir}${_install_path}"
+  install -Dm644 "README" "ZenBound2.png" "${pkgdir}${_install_path}"
+
+  cp -dpr --no-preserve=ownership "data_common" "data_desktop" "${pkgdir}/opt/${pkgname}"
+
+  install -Dm644 "ZenBound2.desktop" "${pkgdir}/usr/share/applications/ZenBound2.desktop"
+}
+
+# vim:set ts=2 sw=2 et:

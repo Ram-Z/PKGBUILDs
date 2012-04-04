@@ -1,0 +1,81 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributer: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
+# Contributer: trya <tryagainprod@gmail.com>
+
+pkgname=braid
+pkgver=1.0.2
+pkgrel=2
+pkgdesc="[Humble Bundle 2&3] A puzzle-platformer where the player manipulates the flow of time in strange and unusual ways"
+url="http://braid-game.com"
+license=('custom: "commercial"')
+arch=('i686' 'x86_64')
+depends=('sdl' 'nvidia-cg-toolkit')
+optdepends=('libtxc_dxtn: open S3TC implementation for free DRI drivers')
+makedepends=('unzip')
+source=('braid.desktop' 'braid.sh')
+md5sums=('5c2644ab74d7714bed6d16a564df33bb'
+         'c0c774073c1b626450b4fa30a2917ab8')
+PKGEXT='.pkg.tar' 
+_archive='braid-linux-build2.run.bin'
+_archive_md5='f8933b7f7c77a234763cf73e2f9312a7'
+_bundle=('humblebundle2' 'humblebundle3')
+
+_humble() {
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        echo "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri
+        mv ${_archive}* ${_archive}
+        break
+      else
+        echo "\"${_key}\" environment variable required for download handling not found."
+      fi
+    done
+    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+      echo "Unable to download \"${_archive}\"."
+      exit 1
+    fi
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5
+}
+
+build() {
+  cd "${srcdir}"
+  _humble
+
+  unzip -o "${_archive}" || true
+
+  unset _archive _uri
+}
+
+package() {
+  cd "$srcdir"
+  
+  # data
+  install -d "$pkgdir/opt"
+  cp -a data/gamedata "$pkgdir/opt/Braid"
+  
+  # startup script and executable
+  install -Dm755 braid.sh "$pkgdir/usr/bin/braid"
+  if [ "$CARCH" == "x86_64" ]; then
+    cp data/amd64/braid "$pkgdir/opt/Braid"
+  else
+    cp data/x86/braid "$pkgdir/opt/Braid"
+  fi
+  
+  # desktop icon
+  install -Dm644 braid.desktop "$pkgdir/usr/share/applications/braid.desktop"
+  install -Dm644 data/gamedata/braid.png "$pkgdir/usr/share/pixmaps/braid.png"
+}
+
+# vim: sts=2 ts=2 sw=2 et

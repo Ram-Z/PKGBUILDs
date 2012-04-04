@@ -1,0 +1,8 @@
+7c7
+< BROWSERS="chromium google-chrome midori mozilla opera" # all supported browsers
+---
+> BROWSERS="chromium google-chrome midori mozilla opera qupzilla" # all supported browsers
+27a28,30
+>                 qupzilla)
+>                         [[ "$i" = "qupzilla" ]] && STATIC="$homedir/.$i-backup" && LINK="$homedir/.$i"
+>                         ;;

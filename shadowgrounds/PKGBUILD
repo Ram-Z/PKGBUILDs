@@ -15,15 +15,14 @@ md5sums=('db283956f1336777a3940a8e71e67098'
          '1846958138e5de44173b66b1ad4d1f30'
          'd05af923259375bb68ad0d53efe793d1')
 
- [ $CARCH = 'i686' ]   && depends=('libglade' 'mesa' 'openal')
-if [ $CARCH = 'x86_64' ]; then
+ [[ $CARCH = 'i686' ]]   && depends=('libglade' 'mesa' 'openal')
+if [[ $CARCH = 'x86_64' ]]; then
     depends=('lib32-libglade' 'lib32-mesa' 'lib32-openal')
-     [ -f "/usr/lib/libpulse.so" ] && depends=("${depends[@]}" 'lib32-libpulse' 'lib32-alsa-plugins')
-    pacman -Q nvidia-utils >/dev/null 2>&1
-     [ $? = 0 ] && depends=("${depends[@]}" 'lib32-nvidia-utils')
+     [[ -f "/usr/lib/libpulse.so" ]] && depends=("${depends[@]}" 'lib32-libpulse' 'lib32-alsa-plugins')
+     [[ -f "/usr/lib/libnvidia-cfg.so" ]] && depends=("${depends[@]}" 'lib32-nvidia-utils')
 fi 
 
-PKGEXT="pkg.tar"
+PKGEXT=".pkg.tar"
 _archive="shadowgroundsUpdate1.run"
 _archive_md5='7c9913f754168742973edfeb66ba8f1c'
 
@@ -67,33 +66,31 @@ build() {
 }
 
 package(){
-
   # directories
-  install -d ${pkgdir}/opt/${pkgname}
-  cd ${srcdir}/${pkgname}
+  install -d "${pkgdir}/opt/${pkgname}"
+  cd "{srcdir}/${pkgname}"
   rm lib32/libopenal* lib32/libasound* lib32/libvorbis* lib32/libogg*
   cp -dpr --no-preserve=ownership data Config lib32 Profiles "${pkgdir}/opt/${pkgname}"
 
   #fix permissions
-  find ${pkgdir}/opt/${pkgname} -type d -exec chmod 755 {} \;
-  find ${pkgdir}/opt/${pkgname}/{Config,data,Profiles} -type f -exec chmod 644 {} \;
-  chmod -R 755 ${pkgdir}/opt/${pkgname}/lib32
+  find "${pkgdir}/opt/${pkgname}" -type d -exec chmod 755 {} \;
+  find "${pkgdir}/opt/${pkgname}/"{Config,data,Profiles} -type f -exec chmod 644 {} \;
+  chmod -R 755 "${pkgdir}/opt/${pkgname}/lib32"
 
   #other data files
   install -Dm644 data1.fbz shadowgrounds-launcher.glade shadowgrounds-logo.png \
-                 Shadowgrounds.xpm ${pkgdir}/opt/${pkgname}
+                 Shadowgrounds.xpm "${pkgdir}/opt/${pkgname}"
   
   # startup scripts
-  install -Dm755 ${srcdir}/shadowgrounds.sh ${pkgdir}/usr/bin/shadowgrounds
-  install -Dm755 ${srcdir}/shadowgrounds-launcher.sh ${pkgdir}/usr/bin/shadowgrounds-launcher
+  install -Dm755 "${srcdir}/shadowgrounds.sh" "${pkgdir}/usr/bin/shadowgrounds"
+  install -Dm755 "${srcdir}/shadowgrounds-launcher.sh" "${pkgdir}/usr/bin/shadowgrounds-launcher"
 
   # execs
-  install -Dm755 shadowgrounds-bin ${pkgdir}/opt/${pkgname}/shadowgrounds-bin
-  install -Dm755 shadowgrounds-launcher ${pkgdir}/opt/${pkgname}/shadowgrounds-launcher
+  install -Dm755 shadowgrounds-bin "${pkgdir}/opt/${pkgname}/shadowgrounds-bin"
+  install -Dm755 shadowgrounds-launcher "${pkgdir}/opt/${pkgname}/shadowgrounds-launcher"
 
   # desktop entry
-  install -Dm644 ${srcdir}/shadowgrounds.desktop ${pkgdir}/usr/share/applications/shadowgrounds.desktop
-  
+  install -Dm644 "${srcdir}/shadowgrounds.desktop" "${pkgdir}/usr/share/applications/shadowgrounds.desktop"
 }
 
 

@@ -1,5 +1,6 @@
 # Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
 # Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
+
 pkgname=anomaly
 pkgver=1327984913
 pkgrel=3
@@ -37,3 +38,5 @@ build () {
 	install -Dm644 anomaly.desktop "$pkgdir/usr/share/applications/anomaly.desktop"
 	rm anomaly.desktop
 }
+
+

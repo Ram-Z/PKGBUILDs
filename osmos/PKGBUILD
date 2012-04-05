@@ -1,0 +1,104 @@
+# Maintainer: Michael Kutschall <michaelkutschall@web.de>
+# Contributor: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributor: N30N <archlinux@alunamation.com>
+
+pkgname=osmos
+_pkgname=Osmos
+pkgver=1.6.1
+pkgrel=1
+pkgdesc="Enter the ambient world of Osmos: elegant, physics-based gameplay, dreamlike visuals, and a minimalist, electronic soundtrack."
+arch=("i686" "x86_64")
+url="http://www.hemispheregames.com/osmos/"
+license=("custom: commercial")
+depends=("openal" "mesa" "libvorbis")
+_gamepkg="Osmos_${pkgver}.tar.gz"
+source=("osmos.desktop")
+md5sums=("7709be11fab3001b109ddf842b596d0c")
+PKGEXT=".pkg.tar"
+
+_archive="${_pkgname}_${pkgver}.tar.gz"
+_archive_md5='ed2cb029c20c25de719c28062e6fc9cf'
+
+_bundle=('humblebundleandroid')
+
+_humble() {
+  if [[ -f "${_gamedir}/${_archive}" ]]; then
+    ln -s "${_gamedir}/${_archive}"
+  fi
+
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        msg2 "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri
+        mv ${_archive}* ${_archive}
+        break
+      fi
+    done
+    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+      error "Unable to find \"${_archive}\"." 
+      plain "You should run one of these commands before installing this pkg."
+      for bundle in ${_bundle[@]}; do
+        plain "$ export _${bundle}key=<your-${bundle}-key>"
+      done
+      plain "$ export _gamedir=<dir/to/${_archive}>"
+      exit 1
+    fi
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5 _bundle
+}
+
+build() {
+  cd "${srcdir}"
+  _humble
+
+  tar xzf "${_archive}" || true
+
+  unset _archive
+
+	msg2 "Patching install path."
+	sed -ri "s|^(CANONPATH=).*|\1/opt/osmos/Osmos|" Osmos/Osmos
+
+	msg2 "Patching sound issue."
+	sed -ri 's/^(soundDevice ")-/\1/' Osmos/defaults.cfg
+}
+
+package() {
+	cd Osmos
+
+	install -d "${pkgdir}/usr/bin" \
+		"${pkgdir}/usr/share/applications" \
+		"${pkgdir}/usr/share/licenses/${pkgname}" \
+		"${pkgdir}/opt/osmos/Fonts" \
+		"${pkgdir}/opt/osmos/Icons" \
+		"${pkgdir}/opt/osmos/Sounds" \
+		"${pkgdir}/opt/osmos/Textures"
+
+	if [ ${CARCH} == "x86_64" ]; then
+		install -m755 Osmos.bin64 "$pkgdir/opt/osmos"
+	else
+		install -m755 Osmos.bin32 "$pkgdir/opt/osmos"
+	fi
+
+	install -m755 Osmos "$pkgdir/usr/bin/osmos"
+	install -m644 *.{cfg,loc} "${pkgdir}/opt/osmos"
+	install -m644 Icons/*.png "${pkgdir}/opt/osmos/Icons"
+	install -m644 Sounds/*.ogg "${pkgdir}/opt/osmos/Sounds"
+	install -m644 Textures/*.tga "${pkgdir}/opt/osmos/Textures"
+	install -m644 Fonts/*.ttf "${pkgdir}/opt/osmos/Fonts"
+	install -m644 eula.txt \
+		"${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	install -m644 "${srcdir}/osmos.desktop" \
+		"${pkgdir}/usr/share/applications/osmos.desktop"
+}
+
+# vim: sts=2 ts=2 sw=2 et

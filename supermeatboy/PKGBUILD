@@ -7,80 +7,83 @@ _pkgver=12132011b
 pkgrel=5
 pkgdesc="[Humble Bundle 4] Super Meat Boy is a tough as nails platformer where you play as an animated cube of meat."
 arch=('i686' 'x86_64')
+ [[ $CARCH == 'i686' ]]   && _arch='x86'
+ [[ $CARCH == 'x86_64' ]] && _arch='amd64'
 url="http://www.supermeatboy.com/"
 license=('custom')
 depends=('openal' 'sdl')
 makedepends=('unzip' 'tar')
-source=('supermeatboy.desktop')
-md5sums=('ceda8cdca2aaff63a9cae2ef7d7cf0d4')
+source=('supermeatboy.desktop'
+        'supermeatboy.sh'
+        'http://treefort.icculus.org/smb/smb-linux-mesa-hotfix-test.tar.bz2')
+md5sums=('ceda8cdca2aaff63a9cae2ef7d7cf0d4'
+         '818b03f82053ce6e0e996a780869e110'
+         '65b4b39f961e7de7a4d0e018690e736d')
 PKGEXT='.pkg.tar'
 
 _archive_md5="e27c7a2506cbf7047f51a2230f7d1b0f"
-hotfix_md5='65b4b39f961e7de7a4d0e018690e736d'
 _archive="supermeatboy-linux-${_pkgver}-bin"
 
+_bundle=('humblebundle4')
+
+_humble() {
+  if [[ -f "${_gamedir}/${_archive}" ]]; then
+    ln -sf "${_gamedir}/${_archive}"
+  fi
+
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        msg2 "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri
+        mv ${_archive}* ${_archive}
+        break
+      fi
+    done
+    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+      error "Unable to find \"${_archive}\"." 
+      plain "You should run one of these commands before installing this pkg."
+      for bundle in ${_bundle[@]}; do
+        plain "$ export _${bundle}key=<your-${bundle}-key>"
+      done
+      plain "$ export _gamedir=<dir/to/${_archive}>"
+      exit 1
+    fi
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5 _bundle
+}
+
 build() {
-  cd ${srcdir}
+  cd "${srcdir}"
+  _humble
 
-  if [ ! -f ${_smbarchivelocation}${_archive} ]; then
-	  if [ ! -f ${_archive} ] && [ -n "${_humblebundle4key}" ]; then
-		rm -f ${_archive}* index.html?key\=${_humblebundle4key}*
-		wget http://www.humblebundle.com/?key=${_humblebundle4key}
-		wget $(cat index.html?key\=${_humblebundle4key} | grep "${_archive}" | cut -d "'" -f 10)
-		mv ${_archive}* ${_archive}
-	  elif [ -z "${_humblebundle4key}" ]; then
-		echo You can automate the download of the archive using the _humblebundle4key bash variable.
-		echo Just add 'export _humblebundle4key\=\<Your key here\>' to \.bashrc
-		echo
-		echo Otherwise please just place ${_archive} into $(pwd)/
-		echo Press Enter to continue
-		read -a _unused
-	  fi
-    wget http://treefort.icculus.org/smb/smb-linux-mesa-hotfix-test.tar.bz2  
-  fi
-#'
-
-  if [ ! -f ${_smbarchivelocation}${_archive} ]; then
-    echo "${_smbarchivelocation}${_archive} not found!"
-    return 1
-  fi  
-
-  if ! echo "${_archive_md5}  ${_smbarchivelocation}${_archive}" | md5sum -c --quiet; then
-    echo "Invalid checksum for ${_smbarchivelocation}${_archive}"
-    return 1
-  fi
-
-  if ! echo "${hotfix_md5}  ${srcdir}/smb-linux-mesa-hotfix-test.tar.bz2" | md5sum -c --quiet; then
-    echo "Invalid checksum for ${srcdir}/smb-linux-mesa-hotfix-test.tar.bz2"
-    return 1
-  fi
-
-  rm -Rf ${srcdir}/smb/
-  unzip -d ${srcdir}/smb/ ${_smbarchivelocation}${_archive} || true
-
-  rm ${srcdir}/smb/data/{amd64,x86}/lib*
-  if test "$CARCH" == "i686"; then
-    rm -r ${srcdir}/smb/data/amd64
-  else
-    rm -r ${srcdir}/smb/data/x86
-  fi
+  unzip -o "${_archive}" -d "${pkgname}" || true
 
 # Apply hotfix
+  cp -dpf --no-preserve=ownership "${srcdir}/${_arch}/SuperMeatBoy-${_arch}" "${srcdir}/${pkgname}/data/${_arch}"
+}
 
-  mkdir ${srcdir}/hotfix/
-  tar -xvf ${srcdir}/smb-linux-mesa-hotfix-test.tar.bz2 -C ${srcdir}/hotfix
-  if test "$CARCH" == "i686"; then
-     cp -r ${srcdir}/hotfix/x86   ${srcdir}/smb/data/
-  else
-     cp -r ${srcdir}/hotfix/amd64/ ${srcdir}/smb/data/
-  fi
+package() {
+  cd "${srcdir}/${pkgname}/data"
 
-  mkdir -p ${pkgdir}/opt/ ${pkgdir}/usr/share/applications/ \
-    ${pkgdir}/usr/bin/
-  cp -Tr ${srcdir}/smb/data ${pkgdir}/opt/supermeatboy/
-  ln -s /opt/supermeatboy/SuperMeatBoy ${pkgdir}/usr/bin/supermeatboy
-  cp ${srcdir}/supermeatboy.desktop ${pkgdir}/usr/share/applications/
-  chmod a+r ${pkgdir}/usr/share/applications/supermeatboy.desktop
+  install -d "${pkgdir}/opt/${pkgname}"
+  cp -dpr --no-preserve=ownership Levels resources UserData "${pkgdir}/opt/${pkgname}"
+
+  install -Dm644 buttonmap.cfg gameaudio.dat gamedata.dat locdb.txt README-linux.txt supermeatboy.png \
+    "${pkgdir}/opt/${pkgname}"
+  install -Dm755 "${_arch}/SuperMeatBoy-${_arch}" "${pkgdir}/opt/${pkgname}/SuperMeatBoy"
+
+  install -Dm755 "${srcdir}/supermeatboy.sh" "${pkgdir}/usr/bin/supermeatboy"
+  install -Dm644 "${srcdir}/supermeatboy.desktop" "${pkgdir}/usr/share/applications/supermeatboy.desktop"
 }
 
 # vim: sts=2 ts=2 sw=2 et

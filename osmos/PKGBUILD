@@ -23,7 +23,7 @@ _bundle=('humblebundleandroid')
 
 _humble() {
   if [[ -f "${_gamedir}/${_archive}" ]]; then
-    ln -s "${_gamedir}/${_archive}"
+    ln -sf "${_gamedir}/${_archive}"
   fi
 
   if [ ! -f "${_archive}" ]; then

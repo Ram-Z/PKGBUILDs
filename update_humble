@@ -1,0 +1,13 @@
+#!/usr/bin/perl -pi.orig
+
+use strict;
+use warnings;
+
+BEGIN {undef $/;}
+
+my $humble_path = './humble.sh';
+open FILE, $humble_path or die "Could not open '$humble_path'";
+my $humble  = <FILE>;
+close FILE;
+
+s/_humble.*(build)/$humble\n$1/smg

@@ -6,6 +6,7 @@ src/
 pkg/
 # no backups
 *~
+*.swp
 # no sources, hoping this won't be to vague
 *.tar*
 *.zip

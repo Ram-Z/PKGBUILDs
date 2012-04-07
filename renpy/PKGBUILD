@@ -1,15 +1,16 @@
 # Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
-# Contributer: AlexanderR <rvacheva at nxt dot ru>
+# Contributor: AlexanderR <rvacheva at nxt dot ru>
 
 pkgname=renpy
-pkgver=6.13.9
+pkgver=6.13.11
 pkgrel=1
 pkgdesc="Ren'Py is a visual novel engine that helps you use words, images, and sounds to tell stories with the computer. This package contains both player and development tools."
 arch=('any')
 license=('MIT')
 url='http://www.renpy.org'
+screenshot="http://www.renpy.org/static/ss/clcollage.jpg"
 # are python-pygame and ttf-dejavu required by renpy or games itself?
-depends=('python-renpy=6.13.9' 'python-pygame' 'ttf-dejavu')
+depends=('python-renpy=6.13.11' 'python-pygame' 'ttf-dejavu')
 optdepends=('jedit: game development'
 	'zenity: filechooser support')
 options=(!strip !zipman)
@@ -23,8 +24,7 @@ source=("http://www.renpy.org/dl/$pkgver/renpy-$pkgver-source.tar.bz2"
 	'python2.diff'
 	'jedit-external.diff'
 	'renpy-launcher.sh')
-
-md5sums=('593928bfbeb3902b77cbded795e0bb9a'
+md5sums=('2a43ce5c23271a2a691967da22bdbd3c'
          'a9beb35fa6c6d8af7ba5d2a764c33158'
          'd206d24b78e207a2c3b603fef14ac47f'
          '8b9922e26e567248a2a5adc1d0cdfdd4'

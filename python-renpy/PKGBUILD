@@ -1,9 +1,9 @@
 # Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
-# Contributer: AlexanderR <rvacheva at nxt dot ru>
+# Contributor: AlexanderR <rvacheva at nxt dot ru>
 # Contributor: zhn <zhangn1985 AT gmail com>
 
 pkgname=python-renpy
-pkgver=6.13.9
+pkgver=6.13.11
 pkgrel=1
 pkgdesc="Platform-dependant Ren'Py libraries."
 arch=('i686' 'x86_64')
@@ -16,10 +16,8 @@ conflicts=('renpy<6.13.9' 'renpy64' 'renpy-bin')
 makedepends=('python>=2.7')
 source=("http://www.renpy.org/dl/$pkgver/renpy-$pkgver-source.tar.bz2"
 	python2.diff)
-
-md5sums=('593928bfbeb3902b77cbded795e0bb9a'
+md5sums=('2a43ce5c23271a2a691967da22bdbd3c'
          '19b861f4d934bfea817c161bf3ea1142')
-
 build() {
   cd "$srcdir/renpy-$pkgver"
 

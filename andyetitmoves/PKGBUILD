@@ -8,6 +8,7 @@ pkgrel=1
 pkgdesc="[Humble Bundle 3,4] Physics-based platform game"
 arch=('i686' 'x86_64')
 url="http://www.andyetitmoves.net/"
+screenshot="http://www.andyetitmoves.net/screens/600/01-indiana-jones.jpg"
 license=("custom:shareware")
 source=("andyetitmoves.desktop")
 depends=("mesa" "libxft" "sdl_image" "libvorbis" "libpng12")

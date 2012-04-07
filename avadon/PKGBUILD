@@ -8,6 +8,7 @@ arch=('i686' 'x86_64')
  [ $CARCH = 'i686' ]   && _arch='x86'
  [ $CARCH = 'x86_64' ] && _arch='amd64'
 url="http://www.spidweb.com/avadon/"
+screenshot="http://www.spidweb.com/images/avadon/AvRatFight.jpg"
 license=('custom: commercial')
 depends=('sdl' 'openal')
 options=('!strip')

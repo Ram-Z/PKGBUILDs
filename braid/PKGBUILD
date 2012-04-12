@@ -7,6 +7,7 @@ pkgver=1.0.2
 pkgrel=2
 pkgdesc="[Humble Bundle 2&3] A puzzle-platformer where the player manipulates the flow of time in strange and unusual ways"
 url="http://braid-game.com"
+screenshot="http://braid-game.com/walkthrough/start.jpg"
 license=('custom: "commercial"')
 arch=('i686' 'x86_64')
 depends=('sdl' 'nvidia-cg-toolkit')

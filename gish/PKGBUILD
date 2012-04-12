@@ -9,6 +9,7 @@ pkgrel=1
 pkgdesc="[Humble Bundle 1,2,Voxatron] A one of a kind 2d sidescroller with a twist you play as a totally physics based ball of tar."
 arch=('i686' 'x86_64')
 url='http://www.chroniclogic.com/gish.htm'
+screenshot="http://www.chroniclogic.com/image/gish/gish-11.jpg"
 license=('custom: "commercial"')
 install=gish.install
 depends=('libvorbis' 'openal' 'sdl' 'gcc-libs' 'sdl_image' 'mesa')

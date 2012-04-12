@@ -6,6 +6,7 @@ _pkgver=20120208-1
 pkgrel=1
 pkgdesc="[Humble Bundle Android] a casual puzzle-platformer that challenges you to roll your cube through over 100 levels"
 url="http://www.mobigame.net/"
+screenshot="http://www.platformnation.com/wp-content/uploads/2011/07/edge-screenshot.png"
 license=('custom: "commercial"')
 arch=('i686' 'x86_64')
  [ $CARCH = 'i686' ]   && _arch=i386
@@ -57,19 +58,12 @@ _humble() {
 }
 
 build() {
-  _humble
- 
   cd "${srcdir}"
-  if [ ! -f "${_archive}" ]; then
-    wget $_uri
-    mv ${_archive}* ${_archive}
-  fi
-  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
-    echo "Invalid checksum for ${_archive}"
-    return 1
-  fi
+  _humble
+
   tar xzf "${_archive}"
-  unset _archive _archive_md5 _uri
+
+  unset _archive _uri
 }
 
 

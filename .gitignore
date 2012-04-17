@@ -10,3 +10,5 @@ pkg/
 # no sources, hoping this won't be to vague
 *.tar*
 *.zip
+# where did that come from?
+.directory

@@ -9,18 +9,17 @@ pkgrel=1
 pkgdesc="[Humble Bundle 1,2,Voxatron] A one of a kind 2d sidescroller with a twist you play as a totally physics based ball of tar."
 arch=('i686' 'x86_64')
 url='http://www.chroniclogic.com/gish.htm'
+screenshot="http://www.chroniclogic.com/image/gish/gish-11.jpg"
 license=('custom: "commercial"')
 install=gish.install
 depends=('libvorbis' 'openal' 'sdl' 'gcc-libs' 'sdl_image' 'mesa')
 conflicts=('gish')
 source=('gish.png'
         'gish.desktop'
-        'gish32bit.launcher'
-        'gish64bit.launcher')
+        'gish.sh')
 md5sums=('f3831056f039b0d6867781d21b857993'
          'cb2f9c719e432d0d8195860f5831fe0d'
-         'eafe7f167cba997cfccecae6f5ac4956'
-         '303264ff383435c4c8f6843a64c51f62')
+         '1deb28366976a258530faa11baac2391')
 options=('!strip')
 PKGEXT='.pkg.tar' 
 
@@ -65,38 +64,32 @@ _humble() {
 }
 
 build() {
+  cd "${srcdir}"
   _humble
 
-  cd "${srcdir}"
-  if [ ! -f "${_archive}" ]; then
-    wget $_uri
-    mv ${_archive}* ${_archive}
-  fi
-  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
-    echo "Invalid checksum for ${_archive}"
-    return 1
-  fi
   tar xzf "${_archive}" || true
   unset _archive _archive_md5 _uri
 }
 
 package()
 {
-	install -dm775 -ggames $pkgdir/opt/Gish
+  cd "${srcdir}/${pkgname}"
+
+	install -dm775 -ggames "$pkgdir/opt/gish"
 	
-	cp -r $srcdir/gish/* $pkgdir/opt/Gish/
-	chown -R :games $pkgdir/opt/Gish/*
-	chmod -R g+rw $pkgdir/opt/Gish/*
-	chmod -R g-w+x $pkgdir/opt/Gish/gish_{32,64}
+	cp -rdp --no-preserve=ownership * "$pkgdir/opt/gish/"
 	
-	install -Dm644 $srcdir/gish.png     $pkgdir/usr/share/pixmaps/gish.png 
-	install -Dm644 $srcdir/gish.desktop $pkgdir/usr/share/applications/gish.desktop 
+	install -Dm644 "${srcdir}/gish.png"     "$pkgdir/usr/share/pixmaps/gish.png"
+	install -Dm644 "${srcdir}/gish.desktop" "$pkgdir/usr/share/applications/gish.desktop"
 	
 	if [ "$CARCH" = "x86_64" ]; then
-		install -Dm755 $srcdir/gish64bit.launcher $pkgdir/usr/bin/gish 
+    rm gish_32
+    mv gish_64 gish
 	else
-		install -Dm755 $srcdir/gish32bit.launcher $pkgdir/usr/bin/gish 
+    rm gish_64
+    mv gish_32 gish
 	fi
+  install -Dm755 "${srcdir}/gish.sh" "$pkgdir/usr/bin/gish"
 }
 
 # vim: sts=2 ts=2 sw=2 et

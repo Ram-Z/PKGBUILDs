@@ -6,6 +6,7 @@ _pkgver=20120208-1
 pkgrel=1
 pkgdesc="[Humble Bundle Android] a casual puzzle-platformer that challenges you to roll your cube through over 100 levels"
 url="http://www.mobigame.net/"
+screenshot="http://www.platformnation.com/wp-content/uploads/2011/07/edge-screenshot.png"
 license=('custom: "commercial"')
 arch=('i686' 'x86_64')
  [ $CARCH = 'i686' ]   && _arch=i386
@@ -57,25 +58,18 @@ _humble() {
 }
 
 build() {
-  _humble
- 
   cd "${srcdir}"
-  if [ ! -f "${_archive}" ]; then
-    wget $_uri
-    mv ${_archive}* ${_archive}
-  fi
-  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
-    echo "Invalid checksum for ${_archive}"
-    return 1
-  fi
+  _humble
+
   tar xzf "${_archive}"
-  unset _archive _archive_md5 _uri
+
+  unset _archive _uri
 }
 
 
 package()
 {
-  cd ${srcdir}/${pkgname}
+  cd "${srcdir}/${pkgname}"
 
   ESCAPED_PATH=$(echo "${CURRENT_DIR}" |  sed 's/\//\\\//g')
 
@@ -83,7 +77,7 @@ package()
   sed -i 's:/usr/bin/EDGE.png:/usr/share/pixmaps/edge.png:' EDGE.desktop
   sed 's:\$INSTALL_PATH\$:/opt/edge:' edge.in > edge
 
-  install -dm755 ${pkgdir}/opt/${pkgname}
+  install -dm755 "${pkgdir}/opt/${pkgname}"
 
   cp -rdp --no-preserve=ownership audio/ config/ default/ effects/ fx/ images/ levels/ \
     localization/ models/ music/ sprites/ textures/ "${pkgdir}/opt/${pkgname}/"
@@ -91,10 +85,10 @@ package()
   install -m755 EDGE.bin "${pkgdir}/opt/${pkgname}/"
   install -m644 cos.bin EDGE.png font.bin namespace.txt README "${pkgdir}/opt/${pkgname}/"
 
-  install -Dm755 edge ${pkgdir}/usr/bin/edge
+  install -Dm755 edge "${pkgdir}/usr/bin/edge"
 
-  install -Dm644 EDGE.png ${pkgdir}/usr/share/pixmaps/edge.png
-  install -Dm644 EDGE.desktop ${pkgdir}/usr/share/applications/edge.desktop
+  install -Dm644 EDGE.png "${pkgdir}/usr/share/pixmaps/edge.png"
+  install -Dm644 EDGE.desktop "${pkgdir}/usr/share/applications/edge.desktop"
 }
 
 # vim: sts=2 ts=2 sw=2 et

@@ -21,7 +21,8 @@ backup=('etc/conf.d/derby-network-server'
         'etc/profile.d/jdk.csh'
         'etc/profile.d/jdk.sh')
 install=jdk.install
-source=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/jdk-$pkgver-linux-${_arch}.tar.gz"
+#source=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/jdk-$pkgver-linux-${_arch}.tar.gz"
+source=("http://uni-smr.ac.ru/archive/dev/java/SDKs/oracle/j2se/7/jdk-$pkgver-linux-${_arch}.tar.gz"
         'java-monitoring-and-management-console.desktop'
         'java-visualvm.desktop'
         'jdk.sh'

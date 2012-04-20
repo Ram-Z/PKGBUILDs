@@ -21,7 +21,7 @@ conflicts=('java-runtime' 'java-runtime-headless')
 backup=(etc/profile.d/jre.sh
         etc/profile.d/jre.csh)
 install=jre.install
-source=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/jre-$pkgver-linux-${_arch}.tar.gz"
+source=("http://uni-smr.ac.ru/archive/dev/java/JRE/oracle/7/jre-7u3-linux-${_arch}.tar.gz"
         'java-policy-settings.desktop'
         'jre.sh'
         'jre.csh'

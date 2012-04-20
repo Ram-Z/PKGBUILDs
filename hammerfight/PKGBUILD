@@ -9,10 +9,13 @@ arch=('i686' 'x86_64')
  [[ $CARCH == 'i686' ]]   && _arch=x86
  [[ $CARCH == 'x86_64' ]] && _arch=amd64
 url="http://www.koshutin.com/"
+screenshot="http://www.koshutin.com/Media/Screens/screen_01.jpg"
 license=('unknown')
 makedepends=('imagemagick')
-source=("hammerfight.desktop")
-md5sums=('e23ba95fa5623d37bdd0f3b520e36343')
+source=("hammerfight.desktop"
+        "hammerfight.sh")
+md5sums=('e23ba95fa5623d37bdd0f3b520e36343'
+         '802b2cabf5638b2b7d35b6af369bfff0')
 install='hammerfight.install'
 depends=('openal' 'gcc-libs' 'sdl' 'hicolor-icon-theme')
 options=('!strip')
@@ -74,19 +77,10 @@ package() {
   
   install -Dm644 Config.ini README-linux.txt hammerfight.png hgeicon.bmp media.script readme.txt strings.txt \
     "${pkgdir}/opt/${pkgname}"
-  install -Dm755 Hammerfight-${_arch} "${pkgdir}/opt/${pkgname}"
+  install -Dm755 Hammerfight-${_arch} "${pkgdir}/opt/${pkgname}/Hammerfight"
 
   install -Dd "${pkgdir}/usr/bin"
-  echo \#\!/bin/bash > "${pkgdir}/usr/bin/hammerfight"
-  echo "cd /opt/hammerfight" >> "${pkgdir}/usr/bin/hammerfight"
-  echo "exec ./Hammerfight-${_arch}" >> "${pkgdir}/usr/bin/hammerfight"
-  chmod +x "${pkgdir}/usr/bin/hammerfight"
-
-  if [ "$CARCH" = "x86_64" ]; then
-	rm -rf "${pkgdir}/opt/hammerfight/Hammerfight-x86"
-  else
-	rm -rf "${pkgdir}/opt/hammerfight/Hammerfight-amd64"
-  fi
+  install -m755 "${srcdir}/hammerfight.sh" "${pkgdir}/usr/bin/hammerfight"
 
   for i in 16x16 22x22 32x32 48x48 64x64 128x128; do
     mkdir -p "${pkgdir}/usr/share/icons/hicolor/${i}/apps"

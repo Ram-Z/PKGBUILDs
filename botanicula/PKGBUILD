@@ -1,0 +1,94 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
+# Contributor: Ner0
+
+pkgname=botanicula
+pkgver=1.0
+_build=1334708544
+pkgrel=1
+pkgdesc="[Humble Bundle Botanicula] A point'n'click exploration game from the creators of Machinarium"
+arch=('any')
+url="http://www.botanicula.net/"
+screenshot="http://amanita-design.net/img/games/botanicula-01.jpg"
+license=('custom')
+depends=('adobe-air-sdk' 'hicolor-icon-theme')
+makedepends=('unzip')
+install=$pkgname.install
+source=($pkgname.desktop
+        $pkgname.sh)
+md5sums=('617bf525a3ec3de3a69ec10888c56669'
+         '852e2ba86100dd2ef5ef88762ca807e2')
+PKGEXT='.pkg.tar'
+
+_archive="$pkgname-linux-$pkgver-$_build.zip"
+_archive_md5="cebb95fd475ccad1d0826e85fc60ad49"
+
+_bundle=('humblebundlebotanicula')
+
+_humble() {
+  if [[ -f "${_gamedir}/${_archive}" ]]; then
+    ln -sf "${_gamedir}/${_archive}"
+  fi
+
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        msg2 "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri
+        mv ${_archive}* ${_archive}
+        break
+      fi
+    done
+    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+      error "Unable to find \"${_archive}\"." 
+      plain "You should run one of these commands before installing this pkg."
+      for bundle in ${_bundle[@]}; do
+        plain "$ export _${bundle}key=<your-${bundle}-key>"
+      done
+      plain "$ export _gamedir=<dir/to/${_archive}>"
+      exit 1
+    fi
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5 _bundle
+}
+
+build() {
+  cd "${srcdir}"
+  _humble
+
+  unzip -o "${_archive}" || true
+  
+  # unzip the .air file
+  unzip -o "Botanicula.air" -d "${pkgname}" || true
+
+  unset _archive
+}
+
+package () {
+  cd "${srcdir}"
+
+  install -dm755 "$pkgdir/opt/$pkgname"
+  cp -drp --no-preserve=ownership "$pkgname" "$pkgdir/opt"
+
+  # Installing launch script and desktop file
+  install -Dm755 $pkgname.sh "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 $pkgname.desktop "$pkgdir/usr/share/applications/${pkgname}.desktop"
+
+  # Installing icons
+  cd "$pkgname"
+
+  for i in 16 32 36 48 72 128 256 512; do
+    install -Dm644 "data/icons/b$i.png" "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/$pkgname.png"
+  done
+}
+
+# vim: sts=2 ts=2 sw=2 et

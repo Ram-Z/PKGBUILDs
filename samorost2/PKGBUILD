@@ -1,0 +1,85 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
+# Contributor: Vojtech Kral <kral.vojtech at gmail dot com>
+
+pkgname=samorost2
+pkgver=1.0
+pkgrel=1
+pkgdesc="[Humble Bundle 1,Botanicula] Samorost 2 is an award-winning point-and-click adventure/puzzle Flash game by Amanita Design"
+arch=('i686' 'x86_64')
+url="http://amanita-design.net/samorost-2/"
+screenshot="http://amanita-design.net/samorost-2/wallpapers/01_1024x768.jpg"
+license=('unknown')
+depends=('xdg-utils')
+optdepends=('flashplugin: for native browsers')
+makedepends=('unzip')
+source=("samorost2.sh"
+        "samorost2.desktop"
+        "https://www.humblebundle.com/4/icons/samorost2.png")
+sha256sums=('35e03f1fc3397d6a274fb63528f4b5ad42f85156c93d49729ed74592b2f5b2ce'
+            'f7d452f49e12f5baacd306ca7a640b41a59f6f2536770c8f4f197458af11a68c'
+            '8939b55e5da72a5bf7c47a348d1c68e3990bba86a80ca5d9b4bee61e5c3ab305')
+
+_archive="samorost2_linux.zip"
+_archive_md5="6cd3b70717ee172376e042038797e7ae"
+
+_bundle=('humblebundle1' 'humblebundlebotanicula')
+
+_humble() {
+  if [[ -f "${_gamedir}/${_archive}" ]]; then
+    ln -sf "${_gamedir}/${_archive}"
+  fi
+
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        msg2 "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri
+        mv ${_archive}* ${_archive}
+        break
+      fi
+    done
+    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+      error "Unable to find \"${_archive}\"." 
+      plain "You should run one of these commands before installing this pkg."
+      for bundle in ${_bundle[@]}; do
+        plain "$ export _${bundle}key=<your-${bundle}-key>"
+      done
+      plain "$ export _gamedir=<dir/to/${_archive}>"
+      exit 1
+    fi
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5 _bundle
+}
+
+build() {
+  cd "$srcdir"
+  _humble
+
+  unzip -o $_archive -d $pkgname || true
+
+  unset _archive
+}
+
+package() {
+  cd "$srcdir"
+
+  install -dm755 "${pkgdir}/opt/${pkgname}"
+
+  cp -drp --no-preserve=ownership $pkgname "$pkgdir/opt"
+
+  install -Dm755 samorost2.sh "$pkgdir/usr/bin/samorost2"
+  install -Dm644 samorost2.desktop "$pkgdir/usr/share/applications/samorost2.desktop"
+  install -Dm644 samorost2.png "$pkgdir/usr/share/pixmaps/samorost2.png"
+}
+
+# vim: sts=2 ts=2 sw=2 et

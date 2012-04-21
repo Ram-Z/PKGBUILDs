@@ -8,6 +8,7 @@ arch=('i686' 'x86_64')
   [ "${CARCH}" = "i686" ]   && ARCH=i386
   [ "${CARCH}" = "x86_64" ] && ARCH=x86_64
 url="http://code.google.com/p/transmisson-remote-gui/"
+screenshot="http://transmisson-remote-gui.googlecode.com/svn/wiki/FilesLinux.png"
 license=('GPL2')
 depends=('gtk2')
 install="transgui.install"

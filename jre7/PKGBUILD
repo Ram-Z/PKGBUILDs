@@ -21,7 +21,7 @@ conflicts=('java-runtime' 'java-runtime-headless')
 backup=(etc/profile.d/jre.sh
         etc/profile.d/jre.csh)
 install=jre.install
-source=("http://uni-smr.ac.ru/archive/dev/java/JRE/oracle/7/jre-7u3-linux-${_arch}.tar.gz"
+source=("http://download.oracle.com/otn-pub/java/jdk/${pkgver}-${_build}/jre-${pkgver}-linux-${_arch}.tar.gz"
         'java-policy-settings.desktop'
         'jre.sh'
         'jre.csh'
@@ -33,6 +33,8 @@ md5sums=(''
          '45c15a6b4767288f2f745598455ea2bf')
  [ "$CARCH" == 'i686' ]   && md5sums[0]='cfce10a05f8d152d39aef892f2cd4011'
  [ "$CARCH" == 'x86_64' ] && md5sums[0]='3d3e206cea84129f1daa8e62bf656a28'
+
+DLAGENTS=('http::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -o %o %u --header "Cookie:oraclelicensejdk-${pkgver}-oth-JPR=accept-securebackup-cookie;gpw_e24=http://edelivery.oracle.com"')
 
 package() {
   msg2 "Creating required dirs"

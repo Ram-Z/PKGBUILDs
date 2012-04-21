@@ -21,8 +21,7 @@ backup=('etc/conf.d/derby-network-server'
         'etc/profile.d/jdk.csh'
         'etc/profile.d/jdk.sh')
 install=jdk.install
-#source=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/jdk-$pkgver-linux-${_arch}.tar.gz"
-source=("http://uni-smr.ac.ru/archive/dev/java/SDKs/oracle/j2se/7/jdk-$pkgver-linux-${_arch}.tar.gz"
+source=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/jdk-$pkgver-linux-${_arch}.tar.gz"
         'java-monitoring-and-management-console.desktop'
         'java-visualvm.desktop'
         'jdk.sh'
@@ -40,6 +39,7 @@ md5sums=(''
          '45c15a6b4767288f2f745598455ea2bf')
  [ "$CARCH" == 'i686' ]   && md5sums[0]='99a0fa02b608985c271e55122f0621bf'
  [ "$CARCH" == 'x86_64' ] && md5sums[0]='969927251b558ffbc09ede1e89200d40'
+DLAGENTS=('http::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -o %o %u --header "Cookie:oraclelicensejdk-${pkgver}-oth-JPR=accept-securebackup-cookie;gpw_e24=http://edelivery.oracle.com"')
 
 package(){
   msg2 "Creating required dirs"

@@ -4,16 +4,14 @@
 
 pkgname=python-renpy
 pkgver=6.13.11
-pkgrel=1
+pkgrel=2
 pkgdesc="Platform-dependant Ren'Py libraries."
 arch=('i686' 'x86_64')
 license=('MIT')
 url='http://www.renpy.org'
 # are python-pygame and ttf-dejavu required by renpy or games itself?
-depends=('ffmpeg' 'fribidi' 'python>=2.7' 'glew' 'freetype2' 'libpng')
+depends=('ffmpeg' 'fribidi' 'python2>=2.7' 'glew' 'freetype2' 'libpng')
 conflicts=('renpy<6.13.9' 'renpy64' 'renpy-bin')
-# python-argparse is part of distribution since 2.7
-makedepends=('python>=2.7')
 source=("http://www.renpy.org/dl/$pkgver/renpy-$pkgver-source.tar.bz2"
 	python2.diff)
 md5sums=('2a43ce5c23271a2a691967da22bdbd3c'

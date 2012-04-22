@@ -2,16 +2,16 @@
 # Contributor: AlexanderR <rvacheva at nxt dot ru>
 # Contributor: zhn <zhangn1985 AT gmail com>
 
-pkgname=python-renpy
+pkgname=python2-renpy
 pkgver=6.13.11
-pkgrel=2
+pkgrel=1
 pkgdesc="Platform-dependant Ren'Py libraries."
 arch=('i686' 'x86_64')
 license=('MIT')
 url='http://www.renpy.org'
-# are python-pygame and ttf-dejavu required by renpy or games itself?
 depends=('ffmpeg' 'fribidi' 'python2>=2.7' 'glew' 'freetype2' 'libpng')
-conflicts=('renpy<6.13.9' 'renpy64' 'renpy-bin')
+conflicts=('renpy<6.13.9' 'renpy64' 'renpy-bin' 'python-renpy')
+replaces=('python-renpy')
 source=("http://www.renpy.org/dl/$pkgver/renpy-$pkgver-source.tar.bz2"
 	python2.diff)
 md5sums=('2a43ce5c23271a2a691967da22bdbd3c'

@@ -1,18 +1,21 @@
 # Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
 
-pkgname=ccr-tools-git
-_pkgname=ccr-tools
-pkgver=20120411
+pkgname=ccr-git
+_pkgname=ccr
+pkgver=20120430
 pkgrel=1
-pkgdesc="Some tools to talk to CCR via cli."
+pkgdesc="A Bash wrapper for the CCR"
 arch=('any')
 url="https://github.com/ccr-tools/ccr-tools"
 license=('GPL')
 depends=('curl' 'jshon' 'wget')
+conflicts=('ccr' 'ccr-tools-git')
+provides=('ccr')
 makedepends=('git')
 
 _gitroot="git://github.com/ccr-tools/ccr-tools.git"
 _gitname="ccr-tools"
+_gitbranch="develop"
 
 build() {
   cd $srcdir
@@ -22,7 +25,7 @@ build() {
     cd $_gitname && git pull origin
     msg "The local files are updated."
   else
-    git clone -b develop $_gitroot $_gitname
+    git clone -b $_gitbranch $_gitroot $_gitname
   fi
  
   msg "GIT checkout done or server timeout"
@@ -31,7 +34,11 @@ build() {
 package() {
   cd "$srcdir/$_gitname"
 
-  install -Dm755 ccr-tools "${pkgdir}/usr/bin/ccr-tools"
+  install -dm755 "$pkgdir/usr/bin"
+  install -Dm755 ccr ccr-tools "${pkgdir}/usr/bin"
+
+  install -dm755 "$pkgdir/usr/share/man/man8"
+  install -Dm644 ccr.8 ccr-tools.8 "$pkgdir/usr/share/man/man8"
 }
 
 # vim:set ts=2 sw=2 et:

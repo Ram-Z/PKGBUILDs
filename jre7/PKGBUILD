@@ -4,11 +4,11 @@
 # Contributors: Charles Ghislain, Guillaume ALAUX, Daniel J Griffiths, Jason Chu, Geoffroy Carrier, Army, kfgz, Thomas Dziedzic, Dan Serban
 
 pkgname=jre7
-pkgver=7u3
-_build=b04
+pkgver=7u4
+_build=b20
 pkgrel=1
 pkgdesc="Java 7 Runtime Environment"
-url=http://www.oracle.com/technetwork/java/javase/downloads/index.html
+url="http://www.oracle.com/technetwork/java/javase/downloads/index.html"
 arch=('i686' 'x86_64')
  [ "$CARCH" = 'i686' ]   && _arch=i586 && _arch2=i586
  [ "$CARCH" = 'x86_64' ] && _arch=x64  && _arch2=amd64
@@ -18,8 +18,8 @@ optdepends=('alsa-lib: sound support'
             'ttf-dejavu: fonts')
 provides=('jre' 'java-runtime=7' 'java-runtime-headless=7')
 conflicts=('java-runtime' 'java-runtime-headless')
-backup=(etc/profile.d/jre.sh
-        etc/profile.d/jre.csh)
+backup=("etc/profile.d/jre.sh"
+        "etc/profile.d/jre.csh")
 install=jre.install
 source=("http://download.oracle.com/otn-pub/java/jdk/${pkgver}-${_build}/jre-${pkgver}-linux-${_arch}.tar.gz"
         'java-policy-settings.desktop'
@@ -31,15 +31,15 @@ md5sums=(''
          '85ba1d2b39d5e6efad89ef98d0f19909'
          'c106d744a5ca16a7bad35b3332818114'
          '45c15a6b4767288f2f745598455ea2bf')
- [ "$CARCH" == 'i686' ]   && md5sums[0]='cfce10a05f8d152d39aef892f2cd4011'
- [ "$CARCH" == 'x86_64' ] && md5sums[0]='3d3e206cea84129f1daa8e62bf656a28'
+ [ "$CARCH" == 'i686' ]   && md5sums[0]='8e6db43d9a7cac724be2cb9d1329e702'
+ [ "$CARCH" == 'x86_64' ] && md5sums[0]='49da2f0c288f96ed255ed75b796a5455'
 
 DLAGENTS=('http::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -o %o %u --header "Cookie:oraclelicensejdk-${pkgver}-oth-JPR=accept-securebackup-cookie;gpw_e24=http://edelivery.oracle.com"')
 
 package() {
   msg2 "Creating required dirs"
   cd $(ls -1d jre1.7.0_*/ | tail -1)
-  mkdir -p "$pkgdir"/{opt/java/jre,usr/{share/{,licenses/jre},lib/mozilla/plugins},etc/{.java/.systemPrefs,profile.d}}
+  install -dm755 "$pkgdir"/{opt/java/jre,usr/{share/{,licenses/jre},lib/mozilla/plugins},etc/{.java/.systemPrefs,profile.d}}
 
   msg2 "Re-ordering folders a bit"
   mv lib/desktop/{applications,icons,mime} "$pkgdir"/usr/share/

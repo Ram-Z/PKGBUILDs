@@ -1,7 +1,7 @@
 # Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
 
 pkgname=transgui
-pkgver=4.0.2
+pkgver=4.0.3
 pkgrel=1
 pkgdesc="Cross platform remote GUI for the Transmission daemon"
 arch=('i686' 'x86_64')
@@ -15,10 +15,10 @@ install="transgui.install"
 source=("http://transmisson-remote-gui.googlecode.com/files/${pkgname}-${pkgver}-${ARCH}-linux.zip"
         "transgui.desktop"
         "transgui.sh")
-  [ "${CARCH}" = "x86_64" ] && md5sums=('0a40a1731cb2d7384eaeb2300df3fae3'
+  [ "${CARCH}" = "x86_64" ] && md5sums=('cb51625a2460d8d58715ee6465965b14'
                                         '842162e5a3ee4eb6826e5b7c97f63184'
                                         '99dc2528362993c19976d3337f8cb050')
-  [ "${CARCH}" = "i686" ]   && md5sums=('2ba89dc081a086d7c3005070a9aacc50'
+  [ "${CARCH}" = "i686" ]   && md5sums=('91bf0f4c9590084601315f715c66f8fc'
                                         '842162e5a3ee4eb6826e5b7c97f63184'
                                         '99dc2528362993c19976d3337f8cb050')
 

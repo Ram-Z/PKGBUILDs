@@ -2,12 +2,13 @@
 
 pkgname=swordsandsoldiers
 pkgver=20120325
-pkgrel=1
+pkgrel=2
 pkgdesc="[Humble Bundle Android2] Three factions are fighting each other to gain the powers of the gods."
 arch=('i686' 'x86_64')
  [ $CARCH = 'i686' ]   && _arch='i386'
  [ $CARCH = 'x86_64' ] && _arch='amd64'
 url="http://www.swordsandsoldiers.com/"
+screenshot="http://ronimo-games.com/SwordsAndSoldiers/images/snslogosmall.jpg"
 license=('custom: commercial')
 depends=('sdl')
 options=('!strip')
@@ -77,8 +78,9 @@ package() {
 
   install -d "${pkgdir}${_install_path}"
   install -d "${pkgdir}/usr/bin/"
-  install -Dm755 "swordsandsoldiers" "swordsandsoldierssetup" "${pkgdir}/usr/bin/"
-  install -Dm755 "SwordsAndSoldiers.bin" "SwordsAndSoldiersSetup.bin" "${pkgdir}${_install_path}"
+  ln -s "/opt/${pkgname}/swordsandsoldiers" "${pkgdir}/usr/bin/"
+  ln -s "/opt/${pkgname}/swordsandsoldierssetup" "${pkgdir}/usr/bin/"
+  install -Dm755 "swordsandsoldiers" "swordsandsoldierssetup" "SwordsAndSoldiers.bin" "SwordsAndSoldiersSetup.bin" "${pkgdir}${_install_path}"
   install -Dm644 "README" "SwordsAndSoldiersSetup.png" "SwordsAndSoldiers.png" "${pkgdir}${_install_path}"
 
   cp -dpr --no-preserve=ownership "Data" "${pkgdir}/opt/${pkgname}"

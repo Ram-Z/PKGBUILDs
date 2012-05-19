@@ -1,0 +1,48 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributor: Umidjon Almasov <u.almasov@gmail.com>
+# Contributor: Seppo Porspakka <sporspak@paju.oulu.fi>
+ 
+pkgname=scorched3d
+pkgver=43.3d
+pkgrel=1
+pkgdesc="A 3d artillery combat game"
+arch=('i686' 'x86_64')
+url="http://www.scorched3d.co.uk/"
+screenshot="http://chakra.ucoz.net/ccr_screens/scorched3d.png"
+license=('GPL')
+depends=('sdl_net' 'wxgtk' 'freealut>=1.0.0-3' 'libvorbis' 'mesa' 'fftw' 'libjpeg>=8' 'xdg-utils')
+install=scorched3d.install
+source=("http://downloads.sourceforge.net/${pkgname}/Scorched3D-${pkgver}-src.tar.gz"
+        'scorched3d.desktop'
+        'scorched3d.gcc47.patch')
+md5sums=('9c3043282a9e7451468ff325bef3b04c'
+         '85556f0e8273d572b1a69c76a7771e84'
+         '9bb124612df3f926b6845efe15eed819')
+
+build() {
+  cd "$srcdir/scorched"
+
+  patch -Np1 < "${srcdir}/$pkgname.gcc47.patch"
+
+  WANT_WXGTK=gtk2
+  sh autogen.sh \
+    --prefix=/usr \
+    --datadir=/usr/share/scorched3d \
+    --disable-openaltest \
+    --with-wx-config=wx-config
+
+  make
+}
+
+package() {
+  cd "${srcdir}/scorched"
+
+  make DESTDIR="${pkgdir}" install
+ 
+  cd "${srcdir}"
+
+  install -dm755 "${pkgdir}/usr/share/icons/hicolor/48x48/apps/${pkgname}"
+  ln -s /usr/share/scorched3d/data/images/tank2.png "${pkgdir}/usr/share/icons/hicolor/48x48/apps/${pkgname}.png"
+  install -Dm644 scorched3d.desktop "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+}
+

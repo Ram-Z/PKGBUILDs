@@ -1,0 +1,11 @@
+diff -rupN scorched.orig/src/client/client/SecureID.cpp scorched/src/client/client/SecureID.cpp
+--- scorched.orig/src/client/client/SecureID.cpp	2012-05-19 14:21:22.258926187 +0200
++++ scorched/src/client/client/SecureID.cpp	2012-05-19 14:21:53.798868730 +0200
+@@ -74,6 +74,7 @@ std::string SecureID::GetPrivateKey(void
+ #else
+ 
+ #include <sys/ioctl.h>
++#include <unistd.h>
+ #include <net/if.h>
+ 
+ std::string SecureID::GetPrivateKey(void)

@@ -3,25 +3,22 @@
 # Contributor: Ner0
 
 pkgname=botanicula
-pkgver=1.0
-_build=1334708544
+pkgver=20120501
 pkgrel=1
 pkgdesc="[Humble Bundle Botanicula] A point'n'click exploration game from the creators of Machinarium"
-arch=('any')
+arch=('x86_64' 'i686')
+[[ "$CARCH" == 'x86_64' ]] && _arch='amd64'
+[[ "$CARCH" == 'i686' ]]   && _arch='i386'
 url="http://www.botanicula.net/"
 screenshot="http://amanita-design.net/img/games/botanicula-01.jpg"
 license=('custom')
-depends=('adobe-air-sdk' 'hicolor-icon-theme')
-makedepends=('unzip')
+depends=('hicolor-icon-theme')
 install=$pkgname.install
-source=($pkgname.desktop
-        $pkgname.sh)
-md5sums=('617bf525a3ec3de3a69ec10888c56669'
-         '852e2ba86100dd2ef5ef88762ca807e2')
 PKGEXT='.pkg.tar'
 
-_archive="$pkgname-linux-$pkgver-$_build.zip"
-_archive_md5="cebb95fd475ccad1d0826e85fc60ad49"
+_archive="$pkgname-$pkgver-$_arch.tar.gz"
+[[ "$CARCH" == 'x86_64' ]] && _archive_md5="239401907d901ac074d9180d63c20e70"
+[[ "$CARCH" == 'i686' ]]   && _archive_md5="cbe92cbf52511acedf18d4774ec0d91f"
 
 _bundle=('humblebundlebotanicula')
 
@@ -65,29 +62,28 @@ build() {
   cd "${srcdir}"
   _humble
 
-  unzip -o "${_archive}" || true
+  tar xzf "${_archive}" || true
   
-  # unzip the .air file
-  unzip -o "Botanicula.air" -d "${pkgname}" || true
-
   unset _archive
 }
 
 package () {
-  cd "${srcdir}"
+  cd "${srcdir}/$pkgname"
+
+  sed 's|\$INSTALL_PATH\$|/opt/'"$pkgname/|" botanicula.desktop.in > botanicula.desktop
+  sed 's|\$INSTALL_PATH\$|/opt/'"$pkgname/|" botanicula.in > botanicula
+  chmod +x botanicula
 
   install -dm755 "$pkgdir/opt/$pkgname"
-  cp -drp --no-preserve=ownership "$pkgname" "$pkgdir/opt"
+  cp -drp --no-preserve=ownership bin runtimes "$pkgdir/opt/$pkgname"
+
+  install -Dm755 "botanicula" "$pkgdir/usr/bin/botanicula"
 
   # Installing launch script and desktop file
-  install -Dm755 $pkgname.sh "$pkgdir/usr/bin/$pkgname"
   install -Dm644 $pkgname.desktop "$pkgdir/usr/share/applications/${pkgname}.desktop"
 
-  # Installing icons
-  cd "$pkgname"
-
   for i in 16 32 36 48 72 128 256 512; do
-    install -Dm644 "data/icons/b$i.png" "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/$pkgname.png"
+    install -Dm644 "bin/data/icons/b$i.png" "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/$pkgname.png"
   done
 }
 

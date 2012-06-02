@@ -1,0 +1,82 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+
+pkgname=psychonauts
+pkgver=05312012
+pkgrel=1
+pkgdesc="[Humble Bundle 5] "
+arch=('x86_64' 'i686')
+url=""
+screenshot=""
+license=('custom')
+[[ "$CARCH" == 'x86_64' ]] && depends=('lib32-sdl' 'lib32-openal')
+[[ "$CARCH" == 'i686' ]]   && depends=('sdl' 'openal')
+source=("${pkgname}.sh" "${pkgname}.desktop")
+md5sums=('6fb2aae72b8e3af871b51913d0fb282c'
+         'a20e1be7d921dc1c9ac225645ffac6fc')
+makedepends=('unzip')
+PKGEXT='.pkg.tar'
+
+_archive="$pkgname-linux-$pkgver.zip"
+_archive_md5="feb1d3216bbe32a317ea80cb4f88dcae"
+
+_bundle=('humblebundle5')
+
+_humble() {
+  if [[ -f "${_gamedir}/${_archive}" ]]; then
+    ln -sf "${_gamedir}/${_archive}"
+  fi
+
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        msg2 "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri
+        mv ${_archive}* ${_archive}
+        break
+      fi
+    done
+    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+      error "Unable to find \"${_archive}\"." 
+      plain "You should run one of these commands before installing this pkg."
+      for bundle in ${_bundle[@]}; do
+        plain "$ export _${bundle}key=<your-${bundle}-key>"
+      done
+      plain "$ export _gamedir=<dir/to/${_archive}>"
+      exit 1
+    fi
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5 _bundle
+}
+
+build() {
+  cd "${srcdir}"
+  _humble
+
+  unzip -o "${_archive}" -d "${pkgname}"
+  
+  unset _archive
+}
+
+package () {
+  cd "${srcdir}/$pkgname/psychonauts-linux-installer"
+
+  install -dm755 "${pkgdir}/opt/"
+  cp -dpr --no-preserve=ownership data "${pkgdir}/opt/${pkgname}"
+
+  cd "${pkgdir}/opt/${pkgname}"
+  rm libopenal.so.1 libSDL-1.2.so.0
+
+  install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+}
+
+# vim: sts=2 ts=2 sw=2 et

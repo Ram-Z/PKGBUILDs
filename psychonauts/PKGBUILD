@@ -3,10 +3,10 @@
 pkgname=psychonauts
 pkgver=05312012
 pkgrel=1
-pkgdesc="[Humble Bundle 5] "
+pkgdesc="[Humble Bundle 5] A platform video game created by Tim Schafer."
 arch=('x86_64' 'i686')
-url=""
-screenshot=""
+url="http://www.psychonauts.com/"
+screenshot="http://www.psychonauts.com/images/screenshot07.jpg"
 license=('custom')
 [[ "$CARCH" == 'x86_64' ]] && depends=('lib32-sdl' 'lib32-openal')
 [[ "$CARCH" == 'i686' ]]   && depends=('sdl' 'openal')

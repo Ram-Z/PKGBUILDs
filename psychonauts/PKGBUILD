@@ -2,7 +2,7 @@
 
 pkgname=psychonauts
 pkgver=05312012
-pkgrel=1
+pkgrel=2
 pkgdesc="[Humble Bundle 5] A platform video game created by Tim Schafer."
 arch=('x86_64' 'i686')
 url="http://www.psychonauts.com/"
@@ -10,9 +10,11 @@ screenshot="http://www.psychonauts.com/images/screenshot07.jpg"
 license=('custom')
 [[ "$CARCH" == 'x86_64' ]] && depends=('lib32-sdl' 'lib32-openal')
 [[ "$CARCH" == 'i686' ]]   && depends=('sdl' 'openal')
-source=("${pkgname}.sh" "${pkgname}.desktop")
+source=("${pkgname}.sh" "${pkgname}.desktop"
+        "http://treefort.icculus.org/psychonauts/psychonuts-linux-test-06032012.tar.bz2")
 md5sums=('6fb2aae72b8e3af871b51913d0fb282c'
-         'a20e1be7d921dc1c9ac225645ffac6fc')
+         'a20e1be7d921dc1c9ac225645ffac6fc'
+         'fc966040f76837a77f202775e7169eec')
 makedepends=('unzip')
 PKGEXT='.pkg.tar'
 
@@ -69,8 +71,13 @@ build() {
 package () {
   cd "${srcdir}/$pkgname/psychonauts-linux-installer"
 
-  install -dm755 "${pkgdir}/opt/"
+  install -dm755 "${pkgdir}/opt/${pkgname}"
   cp -dpr --no-preserve=ownership data "${pkgdir}/opt/${pkgname}"
+
+  #patch
+  rm "${pkgdir}/opt/${pkgname}/Psychonauts"
+  install -Dm755 "${srcdir}/Psychonauts" "$pkgdir/opt/${pkgname}"
+  #end patch
 
   cd "${pkgdir}/opt/${pkgname}"
   rm libopenal.so.1 libSDL-1.2.so.0

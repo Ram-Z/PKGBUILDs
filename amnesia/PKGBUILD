@@ -1,0 +1,78 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+
+pkgname=amnesia
+pkgver=1.2.1
+pkgrel=2
+pkgdesc="[Humble Bundle 5] Explore a dark and foreboding castle, while avoiding monsters and other obstructions as well as solving puzzles."
+arch=('x86_64' 'i686')
+url="http://www.amnesiagame.com"
+screenshot="http://www.amnesiagame.com/images/screenshot04.jpg"
+license=('custom')
+depends=('sdl' 'openal' 'libtheora' 'libvorbis' 'mesa')
+source=("${pkgname}.sh" "${pkgname}.desktop")
+md5sums=('5f04cbd7181eaec5d26e236b135927fc'
+         '42fba0f1bc3e54f03f936a2bdbb46d3f')
+PKGEXT='.pkg.tar'
+
+_archive="${pkgname}_tdd_${pkgver}-1.sh"
+_archive_md5="7fa8720ce834bdcf4d44031d60a74f41"
+
+_bundle=('humblebundle5')
+
+_humble() {
+  if [[ -f "${_gamedir}/${_archive}" ]]; then
+    ln -sf "${_gamedir}/${_archive}"
+  fi
+
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        msg2 "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri
+        mv ${_archive}* ${_archive}
+        break
+      fi
+    done
+    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
+      error "Unable to find \"${_archive}\"." 
+      plain "You should run one of these commands before installing this pkg."
+      for bundle in ${_bundle[@]}; do
+        plain "$ export _${bundle}key=<your-${bundle}-key>"
+      done
+      plain "$ export _gamedir=<dir/to/${_archive}>"
+      exit 1
+    fi
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5 _bundle
+}
+
+build() {
+  cd "${srcdir}"
+  _humble
+
+  chmod +x $_archive
+}
+
+package () {
+  cd "${srcdir}"
+
+  install -dm755 "${pkgdir}/opt/"
+  ./${_archive} -u --accept-license --destdir "${pkgdir}/opt"
+
+  cd "${pkgdir}/opt/Amnesia"
+
+  [[ $CARCH == 'i686' ]] && sed -i 's/bin64/bin32/' "${srcdir}/${pkgname}.sh" && sed -i 's/bin64/bin32/' "${srcdir}/${pkgname}.desktop"
+  install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+}
+
+# vim: sts=2 ts=2 sw=2 et

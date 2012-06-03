@@ -1,0 +1,7 @@
+[Desktop Entry]
+Categories=Game;
+Encoding=UTF-8
+Name=Amnesia - The Dark Descent
+Exec=/opt/Amnesia/Launcher.bin64
+Icon=/opt/Amnesia/Amnesia.png
+Type=Application

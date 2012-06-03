@@ -12,8 +12,7 @@ _humble() {
       if [ -n "${!_key}" ]; then
         msg2 "Getting your unique ${pkgname} download location."
         _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
-        wget $_uri
-        mv ${_archive}* ${_archive}
+        wget $_uri -O ${_archive}
         break
       fi
     done

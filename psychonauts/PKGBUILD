@@ -71,8 +71,8 @@ build() {
 package () {
   cd "${srcdir}/$pkgname/psychonauts-linux-installer"
 
-  install -dm755 "${pkgdir}/opt/${pkgname}"
-  cp -dpr --no-preserve=ownership data "${pkgdir}/opt/${pkgname}"
+  install -dm755 "${pkgdir}/opt"
+  mv data "${pkgdir}/opt/${pkgname}"
 
   #patch
   rm "${pkgdir}/opt/${pkgname}/Psychonauts"

@@ -19,7 +19,8 @@ md5sums=('5c2644ab74d7714bed6d16a564df33bb'
 PKGEXT='.pkg.tar' 
 _archive='braid-linux-build2.run.bin'
 _archive_md5='f8933b7f7c77a234763cf73e2f9312a7'
-_bundle=('humblebundle2' 'humblebundle3')
+
+_bundle=('humblebundle2' 'humblebundle3' 'humblebundle5')
 
 _humble() {
   if [[ -f "${_gamedir}/${_archive}" ]]; then
@@ -35,8 +36,7 @@ _humble() {
       if [ -n "${!_key}" ]; then
         msg2 "Getting your unique ${pkgname} download location."
         _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
-        wget $_uri
-        mv ${_archive}* ${_archive}
+        wget $_uri -O ${_archive}
         break
       fi
     done

@@ -1,3 +1,4 @@
 #!/bin/bash
 cd /opt/Bastion
-./Bastion.bin.x86_64
+[[ "$1" == "--mesa" ]] && export force_s3tc_enable=true && shift
+./Bastion.bin.x86_64 $@

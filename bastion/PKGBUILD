@@ -10,9 +10,10 @@ arch=('x86_64' 'i686')
 url="http://supergiantgames.com/?page_id=242"
 screenshot="http://supergiantgames.com/site/wp-content/themes/supergiantgames/images/ui/logo.png"
 license=('custom')
-depends=('sdl' 'openal')
+depends=('libxft')
+makedepends=('curl')
 source=("${pkgname}.sh" "${pkgname}.desktop")
-md5sums=('1eca00686c965aee94d66d3344f4fd2c'
+md5sums=('184f5e38110a9a05a06f7af91b41155a'
          '34a402d17bd34b97f76af9b3a86a14d8')
 
 PKGEXT='.pkg.tar'
@@ -68,7 +69,7 @@ package () {
   cd "${srcdir}"
 
   install -dm755 "${pkgdir}/opt/"
-  ./${_archive} -u --datadir "${pkgdir}/opt" --bindir "${pkgdir}/opt/Bastion"
+  ./${_archive} -u --packager pacman --datadir "${pkgdir}/opt" --bindir "${pkgdir}/opt/Bastion"
 
   cd "${pkgdir}/opt/Bastion"
 

@@ -8,12 +8,19 @@ arch=('x86_64' 'i686')
 url="http://www.psychonauts.com/"
 screenshot="http://www.psychonauts.com/images/screenshot07.jpg"
 license=('custom')
-[[ "$CARCH" == 'x86_64' ]] && depends=('lib32-sdl' 'lib32-openal')
-[[ "$CARCH" == 'i686' ]]   && depends=('sdl' 'openal')
+[[ "$CARCH" == 'x86_64' ]] && depends=('lib32-sdl' 'lib32-openal') \
+  && optdepends=('lib32-ati-dri: acceleration for ATI cards'
+                 'lib32-libtxc_dxtn: texture decoding for ATI cards'
+                 'lib32-nvidia-utils: acceleration for Nvidia cards'
+                 'lib32-virtualgl: acceleration for bumbelbee'
+                 'lib32-nvidia-utils: acceleration for bumblebee')
+[[ "$CARCH" == 'i686' ]]   && depends=('sdl' 'openal') \
+  && optdepends=('libtxc_dxtn: texture decoding for ATI cards')
 source=("${pkgname}.sh" "${pkgname}.desktop")
 md5sums=('6fb2aae72b8e3af871b51913d0fb282c'
          'a20e1be7d921dc1c9ac225645ffac6fc')
 makedepends=('unzip')
+options=(!strip)
 PKGEXT='.pkg.tar'
 
 _archive="$pkgname-linux-$pkgver-bin"

@@ -5,8 +5,8 @@
 
 pkgname=jdk7
 _pkgname=jdk
-pkgver=7u4
-_build=b20
+pkgver=7u5
+_build=b05
 pkgrel=1
 pkgdesc="Java 7 Development Kit"
 url="http://www.oracle.com/technetwork/java/javase/downloads/index.html"
@@ -37,9 +37,8 @@ md5sums=(''
          'a279e195e249000646895d93e199860d'
          '4bdff6982c66d24a879c424aaac3d04d'
          '45c15a6b4767288f2f745598455ea2bf')
-
- [ "$CARCH" == 'i686' ]   && md5sums[0]='8e271abb32ac6ce199ba15ee5beb758b'
- [ "$CARCH" == 'x86_64' ] && md5sums[0]='a5ebe416c83b64a68c463a4a65f9e882'
+ [ "$CARCH" == 'i686' ]   && md5sums[0]='afb0c764c301f9475dbd3cd0197f6d29'
+ [ "$CARCH" == 'x86_64' ] && md5sums[0]='a658f817e1d9611468a4481280a96668'
 DLAGENTS=('http::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -o %o %u --header "Cookie:oraclelicensejdk-${pkgver}-oth-JPR=accept-securebackup-cookie;gpw_e24=http://edelivery.oracle.com"')
 
 package(){

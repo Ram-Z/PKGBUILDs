@@ -2,8 +2,8 @@
 
 pkgname=bastion
 _pkgname=Bastion
-pkgver=20120601
-_pkgver=2012-06-01
+pkgver=20120620
+_pkgver=2012-06-20
 pkgrel=1
 pkgdesc="[Humble Bundle 5] An original action role-playing game set in a lush imaginative world, in which players must create and fight for civilization's last refuge as a mysterious narrator marks their every move."
 arch=('x86_64' 'i686')
@@ -18,8 +18,8 @@ md5sums=('184f5e38110a9a05a06f7af91b41155a'
 
 PKGEXT='.pkg.tar'
 
-_archive="${_pkgname}-HIB-${_pkgver}-1.sh"
-_archive_md5="6bfaf5f637a1b54aef066506f6cd6e55"
+_archive="${_pkgname}-HIB-${_pkgver}.sh"
+_archive_md5="aa6ccaead3b4b8a5fbd156f4019e8c8b"
 
 _bundle=('humblebundle5')
 

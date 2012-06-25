@@ -6,7 +6,7 @@
 pkgname=jre7
 pkgver=7u5
 _build=b05
-pkgrel=1
+pkgrel=2
 pkgdesc="Java 7 Runtime Environment"
 url="http://www.oracle.com/technetwork/java/javase/downloads/index.html"
 arch=('i686' 'x86_64')
@@ -63,4 +63,8 @@ package() {
 
   msg2 "Tweaking the javaws .desktop file"
   sed -e 's/Exec=javaws/&-launcher 0.000000/' -e '/NoDisplay=true/d' -i "$pkgdir"/usr/share/applications/sun-javaws.desktop
+
+  # fixing ld.conf for soprano (see https://bugs.archlinux.org/task/16162)
+  install -dm755 "$pkgdir/etc/ld.so.conf.d"
+  echo "/opt/java/jre/lib/$_arch2/server" > "$pkgdir/etc/ld.so.conf.d/jre7.conf"
 }

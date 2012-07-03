@@ -1,0 +1,6 @@
+pkgname=ownCloud
+
+post_install() {
+       echo "Add line into apache conf file:"
+       echo "Include /etc/httpd/conf/extra/owncloud.conf"
+}

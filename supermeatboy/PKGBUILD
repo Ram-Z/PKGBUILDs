@@ -2,29 +2,28 @@
 # Contributer: Yochai Gal <yochaigal@gmail.com>
 
 pkgname=supermeatboy
-pkgver=20111213b
-_pkgver=12132011b
-pkgrel=5
+pkgver=20120607
+_pkgver=06072012
+pkgrel=1
 pkgdesc="[Humble Bundle 4] Super Meat Boy is a tough as nails platformer where you play as an animated cube of meat."
 arch=('i686' 'x86_64')
  [[ $CARCH == 'i686' ]]   && _arch='x86'
  [[ $CARCH == 'x86_64' ]] && _arch='amd64'
 url="http://www.supermeatboy.com/"
+screenshot="http://www.supermeatboy.com/_media/meatboy/cornerlogo.jpg"
 license=('custom')
 depends=('openal' 'sdl')
 makedepends=('unzip' 'tar')
 source=('supermeatboy.desktop'
-        'supermeatboy.sh'
-        'http://treefort.icculus.org/smb/smb-linux-mesa-hotfix-test.tar.bz2')
+        'supermeatboy.sh')
 md5sums=('ceda8cdca2aaff63a9cae2ef7d7cf0d4'
-         '818b03f82053ce6e0e996a780869e110'
-         '65b4b39f961e7de7a4d0e018690e736d')
+         '818b03f82053ce6e0e996a780869e110')
 PKGEXT='.pkg.tar'
 
-_archive_md5="e27c7a2506cbf7047f51a2230f7d1b0f"
 _archive="supermeatboy-linux-${_pkgver}-bin"
+_archive_md5="90a563ff103b4610b41af5fd2bccb21a"
 
-_bundle=('humblebundle4')
+_bundle=('humblebundle4' 'humblebundle5')
 
 _humble() {
   if [[ -f "${_gamedir}/${_archive}" ]]; then
@@ -67,9 +66,6 @@ build() {
   _humble
 
   unzip -o "${_archive}" -d "${pkgname}" || true
-
-# Apply hotfix
-  cp -dpf --no-preserve=ownership "${srcdir}/${_arch}/SuperMeatBoy-${_arch}" "${srcdir}/${pkgname}/data/${_arch}"
 }
 
 package() {

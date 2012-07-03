@@ -1,0 +1,58 @@
+# Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
+
+pkgname=joxy-git
+_pkgname=joxy
+pkgver=20120602
+pkgrel=2
+pkgdesc="Java Swing Look and Feel for integration with the KDE Oxygen theme."
+arch=('any')
+url="http://www.denvelop.nl/joxy/"
+screenshot="http://sourceforge.net/projects/joxy/screenshots/joxy_current.png"
+license=('GPL3')
+depends=('java-environment')
+makedepends=('git')
+conflicts=('joxy')
+install=joxy.install
+source=("compile.patch")
+noextract=("${pkgname}-${_pkgver}.jar")
+md5sums=('eb533c21a7e1e904f275316007a15daa')
+
+_gitroot="git://git.code.sf.net/p/joxy/code"
+_gitname="joxy"
+
+build() {
+  cd "$srcdir"
+  msg "Connecting to GIT server...."
+ 
+  if [[ -d "$_gitname" ]]; then
+    cd "$_gitname" && git pull origin
+    msg "The local files are updated."
+  else
+    git clone "$_gitroot" "$_gitname"
+  fi
+ 
+  msg "GIT checkout done or server timeout"
+  msg "Starting build..."
+  rm -rf "$srcdir/$_gitname-build"
+  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
+
+  cd "$srcdir/$_gitname-build"
+  patch -up1 < $srcdir/compile.patch
+  cd "src/"
+  ./compile.sh
+
+  find joxy/ -name '*.java' -exec javac -cp . {} +
+}
+
+package() {
+  cd "$srcdir/$_gitname-build/src"
+
+  find joxy/ -name '*.class' -exec jar -cvf ${_pkgname}.jar {} +
+
+  install -Dm644 "${_pkgname}.jar" "${pkgdir}/$JAVA_HOME/jre/lib/ext/${_pkgname}-${_pkgver}.jar"
+  [[ $CARCH == 'i686' ]]   && _arch=i386
+  [[ $CARCH == 'x86_64' ]] && _arch=amd64
+  install -Dm755 "libjoxy.so" "${pkgdir}/$JAVA_HOME/jre/lib/${_arch}/libnativeTextRenderer.so"
+}
+
+# vim:set ts=2 sw=2 et:

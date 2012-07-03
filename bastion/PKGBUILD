@@ -1,21 +1,25 @@
 # Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
 
-pkgname=amnesia
-pkgver=1.2.1
-pkgrel=3
-pkgdesc="[Humble Bundle 5] Explore a dark and foreboding castle, while avoiding monsters and other obstructions as well as solving puzzles."
+pkgname=bastion
+_pkgname=Bastion
+pkgver=20120620
+_pkgver=2012-06-20
+pkgrel=1
+pkgdesc="[Humble Bundle 5] An original action role-playing game set in a lush imaginative world, in which players must create and fight for civilization's last refuge as a mysterious narrator marks their every move."
 arch=('x86_64' 'i686')
-url="http://www.amnesiagame.com"
-screenshot="http://thedarkswarm.com/share/amnesia/logo.jpg"
+url="http://supergiantgames.com/?page_id=242"
+screenshot="http://supergiantgames.com/site/wp-content/themes/supergiantgames/images/ui/logo.png"
 license=('custom')
-depends=('sdl' 'openal' 'libtheora' 'libvorbis' 'mesa')
+depends=('libxft')
+makedepends=('curl')
 source=("${pkgname}.sh" "${pkgname}.desktop")
-md5sums=('5f04cbd7181eaec5d26e236b135927fc'
-         '42fba0f1bc3e54f03f936a2bdbb46d3f')
+md5sums=('184f5e38110a9a05a06f7af91b41155a'
+         '34a402d17bd34b97f76af9b3a86a14d8')
+
 PKGEXT='.pkg.tar'
 
-_archive="${pkgname}_tdd_${pkgver}-2.sh"
-_archive_md5="9cbc55cceed341a2fa2b50e2f3aa0374"
+_archive="${_pkgname}-HIB-${_pkgver}.sh"
+_archive_md5="aa6ccaead3b4b8a5fbd156f4019e8c8b"
 
 _bundle=('humblebundle5')
 
@@ -65,11 +69,11 @@ package () {
   cd "${srcdir}"
 
   install -dm755 "${pkgdir}/opt/"
-  ./${_archive} -u --accept-license --destdir "${pkgdir}/opt"
+  ./${_archive} -u --packager pacman --datadir "${pkgdir}/opt" --bindir "${pkgdir}/opt/Bastion"
 
-  cd "${pkgdir}/opt/Amnesia"
+  cd "${pkgdir}/opt/Bastion"
 
-  [[ $CARCH == 'i686' ]] && sed -i 's/bin64/bin32/' "${srcdir}/${pkgname}.sh" && sed -i 's/bin64/bin32/' "${srcdir}/${pkgname}.desktop"
+  [[ $CARCH == 'i686' ]] && sed -i 's/x86_64/i386/' "${srcdir}/${pkgname}.sh"
   install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
   install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
 }

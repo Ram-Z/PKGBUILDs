@@ -1,8 +1,21 @@
-7c7
-< BROWSERS="chromium google-chrome midori mozilla opera" # all supported browsers
----
-> BROWSERS="chromium google-chrome midori mozilla opera qupzilla" # all supported browsers
-27a28,30
->                 qupzilla)
->                         [[ "$i" = "qupzilla" ]] && STATIC="$homedir/.$i-backup" && LINK="$homedir/.$i"
->                         ;;
+diff -ur profile-sync-daemon-3.5.orig/profile-sync-daemon profile-sync-daemon-3.5/profile-sync-daemon
+--- profile-sync-daemon-3.5.orig/profile-sync-daemon	2012-06-10 22:54:25.420434692 +0200
++++ profile-sync-daemon-3.5/profile-sync-daemon	2012-06-10 22:56:56.968353659 +0200
+@@ -18,7 +18,7 @@
+ 	exit 0
+ fi
+ 
+-BROWSERS=${BROWSERS:-"chromium google-chrome midori mozilla opera opera-next"} # all supported browsers
++BROWSERS=${BROWSERS:-"chromium google-chrome midori mozilla opera opera-next qupzilla"} # all supported browsers
+ 
+ # make it overrideable from the commandline / config
+ DAEMON_FILE=${DAEMON_FILE:-"/run/psd"}
+@@ -42,7 +42,7 @@
+ 			STATIC="$homedir/.config/$browser-backup"
+ 			LINK="$homedir/.config/$browser"
+ 			;;
+-		mozilla|opera|opera-next)
++		mozilla|opera|opera-next|qupzilla)
+ 			STATIC="$homedir/.$browser-backup"
+ 			LINK="$homedir/.$browser"
+ 			;;

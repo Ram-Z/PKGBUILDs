@@ -1,0 +1,56 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: Mateusz Krawczu <willingmagic [at] gmail [dot] com>
+
+pkgname=owncloud-git
+pkgver=20120610
+pkgrel=1
+pkgdesc="ownCloud is part of the Social Desktop, a project connecting you with your peers in the community"
+arch=('i686' 'x86_64')
+url="http://owncloud.org"
+license=('GPL')
+depends=('php-apache' 'php-curl' 'mysql' 'php-gd')
+install=owncloud.install
+makedepends=()
+optdepends=()
+provides=(owncloud)
+conflicts=(owncloud)
+source=(owncloud.conf)
+md5sums=('c0112de94a7d9bdb7b5d1705a344db81')
+sha256sums=('fa2fd09da688c35548ffda5732bcefc51c4f3a0674dfe6e361687bb0cf6ab8f6')
+_gitroot="git://gitorious.org/owncloud/owncloud.git"
+_gitname="owncloud"
+
+package() {
+  cd "$srcdir"
+
+  msg "Git checkout"
+  if [ -d ${_gitname} ]; then
+    msg "Updating local repository..."
+    cd ${_gitname} 
+    git pull origin master
+    msg "The local files are updated."
+  else
+    git clone ${_gitroot} ${gitname}
+  fi
+  msg "Git checkout done or server timeout"
+
+  msg "Building and installing..." 
+ 
+  # install README file 
+  install -o root -g root -d ${pkgdir}/usr/share/doc/owncloud3.0
+  mv ${srcdir}/${_gitname}/README  ${pkgdir}/usr/share/doc/owncloud3.0/
+
+  # clean .git directory
+  rm -rf ${srcdir}/${_gitname}/.git
+ 
+  # install project  
+  install -d ${pkgdir}/usr/share/webapps/ || return 1
+  cp -a ${srcdir}/${_gitname}  ${pkgdir}//usr/share/webapps/ || return 1
+  chown -R http:http ${pkgdir}/usr/share/webapps/owncloud || return 1 
+ 
+  # install apache .conf file 
+  install -d ${pkgdir}/etc/httpd/conf/extra || return 1
+  install  -m 644 ${srcdir}/owncloud.conf  ${pkgdir}/etc/httpd/conf/extra/ || return 1
+}
+
+# vim: sts=2 ts=2 sw=2 et

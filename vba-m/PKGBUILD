@@ -1,0 +1,49 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+
+pkgname=vba-m-svn
+_pkgname=vbam
+pkgver=1102
+pkgrel=1
+pkgdesc="A VBA fork that focuses on consolidating existing ports and improving VBA in general"
+arch=(i686 x86_64)
+url="http://vba-m.ngemu.com"
+license=('GPL')
+depends=('sdl' 'libglademm' 'sfml' 'pkg-config' 'gtkglextmm')
+makedepends=('cmake' 'pkg-config' 'nasm' 'subversion')
+install='vba-m.install'
+
+_svntrunk=http://$_pkgname.svn.sourceforge.net/svnroot/$_pkgname/trunk
+_svnmod=$_pkgname
+
+build() {
+  cd $srcdir
+ 
+  if [ -d $_svnmod/.svn ]; then
+    (cd $_svnmod && svn up -r $pkgver)
+  else
+    svn co $_svntrunk --config-dir ./ -r $pkgver $_svnmod
+  fi
+ 
+  msg "SVN checkout done or server timeout"
+  msg "Starting make..."
+ 
+  rm -rf $srcdir/$_svnmod-build
+  cp -r $srcdir/$_svnmod $srcdir/$_svnmod-build
+  cd $srcdir/$_svnmod-build
+
+  cmake . \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DDATA_INSTALL_DIR:PATH=share/vbam/gtk \
+    -DVERSION=$pkgver \
+    -DENABLE_WX=OFF \
+    -DCMAKE_CXX_FLAGS=" -fpermissive"
+  make
+}
+
+package() {
+  cd "$srcdir/$_svnmod-build"
+  make DESTDIR=$pkgdir install
+}
+
+# vim: sts=2 ts=2 sw=2 et

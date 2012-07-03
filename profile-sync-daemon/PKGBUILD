@@ -4,8 +4,8 @@
 
 pkgname='profile-sync-daemon'
 _pkgname_short='psd'
-pkgver=3.0
-pkgrel=3
+pkgver=3.5
+pkgrel=1
 pkgdesc='Symlinks and syncs browser profile dirs to RAM thus reducing HDD/SDD calls and speeding-up browsers.'
 arch=('any')
 url='https://wiki.archlinux.org/index.php/Profile-sync-daemon'
@@ -18,8 +18,8 @@ source=("http://repo-ck.com/source/$pkgname/$pkgname-$pkgver.tar.xz"
         "qupzilla.patch")
 backup=("etc/$_pkgname_short.conf")
 install=readme.install
-sha256sums=('b58588c818dd9ed9a440e536fd8aaa587e1dd9bdfd2619bc85aa9ef6e3e61dfe'
-            '2d64c1c0d1d090cd32946640ce57b808ddd15f56e1742feb7093736c80c4aa0d')
+sha256sums=('b01181868bb3badffc98313c596b74a819df1b618218725f87e5806c7b3d1a13'
+            'f407606e070c6a850a116489c14a86bfdf3641a5d29303c6a6b28f5ad9619f0b')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"

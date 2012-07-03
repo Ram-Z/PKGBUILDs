@@ -1,0 +1,7 @@
+[Desktop Entry]
+Categories=Game;
+Encoding=UTF-8
+Name=Bastion
+Exec=bastion
+Icon=/opt/Bastion/Bastion.png
+Type=Application

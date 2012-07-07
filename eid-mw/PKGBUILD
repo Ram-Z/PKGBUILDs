@@ -1,0 +1,33 @@
+# Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
+
+pkgname=eid-mw
+pkgver=4.0.4
+_build=1253
+_build2=tcm406-178475
+pkgrel=1
+pkgdesc=""
+arch=('i686' 'x86_64')
+url="http://eid.belgium.be/"
+license=('LGPL')
+depends=('pcsclite' 'gtk2')
+makedepends=('pkg-config')
+source=("http://eid.belgium.be/en/binaries/${pkgname}-${pkgver}-${_build}_${_build2}.tgz")
+md5sums=('485eb2ebafd44efaf0b487122485ecf8')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr --libexecdir=/usr/bin
+  make
+}
+
+check() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make -k check
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:

@@ -5,7 +5,7 @@
 pkgname='profile-sync-daemon'
 _pkgname_short='psd'
 pkgver=3.5
-pkgrel=1
+pkgrel=2
 pkgdesc='Symlinks and syncs browser profile dirs to RAM thus reducing HDD/SDD calls and speeding-up browsers.'
 arch=('any')
 url='https://wiki.archlinux.org/index.php/Profile-sync-daemon'
@@ -15,15 +15,17 @@ optdepends=('cron: allow hourly (default) or periodic syncs of tmpfs <--> HDD/SD
 conflicts=('firefox-sync' 'firefox-tmpfs-daemon' 'chromium-tmpfs' 'tmpfs-store')
 replaces=('sync-browsers-daemon')
 source=("http://repo-ck.com/source/$pkgname/$pkgname-$pkgver.tar.xz"
-        "qupzilla.patch")
+        "qupzilla.patch" "systemd.patch")
 backup=("etc/$_pkgname_short.conf")
 install=readme.install
 sha256sums=('b01181868bb3badffc98313c596b74a819df1b618218725f87e5806c7b3d1a13'
-            'f407606e070c6a850a116489c14a86bfdf3641a5d29303c6a6b28f5ad9619f0b')
+            'f407606e070c6a850a116489c14a86bfdf3641a5d29303c6a6b28f5ad9619f0b'
+            '70b993b25e8b2f8224b9cf2d2494014048c31c36ad8152c8e35b5874307e216f')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   patch -p1 profile-sync-daemon < "${srcdir}/qupzilla.patch"
+  patch -p1 < "${srcdir}/systemd.patch"
 	gzip -f -9 $_pkgname_short.manpage
 }
 
@@ -33,7 +35,7 @@ package() {
 	install -Dm644 $_pkgname_short.conf "$pkgdir/etc/$_pkgname_short.conf"
 	install -Dm755 rc.$_pkgname_short "$pkgdir/etc/rc.d/$_pkgname_short"
 	install -Dm755 $_pkgname_short.cron.hourly "$pkgdir/etc/cron.hourly/$_pkgname_short-update"
-	install -Dm644 "$_pkgname_short.service" "$pkgdir/lib/systemd/system/$_pkgname_short.service"
+	install -Dm644 "$_pkgname_short.service" "$pkgdir/usr/lib/systemd/system/$_pkgname_short.service"
 	
 	install -g 0 -o 0 -Dm 0644 $_pkgname_short.manpage.gz "$pkgdir/usr/share/man/man1/$pkgname.1.gz"
 	install -g 0 -o 0 -Dm 0644 $_pkgname_short.manpage.gz "$pkgdir/usr/share/man/man1/$_pkgname_short.1.gz"

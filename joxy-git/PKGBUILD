@@ -2,8 +2,8 @@
 
 pkgname=joxy-git
 _pkgname=joxy
-pkgver=20120602
-pkgrel=2
+pkgver=20120604
+pkgrel=1
 pkgdesc="Java Swing Look and Feel for integration with the KDE Oxygen theme."
 arch=('any')
 url="http://www.denvelop.nl/joxy/"
@@ -49,10 +49,10 @@ package() {
 
   find joxy/ -name '*.class' -exec jar -cvf ${_pkgname}.jar {} +
 
-  install -Dm644 "${_pkgname}.jar" "${pkgdir}/$JAVA_HOME/jre/lib/ext/${_pkgname}-${_pkgver}.jar"
+  install -Dm644 "${_pkgname}.jar" "${pkgdir}/$JAVA_HOME/jre/lib/ext/${_pkgname}-${pkgver}.jar"
   [[ $CARCH == 'i686' ]]   && _arch=i386
   [[ $CARCH == 'x86_64' ]] && _arch=amd64
-  install -Dm755 "libjoxy.so" "${pkgdir}/$JAVA_HOME/jre/lib/${_arch}/libnativeTextRenderer.so"
+  install -Dm755 "libjoxy.so" "${pkgdir}/$JAVA_HOME/jre/lib/${_arch}/libjoxy.so"
 }
 
 # vim:set ts=2 sw=2 et:

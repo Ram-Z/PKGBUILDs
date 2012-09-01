@@ -14,11 +14,9 @@ license=('custom: "commercial"')
 install=gish.install
 depends=('libvorbis' 'openal' 'sdl' 'gcc-libs' 'sdl_image' 'mesa')
 conflicts=('gish')
-source=('gish.png'
-        'gish.desktop'
+source=('gish.desktop'
         'gish.sh')
-md5sums=('f3831056f039b0d6867781d21b857993'
-         'cb2f9c719e432d0d8195860f5831fe0d'
+md5sums=('11a6fe4611d75e8cc94c2596d8b81746'
          '1deb28366976a258530faa11baac2391')
 options=('!strip')
 PKGEXT='.pkg.tar' 
@@ -79,7 +77,7 @@ package()
 	
 	cp -rdp --no-preserve=ownership * "$pkgdir/opt/gish/"
 	
-	install -Dm644 "${srcdir}/gish.png"     "$pkgdir/usr/share/pixmaps/gish.png"
+	install -Dm644 "gish.bmp"     "$pkgdir/usr/share/pixmaps/gish.bmp"
 	install -Dm644 "${srcdir}/gish.desktop" "$pkgdir/usr/share/applications/gish.desktop"
 	
 	if [ "$CARCH" = "x86_64" ]; then

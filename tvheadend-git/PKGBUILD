@@ -1,0 +1,58 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Markus Opitz <mastero23 at gmail dot com>
+# Based on package hts-tvheadend-svn by azleifel <azleifel at googlemail dot com>
+
+pkgname=tvheadend-git
+pkgver=20120906
+pkgrel=1
+pkgdesc="TV streaming server for Linux"
+arch=('i686' 'x86_64')
+url="http://www.lonelycoder.com/hts/tvheadend_overview.html"
+license=('GPL3')
+depends=('avahi' 'openssl' 'python2')
+makedepends=('git')
+optdepends=('xmltv: For an alternative source of programme listings')
+provides=('tvheadend')
+conflicts=('hts-tvheadend' 'hts-tvheadend-svn')
+backup=('etc/conf.d/tvheadend')
+install=tvheadend.install
+source=('tvheadend.conf.d' 'tvheadend.rc.d' 'tvheadend.service')
+md5sums=('854845963c364cdcefcbd473f713179b'
+         'a8d7b66c6592aabde7556b253f5e0d54'
+         '4af967f0c8afd89ef13092965a5b8c38')
+
+_gitroot="git://github.com/tvheadend/tvheadend.git"
+_gitname="tvheadend"
+
+build() {
+  cd "$srcdir"
+  msg "Connecting to GIT server...."
+
+  if [ -d $_gitname ] ; then
+    cd $_gitname && git pull origin
+    msg "The local files are updated."
+  else
+    git clone $_gitroot $_gitname
+  fi
+
+  msg "GIT checkout done or server timeout"
+  msg "Starting make..."
+
+  rm -rf "$srcdir/$_gitname-build"
+  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
+  cd "$srcdir/$_gitname-build"
+
+  ./configure --prefix=/usr --mandir=/usr/share/man/man1 --python=python2 --release
+  make
+}
+
+package() {
+  cd "$srcdir/$_gitname-build"
+
+  make DESTDIR="$pkgdir/" install
+
+  install -D -m 755 "$srcdir/tvheadend.rc.d" "$pkgdir/etc/rc.d/tvheadend"
+  install -D -m 644 "$srcdir/tvheadend.conf.d" "$pkgdir/etc/conf.d/tvheadend"
+  install -D -m 644 "$srcdir/tvheadend.service" "$pkgdir/usr/lib/systemd/system/tvheadend.service"
+}

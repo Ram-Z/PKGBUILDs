@@ -4,9 +4,9 @@
 # Contributors: Charles Ghislain, Guillaume ALAUX, Daniel J Griffiths, Jason Chu, Geoffroy Carrier, Army, kfgz, Thomas Dziedzic, Dan Serban
 
 pkgname=jre7
-pkgver=7u5
-_build=b05
-pkgrel=2
+pkgver=7u7
+_build=b10
+pkgrel=1
 pkgdesc="Java 7 Runtime Environment"
 url="http://www.oracle.com/technetwork/java/javase/downloads/index.html"
 arch=('i686' 'x86_64')
@@ -31,8 +31,9 @@ md5sums=(''
          '85ba1d2b39d5e6efad89ef98d0f19909'
          'c106d744a5ca16a7bad35b3332818114'
          '45c15a6b4767288f2f745598455ea2bf')
- [ "$CARCH" == 'i686' ]   && md5sums[0]='1b342c588e24edf6dbbc5029d154e00d'
- [ "$CARCH" == 'x86_64' ] && md5sums[0]='1489af8abfd18699e84d93fedc989710'
+
+ [ "$CARCH" == 'i686' ]   && md5sums[0]='ea99bedd9db33e9e2970f4b70abd1e4b'
+ [ "$CARCH" == 'x86_64' ] && md5sums[0]='5aa9bd26cdf1fa6afd2b15826b4ba139'
 
 DLAGENTS=('http::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -o %o %u --header "Cookie:oraclelicensejdk-${pkgver}-oth-JPR=accept-securebackup-cookie;gpw_e24=http://edelivery.oracle.com"')
 

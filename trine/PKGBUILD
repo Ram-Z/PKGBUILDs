@@ -1,14 +1,12 @@
 # Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
 # Contributer: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
-# Contributer: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
-# Contributor: jimmy-6 <jakub.jarozek {at} gmail.com>
-# Contributor: Babets http://aur.archlinux.org/account.php?Action=AccountInfo&ID=6996
 
 pkgname=trine
 pkgver=1.0.8_update4
 pkgrel=2
 pkgdesc="[Humble Bundle FrozenByte, Frozen Synapse] A physics-based fantasy action game with three playable characters and co-op mode"
 url="http://trine-thegame.com"
+screenshot="http://trine-thegame.com/site/media/screenshots/trine_screenshot_2009_06_thief_forest_run.jpg"
 license=('custom: "commercial"')
 arch=('i686' 'x86_64')
  [ "$CARCH" = "x86_64" ] && _arch='64'

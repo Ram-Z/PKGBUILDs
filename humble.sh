@@ -21,7 +21,7 @@ _humble() {
     done
   fi
   if [ ! -f "${_archive}" ]; then
-    error "Unable to find \"${_archive}\"." 
+    error "Unable to find \"${_archive}\"."
     plain "You should run one of these commands before installing this pkg."
     for bundle in ${_bundle[@]}; do
       plain "$ export _${bundle}key=<your-${bundle}-key>"

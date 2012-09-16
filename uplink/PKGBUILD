@@ -25,6 +25,9 @@ _archive="uplink_${pkgver//_/-}_${_arch}.tar.gz"
 _bundle=('humblebundleintroversion')
 
 _humble() {
+  # default to current dir if not set
+  _gamedir=${_gamedir-${startdir}}
+
   if [[ -f "${_gamedir}/${_archive}" ]]; then
     ln -sf "${_gamedir}/${_archive}"
   fi
@@ -38,20 +41,19 @@ _humble() {
       if [ -n "${!_key}" ]; then
         msg2 "Getting your unique ${pkgname} download location."
         _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
-        wget $_uri
-        mv ${_archive}* ${_archive}
+        wget $_uri -O ${_archive}
         break
       fi
     done
-    if [ -z "${!_key}" -a ! -f "${startdir}/${_archive}" ]; then
-      error "Unable to find \"${_archive}\"." 
-      plain "You should run one of these commands before installing this pkg."
-      for bundle in ${_bundle[@]}; do
-        plain "$ export _${bundle}key=<your-${bundle}-key>"
-      done
-      plain "$ export _gamedir=<dir/to/${_archive}>"
-      exit 1
-    fi
+  fi
+  if [ ! -f "${_archive}" ]; then
+    error "Unable to find \"${_archive}\"."
+    plain "You should run one of these commands before installing this pkg."
+    for bundle in ${_bundle[@]}; do
+      plain "$ export _${bundle}key=<your-${bundle}-key>"
+    done
+    plain "$ export _gamedir=<dir/to/${_archive}>"
+    exit 1
   fi
   if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
     echo "Invalid checksum for ${_archive}"
@@ -63,17 +65,8 @@ _humble() {
 build() {
   _humble
 
-  cd "${srcdir}"
-  if [ ! -f "${_archive}" ]; then
-    wget $_uri
-    mv ${_archive}* ${_archive}
-  fi
-  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
-    echo "Invalid checksum for ${_archive}"
-    return 1
-  fi
   tar xzf "${_archive}" || true
-  unset _archive _archive_md5 _uri
+  unset _archive
 }
 
 package() {

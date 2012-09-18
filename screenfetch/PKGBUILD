@@ -3,7 +3,7 @@
 # Contributer: kittykatt <kittykatt@kittykatt.tk>
 pkgname=screenfetch
 _pkgname=screenfetch-dev
-pkgver=2.4.5
+pkgver=2.5.3
 pkgrel=1
 pkgdesc="Bash screenshot info grabber (DE, WM, theme, uptime, ...)"
 arch=("any")
@@ -13,7 +13,7 @@ conflicts=('screenfetch-git')
 depends=('bash' 'xorg-utils')
 optdepends=('scrot: To take screenshot')
 source=("http://git.silverirc.com/cgit.cgi/screenfetch-dev.git/snapshot/${_pkgname}-${pkgver}.tar.bz2")
-md5sums=('49ff7a781d3967f400cf816b9ef2a41d')
+md5sums=('3fa135260be2c9788386a6a2f115df72')
 
 package() {
   cd "$srcdir/${_pkgname}-${pkgver}"

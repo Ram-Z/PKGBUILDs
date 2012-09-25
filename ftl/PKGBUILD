@@ -1,0 +1,98 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributer: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
+# Maintainer: Dennis Hamester <dennis [dot] hamester [at] gmail [dot] com>
+
+pkgname=ftl
+pkgver=1.01
+pkgrel=1
+pkgdesc="FTL: Faster Than Light: A spaceship simulation real-time roguelike-like (requires full copy of the game)"
+license=('custom:ftl')
+arch=('i686' 'x86_64')
+url="http://www.ftlgame.com/"
+screenshot="http://s3.amazonaws.com/ksr/projects/78421/photo-full.jpg"
+depends=('mesa')
+makedepends=('imagemagick')
+source=('ftl.sh'
+        'ftl.desktop')
+sha1sums=('51101e86e6e75d5d0414fd5b5346d003e38160e7'
+          'ebaaca2051c536893079fd47275be9456ab39d14')
+
+_bundle=('humblebundleftl')
+
+_archive="FTL.Linux.1.01.tar.gz"
+_archive_md5='ccc337edc35f8710199e64670a9a50c4'
+
+_humble() {
+  # default to current dir if not set
+  _gamedir=${_gamedir-${startdir}}
+
+  if [[ -f "${_gamedir}/${_archive}" ]]; then
+    ln -sf "${_gamedir}/${_archive}"
+  fi
+
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        msg2 "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri -O ${_archive}
+        break
+      fi
+    done
+  fi
+  if [ ! -f "${_archive}" ]; then
+    error "Unable to find \"${_archive}\"."
+    plain "You should run one of these commands before installing this pkg."
+    for bundle in ${_bundle[@]}; do
+      plain "$ export _${bundle}key=<your-${bundle}-key>"
+    done
+    plain "$ export _gamedir=<dir/to/${_archive}>"
+    exit 1
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5 _bundle
+}
+
+build() {
+  cd "${srcdir}"
+  _humble
+
+  tar xzf "${_archive}"
+  unset _archive _archive_md5 _uri
+}
+
+package() {
+  cd "$srcdir/FTL"
+
+  install -dm755 "${pkgdir}"/opt
+  cp -dpr --no-preserve=ownership "${srcdir}"/FTL "${pkgdir}"/opt/
+
+  # fix file permissions
+  find "${pkgdir}"/opt/FTL -type d -exec chmod 755 {} +
+  find "${pkgdir}"/opt/FTL -type f -exec chmod 644 {} +
+  chmod 755 "${pkgdir}"/opt/FTL/FTL
+  chmod 755 "${pkgdir}"/opt/FTL/data/FTL
+
+  if [[ $CARCH != x86_64 ]]; then
+    rm -rf "${pkgdir}"/opt/FTL/data/amd64
+    chmod 755 "${pkgdir}"/opt/FTL/data/x86/bin/FTL
+  else
+    rm -rf "${pkgdir}"/opt/FTL/data/x86
+    chmod 755 "${pkgdir}"/opt/FTL/data/amd64/bin/FTL
+  fi
+
+  install -Dm755 "${srcdir}"/ftl.sh "${pkgdir}"/usr/bin/ftl
+
+  install -Dm644 "${srcdir}"/ftl.desktop "${pkgdir}"/usr/share/applications/ftl.desktop
+  convert "data/exe_icon.bmp" "ftl.png"
+  install -Dm644 ftl.png "${pkgdir}"/usr/share/pixmaps/ftl.png
+}
+
+# vim: sts=2 ts=2 et

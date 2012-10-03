@@ -1,6 +1,6 @@
 pkgname=clementine-git
 _realname=clementine-player
-pkgver=20120831
+pkgver=20121003
 pkgrel=1
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 arch=('i686' 'x86_64')
@@ -23,7 +23,6 @@ _gitroot="https://code.google.com/p/${_realname}"
 _gitname=${_realname}
 
 build() {
-    FAIL=0
     if [ -d ${_gitname} ]; then
         cd ${_gitname} && git pull origin
         msg "The local files are updated."
@@ -45,6 +44,4 @@ package() {
     cd ${srcdir}/${_gitname}/build
 
     make DESTDIR=${pkgdir} install; FAIL=$?
-    cd ..
-    return $FAIL
 }

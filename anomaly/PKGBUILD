@@ -18,7 +18,7 @@ PKGEXT=".pkg.tar"
                           && _archive_md5='705569fe43db8d7d771572fe905d2123'
  [[ $CARCH == 'x86_64' ]] && _archive="linux-anomaly-${_arch}.tar.gz" \
                           && _archive_md5='5cf109cd3c55075cf8a642eab87ccec4'
-_bundle=('humblebundleandroid')
+_bundle=('humblebundleandroid' 'humblebundleandroid3')
 
 _humble() {
   if [[ -f "${_gamedir}/${_archive}" ]]; then

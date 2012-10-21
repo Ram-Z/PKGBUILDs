@@ -19,7 +19,7 @@ _archive="${pkgname}-${_pkgver}-${_arch}.tar.gz"
  [ $CARCH = 'i686' ]   && _archive_md5='3d82f928f5e685d9022be4bb2104dbb8'
  [ $CARCH = 'x86_64' ] && _archive_md5='9bba72abc97f1cb5bf8223a3bcc828b8'
  
-_bundle=('humblebundleandroid')
+_bundle=('humblebundleandroid' 'humblebundleandroid3')
  
 _humble() {
   if [[ -f "${_gamedir}/${_archive}" ]]; then

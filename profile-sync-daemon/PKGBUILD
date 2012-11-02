@@ -4,7 +4,7 @@
 
 pkgname='profile-sync-daemon'
 _pkgname_short='psd'
-pkgver=4.02
+pkgver=4.03
 pkgrel=1
 pkgdesc='Symlinks and syncs browser profile dirs to RAM thus reducing HDD/SDD calls and speeding-up browsers.'
 arch=('any')
@@ -14,16 +14,13 @@ depends=('rsync' 'gawk') # gawk is needed for the temp workaround in $pkgname.in
 optdepends=('cron: allow hourly (default) or periodic syncs of tmpfs <--> HDD/SDD storage')
 conflicts=('firefox-sync' 'firefox-tmpfs-daemon' 'chromium-tmpfs' 'tmpfs-store')
 replaces=('sync-browsers-daemon')
-source=("http://repo-ck.com/source/$pkgname/$pkgname-$pkgver.tar.xz"
-        "systemd.patch")
+source=("http://repo-ck.com/source/$pkgname/$pkgname-$pkgver.tar.xz")
 backup=("etc/$_pkgname_short.conf")
 install=$pkgname.install
-sha256sums=('d078b612f93eec90dce67bcec8a4c35e02cf8435ae15cdbecee9a2518be8b149'
-            '70b993b25e8b2f8224b9cf2d2494014048c31c36ad8152c8e35b5874307e216f')
+sha256sums=('abedcb838898d28b4efae6ed495159b40f3432e0da6f1b63763280896ddebce5')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  patch -p1 < "${srcdir}/systemd.patch"
 	gzip -f -9 $_pkgname_short.manpage
 }
 

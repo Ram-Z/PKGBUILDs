@@ -4,7 +4,7 @@
 
 pkgname='profile-sync-daemon'
 _pkgname_short='psd'
-pkgver=4.12
+pkgver=4.13
 pkgrel=1
 pkgdesc='Symlinks and syncs browser profile dirs to RAM thus reducing HDD/SDD calls and speeding-up browsers.'
 arch=('any')
@@ -17,7 +17,7 @@ replaces=('sync-browsers-daemon')
 source=("http://repo-ck.com/source/$pkgname/$pkgname-$pkgver.tar.xz")
 backup=("etc/$_pkgname_short.conf")
 install=$pkgname.install
-sha256sums=('12e6608ef29f871008ab2e4c8cd7f1463d63d020bc4974615992ed678ab9c78f')
+sha256sums=('c4a289bce035fe59a051360eff518ba9f6fa04a7d10cdbf0faae1d072999a172')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"

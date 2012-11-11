@@ -3,11 +3,11 @@
 
 pkgname=vba-m-svn
 _pkgname=vbam
-pkgver=1102
+pkgver=1147
 pkgrel=1
 pkgdesc="A VBA fork that focuses on consolidating existing ports and improving VBA in general"
 arch=(i686 x86_64)
-url="http://vba-m.ngemu.com"
+url="http://vba-m.com"
 license=('GPL')
 depends=('sdl' 'libglademm' 'sfml' 'pkg-config' 'gtkglextmm')
 makedepends=('cmake' 'pkg-config' 'nasm' 'subversion')

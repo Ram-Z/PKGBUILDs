@@ -11,7 +11,7 @@ pkgdesc="Set of tools to create, edit and inspect Matroska files."
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.bunkus.org/videotools/mkvtoolnix/index.html"
-depends=('flac' 'libmatroska' 'libogg' 'libvorbis' 'xdg-utils' 'libebml' 'zlib')
+depends=('flac' 'libmatroska' 'libogg' 'libvorbis' 'xdg-utils' 'libebml' 'zlib' 'boost-libs')
 optdepends=('flac: for FLAC support (Free Lossless Audio Codec)'
 'lzo2: for additional compression capabilities'
 'bzip2: for additional compression capabilities'

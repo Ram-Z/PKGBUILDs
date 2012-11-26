@@ -7,36 +7,43 @@
 
 pkgname=slim
 pkgver=1.3.4
-pkgrel=1
+pkgrel=2
 pkgdesc='Desktop-independent graphical login manager for X11'
 arch=('i686' 'x86_64')
 url='http://slim.berlios.de/'
 license=('GPL2')
-depends=('consolekit' 'pam' 'libxmu' 'libpng' 'libjpeg-turbo' 'libxft')
+depends=('pam' 'libxmu' 'libpng' 'libjpeg-turbo' 'libxft')
 makedepends=('cmake' 'freeglut')
 backup=('etc/slim.conf' 'etc/logrotate.d/slim' 'etc/pam.d/slim')
 source=("http://download.berlios.de/${pkgname}/${pkgname}-${pkgver}.tar.gz"
-        'rc.d'
         'pam.d'
         'logrotate'
         'slim.service'
         'session-name.patch'
-        'libpng-1.4+-support.patch')
-
-install=install
+        'libpng-1.4+-support.patch'
+        'fix-array-overflow.patch')
+md5sums=('51543533e492b41007811f7d880720fa'
+         '37ef35079139544d04b8316c7f66f754'
+         '43da096480bf72c3ccec8ad8400f34f0'
+         'a5d6bde9e63899df7d2081e1585bbe54'
+         'ebcb6829028615686de7b64ceeaaf8ed'
+         '6d19bd7a91592ed2bb902b22b9594565'
+         '6c27d3e9961aef942cd6adf1945f8ac9')
 
 build() {
         cd "${srcdir}/${pkgname}-${pkgver}"
 	patch -p1 -i ../session-name.patch # FS#26693: fix default session name
-        patch -Np1 -i ../libpng-1.4+-support.patch # taken from gentoo to build
+        patch -p1 -i ../libpng-1.4+-support.patch # taken from gentoo to build
+        patch -p0 -i ../fix-array-overflow.patch
+
         cd ${srcdir}
-        mkdir build
+        mkdir -p build
         cd build
         cmake ../${pkgbase}-${pkgver} \
                 -DCMAKE_BUILD_TYPE=Release \
                 -DCMAKE_SKIP_RPATH=ON \
                 -DCMAKE_INSTALL_PREFIX=/usr \
-                -DUSE_PAM=yes -DUSE_CONSOLEKIT=yes
+                -DUSE_PAM=yes -DUSE_CONSOLEKIT=no
 	make
 }
 
@@ -44,7 +51,6 @@ package() {
         cd  ${srcdir}/build/
 	make DESTDIR="${pkgdir}" install
 
-	install -D -m755 ../rc.d "${pkgdir}"/etc/rc.d/slim
 	install -D -m644 ../pam.d "${pkgdir}"/etc/pam.d/slim
 	install -D -m644 ../logrotate "${pkgdir}"/etc/logrotate.d/slim
 
@@ -54,10 +60,3 @@ package() {
         # install systemd files
         install -D -m644 ${srcdir}/slim.service ${pkgdir}/usr/lib/systemd/system/slim.service
 }
-md5sums=('51543533e492b41007811f7d880720fa'
-         'd8ea9c4dee2811524b67f4f666311a1f'
-         '37ef35079139544d04b8316c7f66f754'
-         '43da096480bf72c3ccec8ad8400f34f0'
-         'a5d6bde9e63899df7d2081e1585bbe54'
-         'ebcb6829028615686de7b64ceeaaf8ed'
-         '6d19bd7a91592ed2bb902b22b9594565')

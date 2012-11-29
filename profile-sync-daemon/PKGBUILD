@@ -3,8 +3,7 @@
 # Contributor: graysky <graysky AT archlinux DOT us>
 
 pkgname='profile-sync-daemon'
-_pkgname_short='psd'
-pkgver=4.13
+pkgver=5.06
 pkgrel=1
 pkgdesc='Symlinks and syncs browser profile dirs to RAM thus reducing HDD/SDD calls and speeding-up browsers.'
 arch=('any')
@@ -15,25 +14,21 @@ optdepends=('cron: allow hourly (default) or periodic syncs of tmpfs <--> HDD/SD
 conflicts=('firefox-sync' 'firefox-tmpfs-daemon' 'chromium-tmpfs' 'tmpfs-store')
 replaces=('sync-browsers-daemon')
 source=("http://repo-ck.com/source/$pkgname/$pkgname-$pkgver.tar.xz")
-backup=("etc/$_pkgname_short.conf")
-install=$pkgname.install
-sha256sums=('c4a289bce035fe59a051360eff518ba9f6fa04a7d10cdbf0faae1d072999a172')
+backup=("etc/psd.conf")
+install=psd.install
+sha256sums=('810794b680bf672136a2a1b19773aad9210b2a9ad5179ce8968ceabbadbe372f')
 
-build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-	gzip -f -9 $_pkgname_short.manpage
-}
 
 package() {
-	cd "$srcdir/$pkgname-$pkgver"
-	install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
-	install -Dm644 $_pkgname_short.conf "$pkgdir/etc/$_pkgname_short.conf"
-	install -Dm755 rc.$_pkgname_short "$pkgdir/etc/rc.d/$_pkgname_short"
-	install -Dm755 $_pkgname_short.cron.hourly "$pkgdir/etc/cron.hourly/$_pkgname_short-update"
-	install -Dm644 "$_pkgname_short.service" "$pkgdir/usr/lib/systemd/system/$_pkgname_short.service"
-	
-	install -g 0 -o 0 -Dm 0644 $_pkgname_short.manpage.gz "$pkgdir/usr/share/man/man1/$pkgname.1.gz"
-	ln -s "$pkgname.1.gz" "$pkgdir/usr/share/man/man1/$_pkgname_short.1.gz"
+  cd "$srcdir/$pkgname-$pkgver"
+  install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 psd.conf "$pkgdir/etc/psd.conf"
+  install -Dm755 psd.cron.hourly "$pkgdir/etc/cron.hourly/psd-update"
+  install -Dm644 "psd.service" "$pkgdir/usr/lib/systemd/system/psd.service"
+
+  gzip -9 psd.manpage
+  install -g 0 -o 0 -Dm 0644 psd.manpage.gz "$pkgdir/usr/share/man/man1/$pkgname.1.gz"
+  ln -s "$pkgname.1.gz" "$pkgdir/usr/share/man/man1/psd.1.gz"
 }
 
 # vim: sts=2 ts=2 sw=2 et

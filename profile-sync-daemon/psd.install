@@ -5,6 +5,8 @@ post_install() {
         echo '  Define which users will make use of the sync in /etc/psd.conf'
         echo '  Read the manpage before use or see the wiki page'
         echo '  https://wiki.archlinux.org/index.php/Profile-sync-daemon'
+        echo
+        echo '  ALWAYS backup your profiles data before using utils like psd!'
         echo '--------------------------------------------------------------------------'
 }
 
@@ -18,7 +20,7 @@ pre_upgrade() {
         newpkgver=${1%-*}
 
         # check to see if upgrade action is needed
-        if [[ $oldpkgver < 4.02 ]]; then
+        if [[ $oldpkgver < 5.00 ]]; then
                 # check to see if user is running psd and needs to fix it
                 if [ -e $DAEMON_FILE ]; then
                         echo '------------------------------------------------------------------------'
@@ -66,7 +68,7 @@ post_upgrade() {
                 echo 'http://amjith.blogspot.com/2008/08/quick-and-dirty-vimdiff-tutorial.html'
                 echo '------------------------------------------------------------------------'
         else
-                /bin/true
+                /usr/bin/true
         fi
 }
 
@@ -81,3 +83,4 @@ pre_remove() {
                 fi
         fi
 }
+

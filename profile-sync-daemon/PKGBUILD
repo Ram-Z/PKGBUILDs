@@ -4,7 +4,7 @@
 
 pkgname='profile-sync-daemon'
 pkgver=5.06
-pkgrel=1
+pkgrel=2
 pkgdesc='Symlinks and syncs browser profile dirs to RAM thus reducing HDD/SDD calls and speeding-up browsers.'
 arch=('any')
 url='https://wiki.archlinux.org/index.php/Profile-sync-daemon'
@@ -16,8 +16,7 @@ replaces=('sync-browsers-daemon')
 source=("http://repo-ck.com/source/$pkgname/$pkgname-$pkgver.tar.xz")
 backup=("etc/psd.conf")
 install=psd.install
-sha256sums=('810794b680bf672136a2a1b19773aad9210b2a9ad5179ce8968ceabbadbe372f')
-
+sha256sums=('f451af448333ac33053a8f7d5c06c1f898b3a095bdc9fca1af22363ca3f230ca')
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -25,9 +24,10 @@ package() {
   install -Dm644 psd.conf "$pkgdir/etc/psd.conf"
   install -Dm755 psd.cron.hourly "$pkgdir/etc/cron.hourly/psd-update"
   install -Dm644 "psd.service" "$pkgdir/usr/lib/systemd/system/psd.service"
+  ln -s "$pkgname" "$pkgdir/usr/bin/psd"
 
   gzip -9 psd.manpage
-  install -g 0 -o 0 -Dm 0644 psd.manpage.gz "$pkgdir/usr/share/man/man1/$pkgname.1.gz"
+  install -Dm 0644 psd.manpage.gz "$pkgdir/usr/share/man/man1/$pkgname.1.gz"
   ln -s "$pkgname.1.gz" "$pkgdir/usr/share/man/man1/psd.1.gz"
 }
 

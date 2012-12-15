@@ -4,7 +4,7 @@
  
 pkgname=scorched3d
 pkgver=43.3d
-pkgrel=1
+pkgrel=2
 pkgdesc="A 3d artillery combat game"
 arch=('i686' 'x86_64')
 url="http://www.scorched3d.co.uk/"
@@ -13,16 +13,18 @@ license=('GPL')
 depends=('sdl_net' 'wxgtk' 'freealut>=1.0.0-3' 'libvorbis' 'mesa' 'fftw' 'libjpeg>=8' 'xdg-utils')
 install=scorched3d.install
 source=("http://downloads.sourceforge.net/${pkgname}/Scorched3D-${pkgver}-src.tar.gz"
+        'scorched3d.png::http://cdn.portableapps.com/Scorched3DPortable_128.png'
         'scorched3d.desktop'
-        'scorched3d.gcc47.patch')
+        'scorched3d-libpng1.5.patch')
 md5sums=('9c3043282a9e7451468ff325bef3b04c'
+         '0f7e570f586c227873e909ebbc17c84d'
          '85556f0e8273d572b1a69c76a7771e84'
-         '9bb124612df3f926b6845efe15eed819')
+         '7d2eb973071a7b6bc1d18853b6d384f9')
 
 build() {
   cd "$srcdir/scorched"
 
-  patch -Np1 < "${srcdir}/$pkgname.gcc47.patch"
+  patch -p1 < "${srcdir}/scorched3d-libpng1.5.patch"
 
   WANT_WXGTK=gtk2
   sh autogen.sh \
@@ -31,6 +33,7 @@ build() {
     --disable-openaltest \
     --with-wx-config=wx-config
 
+  sed -i '1 i #include <unistd.h>' src/client/client/SecureID.cpp
   make
 }
 
@@ -42,7 +45,8 @@ package() {
   cd "${srcdir}"
 
   install -dm755 "${pkgdir}/usr/share/icons/hicolor/48x48/apps/${pkgname}"
-  ln -s /usr/share/scorched3d/data/images/tank2.png "${pkgdir}/usr/share/icons/hicolor/48x48/apps/${pkgname}.png"
   install -Dm644 scorched3d.desktop "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  install -D -m644 scorched3d.png "$pkgdir/usr/share/icons/hicolor/48x48/apps/$pkgname.png"
+  install -D -m644 scorched3d.png "$pkgdir/usr/share/pixmaps/$pkgname.png"
 }
 

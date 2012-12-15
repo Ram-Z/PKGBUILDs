@@ -1,0 +1,93 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakr-project[dot]org>
+# Contributor: afettouhi <A.Fettouhi@gmail.com>
+
+pkgname=vessel
+pkgver=08122012
+_pkgver=12082012
+pkgrel=1
+pkgdesc="[Humble Bundle 6] Vessel is a physics-based, steampunk puzzle-platform video game developed by Strange Loop Games."
+url="http://www.strangeloopgames.com/"
+screenshot="http://heliumdesignco.com/strangeloop/wp-content/uploads/2011/09/Vessel-Title-No-Train1.jpg"
+license=('custom')
+arch=('i686' 'x86_64')
+if [ "$CARCH" = "x86_64" ]; then
+    depends=('lib32-sdl' 'lib32-openal' 'bash' 'lib32-gcc-libs')
+    optdepends=('lib32-libtxc_dxtn: texture decoding for open source ATI and Intel drivers')
+else
+    depends=('sdl' 'openal' 'bash' 'gcc-libs')
+    optdepends=('libtxc_dxtn: texture decoding for open source ATI and Intel drivers')
+fi
+makedepends=('unzip')
+source=("${pkgname}.install"
+        "${pkgname}.desktop"
+        "${pkgname}.sh")
+md5sums=('b25345577b44fbeeba96c6cc87f11c1e'
+         '796fc0b93db7ace6fa83c832533419d7'
+         '7a24fe4b132d76d9415d06078a22d719')
+backup=('opt/vessel/VesselGamepad.ini' 'opt/vessel/VesselKeys.ini')
+options=('!strip')
+PKGEXT=".pkg.tar"
+
+_archive="${pkgname}-${_pkgver}-bin"
+_archive_md5="cdb4e42ac3dede4478f54bfe15ebfbeb"
+
+_bundle=('humblebundle6')
+
+_humble() {
+  # default to current dir if not set
+  _gamedir=${_gamedir-${startdir}}
+
+  if [[ -f "${_gamedir}/${_archive}" ]]; then
+    ln -sf "${_gamedir}/${_archive}"
+  fi
+
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        msg2 "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri -O ${_archive}
+        break
+      fi
+    done
+  fi
+  if [ ! -f "${_archive}" ]; then
+    error "Unable to find \"${_archive}\"."
+    plain "You should run one of these commands before installing this pkg."
+    for bundle in ${_bundle[@]}; do
+      plain "$ export _${bundle}key=<your-${bundle}-key>"
+    done
+    plain "$ export _gamedir=<dir/to/${_archive}>"
+    exit 1
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5 _bundle
+}
+
+build() {
+  cd "${srcdir}"
+  _humble
+
+  unzip -u "$_archive" -d "${pkgname}" || true
+  unset _archive
+}
+
+package() {
+  cd "${srcdir}"
+  install -dm755 "${pkgdir}/opt"
+  cp -dpr --no-preserve=ownership "${pkgname}/data" "${pkgdir}/opt/${pkgname}"
+  find "${pkgdir}" -type f -exec chmod 644 "{}" +
+  install -Dm644 "${pkgname}".desktop "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  install -Dm755 "${pkgname}".sh "${pkgdir}/usr/bin/${pkgname}"
+  chmod 755 "${pkgdir}/opt/${pkgname}/Vessel" \
+    "${pkgdir}/opt/${pkgname}/x86/vessel.x86"
+}
+
+# vim: sts=2 ts=2 sw=2 et

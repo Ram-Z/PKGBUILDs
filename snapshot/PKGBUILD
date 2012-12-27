@@ -1,0 +1,97 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Sam S. <smls75@gmail.com>
+
+pkgname=snapshot
+pkgver=1.28_20121219
+_hibver=v28
+pkgrel=1
+pkgdesc='A physics-based platformer puzzle game (Humble Bundle version)'
+url='http://www.retroaffect.com/games/1/snapshot/'
+screenshot='http://www.retroaffect.com/_games/snapshot/featured.jpg'
+arch=('i686' 'x86_64')
+license=('custom:commercial')
+depends=('libgl' 'mesa' 'sdl' 'openal' 'libogg' 'libvorbis')
+source=("${pkgname}.desktop")
+md5sums=('b8020b21e46d0d57f9fedfcaa436ca82')
+options=('!strip' '!upx')
+PKGEXT='.pkg.tar'
+
+_bundle=('humblebundle7')
+
+case $CARCH in
+    i686)   _arch=x86; _archive_md5='8c893e6152d86801768de5d222b5150e' ;;
+    x86_64) _arch=x64; _archive_md5='a9e6bb953e5d443fdb63901d89f65e78' ;;
+esac
+_archive="Snapshot-linux-${_hibver}-${_arch}.tar.gz"
+
+_humble() {
+  # default to current dir if not set
+  _gamedir=${_gamedir-${startdir}}
+
+  if [[ -f "${_gamedir}/${_archive}" ]]; then
+    ln -sf "${_gamedir}/${_archive}"
+  fi
+
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        msg2 "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri -O ${_archive}
+        break
+      fi
+    done
+  fi
+  if [ ! -f "${_archive}" ]; then
+    error "Unable to find \"${_archive}\"."
+    plain "You should run one of these commands before installing this pkg."
+    for bundle in ${_bundle[@]}; do
+      plain "$ export _${bundle}key=<your-${bundle}-key>"
+    done
+    plain "$ export _gamedir=<dir/to/${_archive}>"
+    exit 1
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5 _bundle
+}
+
+build() {
+  cd "$srcdir"
+  _humble
+
+  tar -xzf "${_archive}"
+  unset _archive
+}
+
+package() {
+  cd $srcdir
+
+  # Fix permissions
+  find "${srcdir}/resources" -type f -exec chmod 644 {} \;
+  find "${srcdir}/resources" -type d -exec chmod 755 {} \;
+  
+  # Install game files
+  install -d "${pkgdir}/opt/snapshot/"
+  cp -r "${srcdir}/"{resources,snapshot.bin,snapshot,liblua5.1.so.0} \
+        "${pkgdir}/opt/snapshot/"
+  
+  # Install desktop entry
+  install -Dm644 "${pkgname}.desktop" \
+                 "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+  # Install icon
+  install -Dm644 "${srcdir}/resources/art/engine/pic_icon.png" \
+                 "${pkgdir}/usr/share/pixmaps/snapshot.png"
+
+  # Install launch script
+  install -d "${pkgdir}/usr/bin"
+  ln -s "/opt/snapshot/snapshot" "${pkgdir}/usr/bin/snapshot"
+}

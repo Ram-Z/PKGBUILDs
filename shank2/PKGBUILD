@@ -1,0 +1,80 @@
+# Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+
+pkgname="shank2"
+pkgver="20121228"
+_pkgver="update2-1356639361"
+pkgrel=1
+pkgdesc="[Humble Bundle 7] A 2D side-scrolling beat 'em up."
+url="http://www.shankgame.com/"
+screenhot="http://www.shankgame.com/wp-content/themes/shank-v2/images/shank-the-game.jpg"
+license=("custom")
+arch=("x86_64")
+depends=("sdl" "libgl")
+makedepends=("unzip")
+source=("${pkgname}.sh" "${pkgname}.desktop")
+md5sums=('a50638e8090d2cca59d46246bd645995'
+         '96fa047e2ff040a634ba57bbf54fa60c')
+PKGEXT=".pkg.tar"
+
+_archive="${pkgname}-linux-${pkgver}.tar.gz"
+_archive_md5="38fa1410392c5370e6d4fbcbffd1500c"
+
+_bundle=('humblebundle7')
+
+_humble() {
+  # default to current dir if not set
+  _gamedir=${_gamedir-${startdir}}
+
+  if [[ -f "${_gamedir}/${_archive}" ]]; then
+    ln -sf "${_gamedir}/${_archive}"
+  fi
+
+  if [ ! -f "${_archive}" ]; then
+    for bundle in ${_bundle[@]}; do
+      case ${bundle} in
+        "humblebundle"*) _key="_humblebundle${bundle:12}key";;
+        *) continue;;
+      esac
+      if [ -n "${!_key}" ]; then
+        msg2 "Getting your unique ${pkgname} download location."
+        _uri="$(curl -s "http://www.humblebundle.com/downloads?key=${!_key}" | grep "${_archive}" | cut -d "'" -f 10)"
+        wget $_uri -O ${_archive}
+        break
+      fi
+    done
+  fi
+  if [ ! -f "${_archive}" ]; then
+    error "Unable to find \"${_archive}\"."
+    plain "You should run one of these commands before installing this pkg."
+    for bundle in ${_bundle[@]}; do
+      plain "$ export _${bundle}key=<your-${bundle}-key>"
+    done
+    plain "$ export _gamedir=<dir/to/${_archive}>"
+    exit 1
+  fi
+  if ! echo "${_archive_md5}  ${_archive}" | md5sum -c --quiet; then
+    echo "Invalid checksum for ${_archive}"
+    return 1
+  fi
+  unset _key _uri _archive_md5 _bundle
+}
+
+build() {
+  cd ${srcdir}
+  _humble
+}
+
+package() {
+  install -dm755 "${pkgdir}/opt"
+	tar -xzf "${_archive}" -C "${pkgdir}/opt"
+
+	install -Dm755 "${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+	install -Dm644 "${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+  cd "${pkgdir}/opt/Shank 2"
+  rm -r bin/lib32
+  rm bin/shank2-bin32
+  rm bin/lib64/lib{direct*,SDL*,vga*,x86*,fusion*}
+}
+
+# vim:set ts=2 sw=2 et:

@@ -10,4 +10,4 @@ open FILE, $humble_path or die "Could not open '$humble_path'";
 my $humble  = <FILE>;
 close FILE;
 
-s/_humble.*(build|package)/$humble\n$1/smg
+s/_humble\(\).*?(build|package)/$humble\n$1/smg

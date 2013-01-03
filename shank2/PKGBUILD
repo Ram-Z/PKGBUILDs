@@ -16,7 +16,7 @@ md5sums=('a50638e8090d2cca59d46246bd645995'
          '96fa047e2ff040a634ba57bbf54fa60c')
 PKGEXT=".pkg.tar"
 
-_archive="${pkgname}-linux-${pkgver}.tar.gz"
+_archive="${pkgname}-linux-${_pkgver}.tar.gz"
 _archive_md5="38fa1410392c5370e6d4fbcbffd1500c"
 
 _bundle=('humblebundle7')

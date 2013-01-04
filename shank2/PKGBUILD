@@ -1,8 +1,8 @@
 # Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
 
 pkgname="shank2"
-pkgver="20121228"
-_pkgver="update2-1356639361"
+pkgver="20130102"
+_pkgver="update3-1357159966"
 pkgrel=1
 pkgdesc="[Humble Bundle 7] A 2D side-scrolling beat 'em up."
 url="http://www.shankgame.com/"
@@ -17,7 +17,7 @@ md5sums=('a50638e8090d2cca59d46246bd645995'
 PKGEXT=".pkg.tar"
 
 _archive="${pkgname}-linux-${_pkgver}.tar.gz"
-_archive_md5="38fa1410392c5370e6d4fbcbffd1500c"
+_archive_md5="1d829832c54330c2eabd4dcf0f14e946"
 
 _bundle=('humblebundle7')
 

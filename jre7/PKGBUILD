@@ -4,13 +4,12 @@
 # Contributors: Charles Ghislain, Guillaume ALAUX, Daniel J Griffiths, Jason Chu, Geoffroy Carrier, Army, kfgz, Thomas Dziedzic, Dan Serban
 
 pkgname=jre7
-pkgver=7u9
-_build=b05
+pkgver=7u10
+_build=b18
 pkgrel=1
 pkgdesc="Java 7 Runtime Environment"
 url="http://www.oracle.com/technetwork/java/javase/downloads/index.html"
-arch=('i686' 'x86_64')
- [ "$CARCH" = 'i686' ]   && _arch=i586 && _arch2=i586
+arch=('x86_64')
  [ "$CARCH" = 'x86_64' ] && _arch=x64  && _arch2=amd64
 license=('custom')
 depends=('desktop-file-utils' 'hicolor-icon-theme' 'libxrender' 'libxtst' 'shared-mime-info' 'xdg-utils')
@@ -26,14 +25,11 @@ source=("http://download.oracle.com/otn-pub/java/jdk/${pkgver}-${_build}/jre-${p
         'jre.sh'
         'jre.csh'
         'javaws-launcher')
-md5sums=(''
+md5sums=('9ce426628b1cb2c16dd05fbd906440aa'
          'f4e25ef1ccef8d36ff2433c3987a64fe'
          '85ba1d2b39d5e6efad89ef98d0f19909'
          'c106d744a5ca16a7bad35b3332818114'
          '45c15a6b4767288f2f745598455ea2bf')
-
- [ "$CARCH" == 'i686' ]   && md5sums[0]='56178ed00dab2ebd8268caf5575743f4'
- [ "$CARCH" == 'x86_64' ] && md5sums[0]='8e17fa7b2152ab11f915c6936542cc12'
 
 DLAGENTS=('http::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -o %o %u --header "Cookie:oraclelicensejdk-${pkgver}-oth-JPR=accept-securebackup-cookie;gpw_e24=http://edelivery.oracle.com"')
 

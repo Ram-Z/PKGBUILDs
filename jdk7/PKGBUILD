@@ -5,13 +5,12 @@
 
 pkgname=jdk7
 _pkgname=jdk
-pkgver=7u9
-_build=b05
+pkgver=7u10
+_build=b18  
 pkgrel=1
 pkgdesc="Java 7 Development Kit"
 url="http://www.oracle.com/technetwork/java/javase/downloads/index.html"
-arch=('i686' 'x86_64')
- [ $CARCH = 'i686' ]   && _arch='i586' && _arch2='i386'
+arch=('x86_64')
  [ $CARCH = 'x86_64' ] && _arch='x64'  && _arch2='amd64'
 license=('custom')
 depends=('jre7' 'libx11')
@@ -29,7 +28,7 @@ source=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/jdk-$pkgver
         'derby-network-server'
         'derby-network-server.conf'
         'javaws-launcher')
-md5sums=(''
+md5sums=('2a75b5510bdb7360b9279a6f659d054a'
          'da10de5e6507c392fc9871076ef53ec6'
          '35fd89c5c170021d2183593335703703'
          'b83ab5742651b4234b7d2e20785c6693'
@@ -38,8 +37,6 @@ md5sums=(''
          '4bdff6982c66d24a879c424aaac3d04d'
          '45c15a6b4767288f2f745598455ea2bf')
 
- [ "$CARCH" == 'i686' ]   && md5sums[0]='f66c309ab38d6ba6651f7d98cd58d9d5'
- [ "$CARCH" == 'x86_64' ] && md5sums[0]='372b9dcde93230522672837e1820f939'
 DLAGENTS=('http::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -o %o %u --header "Cookie:oraclelicensejdk-${pkgver}-oth-JPR=accept-securebackup-cookie;gpw_e24=http://edelivery.oracle.com"')
 
 package(){

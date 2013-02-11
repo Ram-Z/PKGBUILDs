@@ -4,7 +4,7 @@
 
 pkgbase=mplayer
 pkgname=('mencoder')
-pkgver=35421
+pkgver=35624
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="Free command line video decoding, encoding and filtering tool"
@@ -14,8 +14,8 @@ makedepends=('libvdpau' 'unzip' 'yasm')
 license=('GPL')
 url="http://www.mplayerhq.hu/"
 options=(!buildflags !emptydirs)
-source=(ftp://ftp.archlinux.org/other/$pkgbase/$pkgbase-$pkgver.tar.xz)
-md5sums=('b5d8c24fc106b4ed58acda3b86c468fa')
+source=("http://chakra-linux.org/sources/${pkgbase}/${pkgbase}-${pkgver}.tar.xz")
+md5sums=('99c1fe331a101f4b137226edb6836b77')
 
 build() {
     cd "$srcdir/$pkgbase"

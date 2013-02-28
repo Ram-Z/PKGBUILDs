@@ -1,0 +1,44 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Dan McGee <dan@archlinux.org>
+
+pkgname=weka
+pkgver=3.7.8
+_dlver=${pkgver//./-}
+pkgrel=1
+pkgdesc="A collection of machine learning algorithms for data mining tasks"
+url="http://www.cs.waikato.ac.nz/ml/weka/"
+license=("GPL")
+arch=('any')
+depends=('java-runtime')
+makedepends=('java-environment' 'imagemagick')
+source=(http://downloads.sourceforge.net/sourceforge/weka/$pkgname-$_dlver.zip
+        LookAndFeel.props weka.sh weka.desktop)
+md5sums=('412e45a95c465a56cf4c78bafaea7761'
+         'eee6cc62a436a1e4c1047783811860dc'
+         'e776c96393ac7a20a2016a66b2d75e78'
+         '83a4d47ba64df90a92a38b23a14c6480')
+
+build() {
+  cd $srcdir/$pkgname-$_dlver
+
+  # patch jar file with new props file (GNOME compatability)
+  mkdir -p weka/gui
+  cp $srcdir/LookAndFeel.props weka/gui/
+  jar uf weka.jar weka/gui/LookAndFeel.props
+
+  # rip icon out of jar for use in desktop menu
+  jar xf weka.jar weka/gui/weka_icon.gif
+  convert weka/gui/weka_icon.{gif,png}
+
+  # install jar file
+  mkdir -p $pkgdir/usr/share/java/$pkgname
+  install -m644 weka.jar $pkgdir/usr/share/java/$pkgname/weka.jar
+
+  # setup for freedesktop icons and shell script
+  mkdir -p $pkgdir/usr/share/{applications,pixmaps}
+  mkdir -p $pkgdir/usr/bin
+  install -m644 weka/gui/weka_icon.png $pkgdir/usr/share/pixmaps/weka.png
+  install -m644 $srcdir/weka.desktop $pkgdir/usr/share/applications/weka.desktop
+  install -m755 $srcdir/weka.sh $pkgdir/usr/bin/weka
+}

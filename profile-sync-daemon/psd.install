@@ -10,14 +10,29 @@ post_install() {
         echo '--------------------------------------------------------------------------'
 }
 
-pre_upgrade() {
-        # $2 is unset due to a bug. See, https://bugs.archlinux.org/task/32278
-        # Query current version using pacman as fallback
-        tempfix=$(pacman -Qi profile-sync-daemon | awk '/^Version/{print $3}')
-        oldpkgver=${tempfix%-*}
+post_upgrade() {
+        oldpkgver=${2%-*}
+        #newpkgver=${1%-*}
 
-        #oldpkgver=${2%-*}
-        newpkgver=${1%-*}
+        # check to see if upgrade action is needed
+        if [[ $oldpkgver < 5.29 ]]; then
+            echo '-------------------------------------------------------------------'
+            echo ' Support for cron has been deprecated in favor of a systemd timer.'
+            echo ' This package now provides both psd.service and psd-resync.service'
+            echo
+            echo ' systemctl enable psd psd-resync'
+            echo ' systemctl start psd psd-resync'
+            echo
+            echo ' See the wiki or man page for more info.'
+            echo '-------------------------------------------------------------------'
+        else
+            /bin/true
+        fi      
+}
+
+pre_upgrade() {
+        oldpkgver=${2%-*}
+        #newpkgver=${1%-*}
 
         # check to see if upgrade action is needed
         if [[ $oldpkgver < 5.03 ]]; then

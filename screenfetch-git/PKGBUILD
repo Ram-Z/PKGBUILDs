@@ -3,7 +3,7 @@
 # Contributor: kittykatt <kittykatt@kittykatt.us>
 
 pkgname=screenfetch-git
-pkgver=20120329
+pkgver=20130324
 pkgrel=1
 pkgdesc="Bash screenshot info grabber (DE, WM, theme, uptime, ...) GIT Version"
 arch=("any")
@@ -14,7 +14,7 @@ depends=('bash' 'xorg-utils')
 optdepends=('scrot: To take screenshot')
 makedepends=('git')
 
-_gitroot="git://git.silverirc.com/screenfetch-dev.git"
+_gitroot="http://git.silverirc.com/cgit.cgi/screenfetch.git/"
 _gitname="screenfetch-dev"
 
 build() {

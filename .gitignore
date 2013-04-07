@@ -10,5 +10,6 @@ pkg/
 # no sources, hoping this won't be to vague
 *.tar*
 *.zip
+*.jar
 # where did that come from?
 .directory

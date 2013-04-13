@@ -5,7 +5,7 @@
 # Contributor: Bram Schoenmakers <me@bramschoenmakers.nl>
 
 pkgname=rapidminer
-pkgver=5.3.005
+pkgver=5.3.007
 pkgrel=1
 pkgdesc='An open-source data mining solution.'
 arch=('any')
@@ -15,7 +15,7 @@ depends=('java-runtime')
 optdepends=('gnuplot')
 source=("http://downloads.sourceforge.net/project/rapidminer/1.%20RapidMiner/${pkgver:0:3}/rapidminer-${pkgver}.zip"
         'rapidminer.desktop')
-md5sums=('659b02bbce6b745dac5c78350e18df4c'
+md5sums=('94ddd37a2ff921ff43e8a55d0e6ea071'
          'd0dbcb8ad72c285efec9740c1cda65e0')
 
 package() {

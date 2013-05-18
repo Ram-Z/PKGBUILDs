@@ -3,7 +3,7 @@
 # Mantainer: sxe <sxxe@gmx.de>
 
 pkgname=qupzilla-git
-pkgver=20130404
+pkgver=20130425
 pkgrel=1
 pkgdesc="A new and very fast open source browser based on WebKit core, written in Qt Framework."
 arch=('i686' 'x86_64')
@@ -14,31 +14,15 @@ depends=( 'qt' 'qtwebkit')
 makedepends=('git')
 provides=('qupzilla')
 conflicts=('qupzilla')
-source=()
-md5sums=()
+source=("${pkgname}::git://github.com/QupZilla/qupzilla.git")
+md5sums=('SKIP')
 
-_gitroot="https://github.com/QupZilla/qupzilla.git"
-_gitname="qupzilla"
+pkgver() {
+    date +%Y%m%d
+}
 
 build() {
-    cd $srcdir
-
-      msg "Connecting to github.com GIT server...."
-  if [ -d ${srcdir}/$_gitname ] ; then
-      cd $_gitname && git pull origin
-      msg "The local files are updated."
-  else
-      git clone $_gitroot
-  fi
-      msg "GIT checkout done or server timeout"
-
-      msg "Starting make..."
-
-  if [ -d ${srcdir}/${_gitname}-build ]; then
-      rm -rf ${srcdir}/${_gitname}-build
-  fi
-    cp -r ${srcdir}/$_gitname ${srcdir}/${_gitname}-build
-    cd ${srcdir}/${_gitname}-build
+    cd "$srcdir/$pkgname"
 
     export USE_WEBGL="true"
     export KDE="true"
@@ -48,6 +32,9 @@ build() {
     qmake
     make clean
     make
-    make INSTALL_ROOT="$pkgdir/" install
+}
 
+package() {
+    cd "$srcdir/$pkgname"
+    make INSTALL_ROOT="$pkgdir/" install
 }

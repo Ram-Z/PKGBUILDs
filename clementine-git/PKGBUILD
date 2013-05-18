@@ -1,6 +1,6 @@
 pkgname=clementine-git
-_realname=clementine-player
-pkgver=20130407
+_gitname=clementine-player
+pkgver=20130502
 pkgrel=1
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 arch=('i686' 'x86_64')
@@ -16,32 +16,23 @@ makedepends=('git' 'boost' 'cmake' 'mesa')
 provides=('clementine')
 conflicts=('clementine' 'clementine-svn')
 replaces=('clementine' 'clementine-svn')
-source=()
-md5sums=()
+source=("${pkgname}::git+https://code.google.com/p/${_gitname}")
+md5sums=('SKIP')
 
-_gitroot="https://code.google.com/p/${_realname}"
-_gitname=${_realname}
+pkgver() {
+    date +%Y%m%d
+}
 
 build() {
-    if [ -d ${_gitname} ]; then
-        cd ${_gitname} && git pull origin
-        msg "The local files are updated."
-    else
-        git clone ${_gitroot}
-    fi
-
-    msg "GIT checkout done or server timeout"
-    msg "Starting make..."
-
-    mkdir -p ${srcdir}/${_gitname}/build
-    cd ${srcdir}/${_gitname}/build
+    mkdir -p ${srcdir}/${pkgname}/build
+    cd ${srcdir}/${pkgname}/build
 
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_GIO=OFF -DBUILDBOT_REVISION=$pkgver
     make
 }
 
 package() {
-    cd ${srcdir}/${_gitname}/build
+    cd ${srcdir}/${pkgname}/build
 
     make DESTDIR=${pkgdir} install; FAIL=$?
 }

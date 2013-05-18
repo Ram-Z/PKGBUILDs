@@ -1,8 +1,8 @@
 # Maintainer: Samir Benmendil <samir.benmendil[at]gmail[dot]com>
 
 pkgname=psychonauts
-pkgver=20120104
-_pkgver=01042012
+pkgver=20130506
+_pkgver=05062013
 pkgrel=1
 pkgdesc="[Humble Bundle 5] A platform video game created by Tim Schafer."
 arch=('x86_64')
@@ -23,7 +23,7 @@ options=(!strip)
 PKGEXT='.pkg.tar'
 
 _archive="$pkgname-linux-$_pkgver-bin"
-_archive_md5="506fdad8ce1610cc39bfad137543d714"
+_archive_md5="cd207acda0613cf06bc153b4b85dceb3"
 
 _bundle=('humblebundle5')
 

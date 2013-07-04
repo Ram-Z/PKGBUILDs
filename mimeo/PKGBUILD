@@ -1,0 +1,26 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+#Maintainer: Xyne <ac xunilhcra enyx, backwards>
+
+pkgname=mimeo
+pkgver=2013.4
+pkgrel=1
+pkgdesc='Open files by MIME-type or file name using regular expressions.'
+arch=("any")
+license=("GPL")
+url="http://xyne.archlinux.ca/projects/mimeo"
+depends=(python2 pyxdg file)
+optdepends=('MIME-types: for recognizing more MIME-types')
+source=("http://xyne.archlinux.ca/projects/mimeo/src/${pkgname}-${pkgver}.tar.xz")
+md5sums=('73b6584fda98049998e3f309547aaedc')
+sha512sums=('95615034c2f4cdf38376b72559bf31f6974e6027dd095313fc71b62371990d902e03946203a1409ea320c80b69d0053b8bb3d1462b957720e4d18d074918a2a9')
+
+package ()
+{
+  cd "$srcdir/$pkgname-$pkgver"
+  python2 setup.py install --root="$pkgdir"/ --optimize=1
+  install -Dm755 "$pkgname" "$pkgdir/usr/bin/$pkgname"
+}
+
+
+# vim: set ts=2 sw=2 et:

@@ -1,0 +1,54 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Lex Black <autumn-wind at web dot de>
+# Contributor: matthewbauer <mjbauer95+aur@gmail.com>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+# Contributor: cantabile <cantabile dot desu at gmail dot com>
+
+_pkgname=xdg-utils
+pkgname=${_pkgname}-mimeo
+_oldver=1.1.0
+_gitver=050333e34e2fe7430ad2ead37e5a0420ac0c2a3e # xdg-mime does not search mimeinfo.cache
+_gitdate=20121008
+pkgver=${_oldver}.git${_gitdate}
+pkgrel=1
+pkgdesc='Command line tools that assist applications with a variety of desktop integration tasks; patched to use mimeo'
+arch=('any')
+url='http://portland.freedesktop.org/'
+license=('MIT')
+depends=('bash' 'xorg-server-utils' 'mimeo')
+makedepends=('docbook-xsl' 'lynx' 'xmlto')
+optdepends=('kdebase-runtime: for KDE support in xdg-open'
+        'libgnome: for GNOME support in xdg-open'
+        'exo: for Xfce support in xdg-open'
+        'xorg-xprop: for Xfce support in xdg-open'
+        'pcmanfm: for LXDE support in xdg-open'
+        'mimeo: for mimeo support in xdg-open'
+        'perl-file-mimeinfo: for generic support in xdg-open')
+provides=('xdg-utils')
+conflicts=('xdg-utils')
+source=("http://cgit.freedesktop.org/xdg/xdg-utils/snapshot/xdg-utils-${_gitver}.tar.gz"
+        mimeo-detection.diff)
+md5sums=('cc321af15724cf7ee1ef014c4a0120ea'
+         'ac6a5d17fb5fc6bb352257e72008d15d')
+
+prepare() {
+        cd ${srcdir}/${_pkgname}-${_gitver}
+        patch -p1 -i "${srcdir}"/mimeo-detection.diff
+}
+
+build() {
+        cd ${srcdir}/${_pkgname}-${_gitver}
+        ./configure --prefix=/usr --mandir=/usr/share/man
+        make scripts-clean -C scripts
+        make man scripts -C scripts
+}
+
+package() {
+        cd ${srcdir}/${_pkgname}-${_gitver}
+        make DESTDIR="${pkgdir}" install
+        install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
+
+        # install empty directory to prevent xdg-desktop-menu install *.desktop to fail, see FS#33316
+        install -dm755 $pkgdir/usr/share/desktop-directories
+}

@@ -11,7 +11,7 @@ _oldver=1.1.0
 _gitver=050333e34e2fe7430ad2ead37e5a0420ac0c2a3e # xdg-mime does not search mimeinfo.cache
 _gitdate=20121008
 pkgver=${_oldver}.git${_gitdate}
-pkgrel=1
+pkgrel=2
 pkgdesc='Command line tools that assist applications with a variety of desktop integration tasks; patched to use mimeo'
 arch=('any')
 url='http://portland.freedesktop.org/'
@@ -29,7 +29,8 @@ provides=('xdg-utils')
 conflicts=('xdg-utils')
 source=("http://cgit.freedesktop.org/xdg/xdg-utils/snapshot/xdg-utils-${_gitver}.tar.gz"
         mimeo-detection.diff)
-md5sums=('cc321af15724cf7ee1ef014c4a0120ea'
+# the snapshot always gets a different md5 -> skip it
+md5sums=(SKIP
          'ac6a5d17fb5fc6bb352257e72008d15d')
 
 prepare() {

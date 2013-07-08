@@ -1,0 +1,18 @@
+# Maintainer: Michael Düll <mail@akurei.me> PGP-Key: AAAEE882
+
+pkgname='wicd-eduroam-rub'
+pkgver=20120508
+pkgrel=3
+pkgdesc="wicd-eduroam for the Ruhr-Universität Bochum (RUB)"
+arch=('any')
+url="http://wicd.sourceforge.net/"
+license=('WTFPL')
+depends=('wicd')
+install=eduroam-rub.install
+source=(eduroam-rub)
+
+package(){
+    install -Dm 644 eduroam-rub $pkgdir/etc/wicd/encryption/templates/eduroam-rub
+}
+
+sha512sums=('f6b8339ce9e62efd2d2536c4b901f0bfcd6231d3754c768967be51b624ce58833441f421746734da69497ff52eea8eea0b1a56777e058d6e04441a19ce642f9b')

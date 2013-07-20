@@ -11,8 +11,8 @@ license=('GPL')
 conflicts=('screenfetch-git')
 depends=('bash' 'xorg-utils')
 optdepends=('scrot: To take screenshot')
-source=("http://git.silverirc.com/cgit.cgi/screenfetch.git/snapshot/${pkgname}-${pkgver}.tar.gz")
-md5sums=('4b007edb873acc449fe54428e5c81d0c')
+source=("http://git.silverirc.com/cgit.cgi/screenfetch.git/snapshot/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('444c786cc91851aa7efba2cc7267d2b3')
 
 package() {
   cd "$srcdir/${pkgname}-${pkgver}"

@@ -1,6 +1,6 @@
 pkgname=clementine-git
 _gitname=clementine-player
-pkgver=20130502
+pkgver=20130717
 pkgrel=1
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 arch=('i686' 'x86_64')
@@ -35,4 +35,5 @@ package() {
     cd ${srcdir}/${pkgname}/build
 
     make DESTDIR=${pkgdir} install; FAIL=$?
+    rm -r "${pkgdir}/home"
 }

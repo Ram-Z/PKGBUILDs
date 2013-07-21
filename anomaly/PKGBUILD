@@ -2,22 +2,23 @@
 # Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
 
 pkgname='anomaly'
-pkgver=1327984913
+pkgver=1364850491
 pkgrel=1
 pkgdesc="[Humble Bundle Android] Tower Offense at its best!"
-arch=('i686' 'x86_64')
- [[ $CARCH == 'i686' ]]   && _arch='i386'
- [[ $CARCH == 'x86_64' ]] && _arch='amd64'
+arch=('x86_64')
 url="http://www.anomalythegame.com"
 screenshot="http://blog.anomalythegame.com/images/cms/gallerylargephoto206.jpg"
 license=('custom')
+makedepends=('unzip')
+source=(anomaly.desktop
+        anomaly.sh)
+md5sums=('99525f1aa840faf2c404e77e6bc93400'
+         'bb89f6be474294510033d2ac89169c5e')
 options=("!strip")
 
 PKGEXT=".pkg.tar"
- [[ $CARCH == 'i686' ]]   && _archive="linux-anomaly-${_arch}-${pkgver}.tar.gz" \
-                          && _archive_md5='705569fe43db8d7d771572fe905d2123'
- [[ $CARCH == 'x86_64' ]] && _archive="linux-anomaly-${_arch}.tar.gz" \
-                          && _archive_md5='5cf109cd3c55075cf8a642eab87ccec4'
+_archive="AnomalyWarzoneEarth-Installer_Humble_Linux_${pkgver}.zip"
+_archive_md5='acf5147293b42c7625aea6ad0e56afc4'
 _bundle=('humblebundleandroid' 'humblebundleandroid3')
 
 _humble() {
@@ -60,30 +61,27 @@ build() {
   cd "${srcdir}"
   _humble
 
-  tar xzf "${_archive}" || true
+  bsdtar -xf "${_archive}"
+  bsdtar -xf "AnomalyWarzoneEarth-Installer" || true
 
   unset _archive
+
+  rm data/libgcc_s.so.1
+  rm data/libopenal.so.1
+  rm data/libstdc++.so.6
 }
 
 
 package() {
-	cd "${srcdir}/Anomaly"
+  cd "${srcdir}"
 
-	INSTALL_PATH="/opt/anomaly"
+  INSTALL_PATH="/opt/anomaly"
 
-	sed 's:\$INSTALL_PATH\$:'${INSTALL_PATH}':' anomaly.desktop.in > anomaly.desktop
-	sed 's:\$INSTALL_PATH\$:'${INSTALL_PATH}':' anomaly.in > anomaly
-	rm anomaly.desktop.in anomaly.in install.sh uninstall.sh
+  install -d "${pkgdir}/opt/${pkgname}"
+  cp -dpr --no-preserve=ownership data/* "${pkgdir}/opt/${pkgname}"
 
-	chmod +x anomaly
-
-	install -d "${pkgdir}/opt/${pkgname}"
-  cp -dpr --no-preserve=ownership * "${pkgdir}/opt/${pkgname}"
-
-	install -d "${pkgdir}/usr/bin"
-	ln -s "/opt/anomaly/anomaly" "${pkgdir}/usr/bin/anomaly"
-	install -Dm644 anomaly.desktop "${pkgdir}/usr/share/applications/anomaly.desktop"
-	rm anomaly.desktop
+  install -Dm755 anomaly.sh "${pkgdir}/usr/bin/anomaly"
+  install -Dm644 anomaly.desktop "${pkgdir}/usr/share/applications/anomaly.desktop"
 }
 
 # vim: sts=2 ts=2 sw=2 et

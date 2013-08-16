@@ -3,14 +3,14 @@
 # Mantainer: sxe <sxxe@gmx.de>
 
 pkgname=qupzilla-git
-pkgver=20130425
+pkgver=20130812
 pkgrel=1
 pkgdesc="A new and very fast open source browser based on WebKit core, written in Qt Framework."
 arch=('i686' 'x86_64')
 url="http://www.qupzilla.com/"
 screenshot="http://www.qupzilla.com/screens/kde.png"
 license=('GPL')
-depends=( 'qt' 'qtwebkit')
+depends=( 'qt' 'qtwebkit' 'qtwebkit-plugins')
 makedepends=('git')
 provides=('qupzilla')
 conflicts=('qupzilla')
@@ -26,9 +26,7 @@ build() {
 
     export USE_WEBGL="true"
     export KDE="true"
-    export NONBLOCK_JS_DIALOGS="true"
-    export USE_QTWEBKIT_2_2="true"
-   
+
     qmake
     make clean
     make

@@ -1,0 +1,25 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: portix <portix at gmx.net>
+
+pkgname=dwb
+pkgver=2013.03.30
+pkgrel=1
+pkgdesc="A webkit web browser with vi-like keyboard shortcuts, stable snapshot" 
+url="http://portix.bitbucket.org/dwb/"
+arch=('x86_64')
+license=('GPL')
+depends=('libwebkit' 'gtk2')
+provides=("dwb")
+conflicts=('dwb-hg' 'dwb-gtk3-hg' 'dwb-gtk3')
+source=("https://bitbucket.org/portix/dwb/downloads/${pkgname}-${pkgver}.tar.gz")
+md5sums=('bed54418cc6a560e3e6818e44e52a7bb')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make
+}
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+}

@@ -3,11 +3,11 @@
 # Maintainer: Dennis Hamester <dennis [dot] hamester [at] gmail [dot] com>
 
 pkgname=ftl
-pkgver=1.01
+pkgver=1.03.3
 pkgrel=1
 pkgdesc="FTL: Faster Than Light: A spaceship simulation real-time roguelike-like (requires full copy of the game)"
 license=('custom:ftl')
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.ftlgame.com/"
 screenshot="http://s3.amazonaws.com/ksr/projects/78421/photo-full.jpg"
 depends=('mesa')
@@ -19,8 +19,8 @@ sha1sums=('51101e86e6e75d5d0414fd5b5346d003e38160e7'
 
 _bundle=('humblebundleftl')
 
-_archive="FTL.Linux.1.01.tar.gz"
-_archive_md5='ccc337edc35f8710199e64670a9a50c4'
+_archive="FTL.Linux.${pkgver}.tar.gz"
+_archive_md5='56cc8a8c0f67c1bced27397d05f998f1'
 
 _humble() {
   # default to current dir if not set

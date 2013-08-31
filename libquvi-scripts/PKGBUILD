@@ -1,0 +1,28 @@
+# Maintainer:  lMuadib Benedikt Hewer <benedikt.hewer@gmail.com>
+# Contributor: Inkane <neoinkaneglade@aol.com>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Lukas Fleischer <archlinux at cryptocrack dot de>
+
+pkgname=libquvi-scripts
+pkgver=0.9.20130619
+pkgrel=1
+pkgdesc='Library for parsing video download links.'
+arch=('any')
+url='http://quvi.sourceforge.net/'
+license=('LGPL')
+depends=('curl' 'lua')
+options=('!libtool')
+source=("http://downloads.sourceforge.net/sourceforge/quvi/${pkgname}-${pkgver}.tar.xz")
+md5sums=('7030104f089320fe3c2b74b1fe0d6447')
+
+build() {
+  cd "${pkgname}-${pkgver}"
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}

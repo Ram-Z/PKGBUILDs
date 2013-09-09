@@ -9,28 +9,21 @@ license=('GPL3')
 arch=('i686' 'x86_64')
 depends=('libx11' 'dbus-glib' 'libusbx')
 makedepends=('scons' 'boost' 'pkg-config' 'libx11' 'dbus-glib' 'libusb')
-
 source=("http://pingus.seul.org/~grumbel/xboxdrv/$pkgname-linux-$pkgver.tar.bz2"
         'xboxdrv.service'
         'xboxdrv.conf')
-
 md5sums=('7f20b12361770bbff9414a7c6d522c25'
          'c44dc13f6d34cd7fc61c87ecd8c3a547'
          'c73bb9cf8ff763e7c477366472d19813')
-
 build() {
-
   cd "$srcdir/$pkgname-linux-$pkgver"
   make
-
 }
 
 package() {
-
   cd "$srcdir/$pkgname-linux-$pkgver"
   make install PREFIX=/usr DESTDIR="$pkgdir"
 
   install -D -m755 "$srcdir/xboxdrv.service" "$pkgdir/usr/lib/systemd/system/xboxdrv.service"
   install -D -m644 "$srcdir/xboxdrv.conf" "$pkgdir/etc/conf.d/xboxdrv"
-
-} 
+}

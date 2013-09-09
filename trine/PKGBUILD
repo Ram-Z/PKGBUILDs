@@ -127,10 +127,10 @@ package() {
     'libavutil.so.50'
     'libswscale.so.0'
     #'libcv.so.1' -> repeated
-    #'libcxcore.so.1 -> repeated
+    #'libcxcore.so.1' -> repeated
     #'libboost_thread-mt.so.1.35.0' -> repeated
-    #'libPhysXLoader.so.1 -> repeated
-    #'libGLEW.so.1.5 -> repeated
+    #'libPhysXLoader.so.1' -> repeated
+    #'libGLEW.so.1.5' -> repeated
 
     ## trine-launcher
     #32bit

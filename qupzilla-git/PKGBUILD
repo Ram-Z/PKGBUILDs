@@ -3,7 +3,7 @@
 # Mantainer: sxe <sxxe@gmx.de>
 
 pkgname=qupzilla-git
-pkgver=20130812
+pkgver=20130818
 pkgrel=1
 pkgdesc="A new and very fast open source browser based on WebKit core, written in Qt Framework."
 arch=('i686' 'x86_64')

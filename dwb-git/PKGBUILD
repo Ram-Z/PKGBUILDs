@@ -11,6 +11,7 @@ url="http://portix.bitbucket.org/dwb"
 arch=('x86_64')
 license=('GPL')
 depends=('libwebkit' 'desktop-file-utils')
+optdepends=('glib-networking: TLS/SSL support')
 provides=("dwb")
 source=("git+https://portix@bitbucket.org/portix/dwb.git")
 install=dwb.install

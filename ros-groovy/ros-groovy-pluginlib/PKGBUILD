@@ -1,0 +1,39 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+pkgdesc="ROS - provides tools for writing and dynamically loading plugins."
+url='http://www.ros.org/'
+
+pkgname='ros-groovy-pluginlib'
+pkgver='1.9.20'
+arch=('i686' 'x86_64')
+pkgrel=1
+license=('BSD, Boost Software License')
+makedepends=('ros-build-tools')
+
+depends=(ros-groovy-class-loader
+  ros-groovy-catkin
+  ros-groovy-roslib
+  ros-groovy-rosconsole
+  boost
+  tinyxml)
+
+build() {
+  [ -f /opt/ros/groovy/setup.bash ] && source /opt/ros/groovy/setup.bash
+  if [ -d ${srcdir}/pluginlib ]; then
+    cd ${srcdir}/pluginlib
+    git fetch origin --tags
+    git reset --hard release/groovy/pluginlib/${pkgver}-0
+  else
+    git clone -b release/groovy/pluginlib/${pkgver}-0 git://github.com/ros-gbp/pluginlib-release.git ${srcdir}/pluginlib
+  fi
+  [ -d ${srcdir}/build ] || mkdir ${srcdir}/build
+  cd ${srcdir}/build
+  /usr/share/ros-build-tools/fix-python-scripts.sh ${srcdir}/pluginlib
+  cmake ${srcdir}/pluginlib -DCATKIN_BUILD_BINARY_PACKAGE=ON -DCMAKE_INSTALL_PREFIX=/opt/ros/groovy -DPYTHON_EXECUTABLE=/usr/bin/python2 -DPYTHON_INCLUDE_DIR=/usr/include/python2.7 -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so -DSETUPTOOLS_DEB_LAYOUT=OFF
+  make
+}
+
+package() {
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}/" install
+}

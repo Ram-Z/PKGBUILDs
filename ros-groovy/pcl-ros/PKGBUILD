@@ -1,0 +1,36 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: erwinkendo <erwinkendo@gmail.com>
+# Contributor: hauptmech <hauptmech@gmail.com>
+# Contributor: pallegro <hollense@cs.dal.ca>
+_name=PCL
+pkgname=pcl-ros
+pkgver=1.6.0
+pkgrel=1
+pkgdesc="Point Cloud Library for ROS"
+arch=('i686' 'x86_64')
+url="http://pointclouds.org"
+license=('GPL')
+depends=('boost' 'eigen3' 'flann' 'vtk')
+optdepends=('qhull' 'openni' 'cuda-toolkit')
+makedepends=('git' 'cmake' 'python2')
+provides=('pcl-ros')
+source=("http://www.pointclouds.org/assets/files/${pkgver}/${_name}-${pkgver}-Source.tar.bz2"
+        "http://dev.pointclouds.org/attachments/download/925/pcl-1.6-rosintegration-v2.diff")
+md5sums=('f83ca5d0ff290412b0807864b95eba26'
+         'eb3c4dd525cc574effb32d3b1ccd2a00')
+
+build() {
+  cd "$srcdir/${_name}-${pkgver}-Source"
+  patch -p0 <../pcl-1.6-rosintegration-v2.diff
+  mkdir build && cd build
+  cmake ..  -DCMAKE_INSTALL_PREFIX=/opt/ros/fuerte -DCMAKE_BUILD_TYPE=Release -DSETUPTOOLS_DEB_LAYOUT=OFF -DUSE_ROS=ON -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2 -DPYTHON_VERSION_XDOTY:STRING=2.7
+  make
+}
+
+package() {
+  cd "$srcdir/${_name}-${pkgver}-Source/build"
+  make DESTDIR="$pkgdir/" install
+  sed -i 's/1.5/1.6/g' ${pkgdir}/opt/ros/fuerte/share/pcl-1.6/manifest.xml
+  ln -s /opt/ros/fuerte/share/pcl-1.6 $pkgdir/opt/ros/fuerte/share/pcl
+}

@@ -4,11 +4,13 @@ pkgdesc="ROS - Package Tool"
 url='http://www.ros.org/'
 
 pkgname='ros-groovy-stage_ros'
-pkgver='1.7.1'
+pkgver='1.7.2'
 arch=('i686' 'x86_64')
 pkgrel=1
 license=('BSD')
 makedepends=('ros-build-tools')
+source=("stage_ros::git://github.com/ros-gbp/stage_ros-release.git#tag=release/hydro/stage_ros/${pkgver}-0")
+md5sums=('SKIP')
 
 depends=(
   ros-groovy-catkin
@@ -16,22 +18,13 @@ depends=(
   pkg-config)
 
 build() {
-  [ -f /opt/ros/groovy/setup.bash ] && source /opt/ros/groovy/setup.bash
-  if [ -d ${srcdir}/stage_ros ]; then
-    cd ${srcdir}/stage_ros
-    git fetch origin --tags
-    git reset --hard release/hydro/stage_ros
-  else
-    git clone -b release/hydro/stage_ros git://github.com/ros-gbp/stage_ros-release.git ${srcdir}/stage_ros
-  fi
-  [ -d ${srcdir}/build ] || mkdir ${srcdir}/build
-  cd ${srcdir}/build
+  cd ${srcdir}/stage_ros
   /usr/share/ros-build-tools/fix-python-scripts.sh ${srcdir}/stage_ros
   cmake ${srcdir}/stage_ros -DCATKIN_BUILD_BINARY_PACKAGE=ON -DCMAKE_INSTALL_PREFIX=/opt/ros/groovy -DPYTHON_EXECUTABLE=/usr/bin/python2 -DPYTHON_INCLUDE_DIR=/usr/include/python2.7 -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so -DSETUPTOOLS_DEB_LAYOUT=OFF
   make
 }
 
 package() {
-  cd "${srcdir}/build"
+  cd "${srcdir}/stage_ros"
   make DESTDIR="${pkgdir}/" install
 }

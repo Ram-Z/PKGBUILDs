@@ -9,6 +9,8 @@ arch=('i686' 'x86_64')
 pkgrel=1
 license=('BSD, Creative Commons')
 makedepends=('ros-build-tools')
+source=("rviz::git://github.com/ros-gbp/rviz-release.git#tag=release/rviz/${pkgver}")
+md5sums=('SKIP')
 
 depends=(ros-groovy-std-srvs
   ros-groovy-roscpp
@@ -41,23 +43,13 @@ depends=(ros-groovy-std-srvs
 )
 
 build() {
-  [ -f /opt/ros/groovy/setup.bash ] && source /opt/ros/groovy/setup.bash
-  if [ -d ${srcdir}/rviz ]; then
-    cd ${srcdir}/rviz
-    git fetch origin --tags
-    git reset --hard release/rviz/${pkgver}
-  else
-    git clone -b release/rviz/${pkgver} git://github.com/ros-gbp/rviz-release.git ${srcdir}/rviz
-  fi
-  cd ${srcdir}/rviz 
-  [ -d ${srcdir}/build ] || mkdir ${srcdir}/build
-  cd ${srcdir}/build
+  cd ${srcdir}/rviz
   /usr/share/ros-build-tools/fix-python-scripts.sh ${srcdir}/rviz
   cmake ${srcdir}/rviz -DCATKIN_BUILD_BINARY_PACKAGE=ON -DCMAKE_INSTALL_PREFIX=/opt/ros/groovy -DPYTHON_EXECUTABLE=/usr/bin/python2 -DPYTHON_INCLUDE_DIR=/usr/include/python2.7 -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so -DSETUPTOOLS_DEB_LAYOUT=OFF
   make
 }
 
 package() {
-  cd "${srcdir}/build"
+  cd "${srcdir}/rviz"
   make DESTDIR="${pkgdir}/" install
 }

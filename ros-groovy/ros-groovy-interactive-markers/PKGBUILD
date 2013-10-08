@@ -9,6 +9,8 @@ arch=('i686' 'x86_64')
 pkgrel=1
 license=('BSD')
 makedepends=('ros-build-tools')
+source=("interactive_markers::git://github.com/ros-gbp/interactive_markers-release.git#tag=release/groovy/interactive_markers/${pkgver}-0")
+md5sums=('SKIP')
 
 depends=(ros-groovy-message-filters
   ros-groovy-roscpp
@@ -22,22 +24,13 @@ depends=(ros-groovy-message-filters
   ros-groovy-rosbag)
 
 build() {
-  [ -f /opt/ros/groovy/setup.bash ] && source /opt/ros/groovy/setup.bash
-  if [ -d ${srcdir}/interactive_markers ]; then
-    cd ${srcdir}/interactive_markers
-    git fetch origin --tags
-    git reset --hard release/groovy/interactive_markers/${pkgver}-0
-  else
-    git clone -b release/groovy/interactive_markers/${pkgver}-0 git://github.com/ros-gbp/interactive_markers-release.git ${srcdir}/interactive_markers
-  fi
-  [ -d ${srcdir}/build ] || mkdir ${srcdir}/build
-  cd ${srcdir}/build
+  cd ${srcdir}/interactive_markers
   /usr/share/ros-build-tools/fix-python-scripts.sh ${srcdir}/interactive_markers
   cmake ${srcdir}/interactive_markers -DCATKIN_BUILD_BINARY_PACKAGE=ON -DCMAKE_INSTALL_PREFIX=/opt/ros/groovy -DPYTHON_EXECUTABLE=/usr/bin/python2 -DPYTHON_INCLUDE_DIR=/usr/include/python2.7 -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so -DSETUPTOOLS_DEB_LAYOUT=OFF
   make
 }
 
 package() {
-  cd "${srcdir}/build"
+  cd "${srcdir}/interactive_markers"
   make DESTDIR="${pkgdir}/" install
 }

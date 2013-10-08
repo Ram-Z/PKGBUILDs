@@ -9,6 +9,8 @@ arch=('i686' 'x86_64')
 pkgrel=1
 license=('BSD')
 makedepends=('ros-build-tools')
+source=("actionlib::git://github.com/ros-gbp/actionlib-release.git#tag=release/actionlib/${pkgver}")
+md5sums=('SKIP')
 
 depends=(ros-groovy-roscpp
   ros-groovy-catkin
@@ -25,22 +27,13 @@ depends=(ros-groovy-roscpp
   boost)
 
 build() {
-  [ -f /opt/ros/groovy/setup.bash ] && source /opt/ros/groovy/setup.bash
-  if [ -d ${srcdir}/actionlib ]; then
-    cd ${srcdir}/actionlib
-    git fetch origin --tags
-    git reset --hard release/actionlib/${pkgver}
-  else
-    git clone -b release/actionlib/${pkgver} git://github.com/ros-gbp/actionlib-release.git ${srcdir}/actionlib
-  fi
-  [ -d ${srcdir}/build ] || mkdir ${srcdir}/build
-  cd ${srcdir}/build
+  cd ${srcdir}/actionlib
   /usr/share/ros-build-tools/fix-python-scripts.sh ${srcdir}/actionlib
   cmake ${srcdir}/actionlib -DCATKIN_BUILD_BINARY_PACKAGE=ON -DCMAKE_INSTALL_PREFIX=/opt/ros/groovy -DPYTHON_EXECUTABLE=/usr/bin/python2 -DPYTHON_INCLUDE_DIR=/usr/include/python2.7 -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so -DSETUPTOOLS_DEB_LAYOUT=OFF
   make
 }
 
 package() {
-  cd "${srcdir}/build"
+  cd "${srcdir}/actionlib"
   make DESTDIR="${pkgdir}/" install
 }

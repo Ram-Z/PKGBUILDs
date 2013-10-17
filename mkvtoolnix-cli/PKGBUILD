@@ -5,7 +5,7 @@
 
 pkgname=mkvtoolnix-cli
 _pkgname=mkvtoolnix
-pkgver=6.0.0
+pkgver=6.4.1
 pkgrel=1
 pkgdesc="Set of tools to create, edit and inspect Matroska files."
 arch=('i686' 'x86_64')
@@ -23,7 +23,7 @@ provides=mkvtoolnix
 replaces=mkvtoolnix
 conflicts=mkvtoolnix
 source=("http://www.bunkus.org/videotools/$_pkgname/sources/$_pkgname-$pkgver.tar.xz")
-md5sums=('869dac2061f4ef91dd96ce6bb0fafecb')
+md5sums=('1e878646b34eb2c32772d05b91f84f4c')
 
 build() {
   cd $srcdir/$_pkgname-$pkgver

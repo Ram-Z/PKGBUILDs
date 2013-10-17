@@ -6,7 +6,7 @@
 
 pkgname=tt-rss
 _realname=Tiny-Tiny-RSS
-pkgver=1.8
+pkgver=1.9
 pkgrel=1
 pkgdesc="Web-based news feed (RSS/Atom) aggregator"
 arch=('any')
@@ -18,8 +18,8 @@ optdepends=('apache' 'mysql' 'postgresql' 'php-curl' 'php-gd')
 install=tt-rss.install
 source=(https://github.com/gothfox/Tiny-Tiny-RSS/archive/${pkgver}.tar.gz
         tt-rss.service)
-md5sums=('d6d9957acb2442dc7ef8083796ead048'
-         'd3ba69d6f0d0a6bce7fab7f235d6afdf')
+sha256sums=('f2eb2141b09510b996bb88f129d184a455d6f1fc7fe1f3241811760a6323f455'
+            '41309d75318b32a6a8152c36cbc8431a9173b58ca98f0b73d09b1d2242000737')
 
 package() {
     cd "$srcdir/${_realname}-$pkgver"

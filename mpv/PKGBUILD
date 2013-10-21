@@ -4,14 +4,15 @@
 
 pkgname=mpv
 pkgver=0.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
 license=('GPL')
 url="http://mpv.io"
-depends=('portaudio' 'ffmpeg' 'lcms2' 'libxinerama' 'libdvdread' 'libquvi' 'mpg123' 'libxv' 'libxkbcommon' 'libva')
+depends=('portaudio' 'ffmpeg' 'lcms2' 'libxinerama' 'libdvdread' 'libquvi' 'mpg123' 'libxv' 'libxkbcommon' 'libva' 'desktop-file-utils' 'xdg-utils')
 makedepends=('mesa' 'docutils')
 options=(!emptydirs)
+install=${pkgname}.install
 source=("https://github.com/mpv-player/$pkgname/archive/v${pkgver}.tar.gz")
 md5sums=('4e7c8823354f97753f0cbe17c61ec211')
 

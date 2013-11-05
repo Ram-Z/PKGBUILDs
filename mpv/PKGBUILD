@@ -3,8 +3,8 @@
 # Contributor: Eivind Uggedal <eivind@uggedal.com>
 
 pkgname=mpv
-pkgver=0.2.1
-pkgrel=2
+pkgver=0.2.2
+pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
 license=('GPL')
@@ -14,7 +14,7 @@ makedepends=('mesa' 'docutils')
 options=(!emptydirs)
 install=${pkgname}.install
 source=("https://github.com/mpv-player/$pkgname/archive/v${pkgver}.tar.gz")
-md5sums=('4e7c8823354f97753f0cbe17c61ec211')
+md5sums=('632d1ee368fe7355563047bbdcd7b08a')
 
 build() {
   # Custom CFLAGS break the mpv build

@@ -3,46 +3,41 @@
 
 pkgname=vba-m-svn
 _pkgname=vbam
-pkgver=1147
+pkgver=1226
 pkgrel=1
 pkgdesc="A VBA fork that focuses on consolidating existing ports and improving VBA in general"
-arch=(i686 x86_64)
-url="http://vba-m.com"
+arch=(x86_64)
+url="http://vba-m.ngemu.com"
 license=('GPL')
-depends=('sdl' 'libglademm' 'sfml' 'pkg-config' 'gtkglextmm')
+depends=('gtkmm' 'sdl' 'glibmm' 'libpng' 'zlib' 'cairo' 'mesa' 'gtkglext' 'gtkglextmm' 'libxv' 'hicolor-icon-theme' 'desktop-file-utils')
 makedepends=('cmake' 'pkg-config' 'nasm' 'subversion')
 install='vba-m.install'
+source=("${pkgname}::svn+https://$_pkgname.svn.sourceforge.net/svnroot/$_pkgname/trunk")
+md5sums=('SKIP')
 
-_svntrunk=http://$_pkgname.svn.sourceforge.net/svnroot/$_pkgname/trunk
-_svnmod=$_pkgname
+pkgver() {
+  cd $pkgname
+
+  svnversion | tr -d [A-z]
+}
 
 build() {
-  cd $srcdir
- 
-  if [ -d $_svnmod/.svn ]; then
-    (cd $_svnmod && svn up -r $pkgver)
-  else
-    svn co $_svntrunk --config-dir ./ -r $pkgver $_svnmod
-  fi
- 
-  msg "SVN checkout done or server timeout"
-  msg "Starting make..."
- 
-  rm -rf $srcdir/$_svnmod-build
-  cp -r $srcdir/$_svnmod $srcdir/$_svnmod-build
-  cd $srcdir/$_svnmod-build
+  cd $pkgname
+
+  export PKG_CONFIG_PATH=/usr/lib/ffmpeg-compat/pkgconfig/:$PKG_CONFIG_PATH
 
   cmake . \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DDATA_INSTALL_DIR:PATH=share/vbam/gtk \
-    -DVERSION=$pkgver \
     -DENABLE_WX=OFF \
+    -DENABLE_LINK=OFF \
     -DCMAKE_CXX_FLAGS=" -fpermissive"
   make
 }
 
 package() {
-  cd "$srcdir/$_svnmod-build"
+  cd $pkgname
+
   make DESTDIR=$pkgdir install
 }
 

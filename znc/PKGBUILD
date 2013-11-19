@@ -14,7 +14,7 @@ arch=('i686' 'x86_64')
 depends=('libsasl')
 makedepends=('tcl' 'python3' 'perl')
 optdepends=('tcl: modtcl module'
-            'python: modpython module'
+            'python3: modpython module'
             'perl: modperl module'
             'cyrus-sasl: saslauth module')
 install=$pkgname.install

@@ -2,8 +2,8 @@
 # Contributer: Yochai Gal <yochaigal@gmail.com>
 
 pkgname=supermeatboy
-pkgver=20120607
-_pkgver=06072012
+pkgver=20131111
+_pkgver=11112013
 pkgrel=1
 pkgdesc="[Humble Bundle 4] Super Meat Boy is a tough as nails platformer where you play as an animated cube of meat."
 arch=('i686' 'x86_64')
@@ -12,16 +12,14 @@ arch=('i686' 'x86_64')
 url="http://www.supermeatboy.com/"
 screenshot="http://www.supermeatboy.com/_media/meatboy/cornerlogo.jpg"
 license=('custom')
-depends=('openal' 'sdl')
+depends=('openal' 'gcc-libs')
 makedepends=('unzip' 'tar')
-source=('supermeatboy.desktop'
-        'supermeatboy.sh')
-md5sums=('ceda8cdca2aaff63a9cae2ef7d7cf0d4'
-         '818b03f82053ce6e0e996a780869e110')
+source=('supermeatboy.desktop')
+md5sums=('ceda8cdca2aaff63a9cae2ef7d7cf0d4')
 PKGEXT='.pkg.tar'
 
 _archive="supermeatboy-linux-${_pkgver}-bin"
-_archive_md5="90a563ff103b4610b41af5fd2bccb21a"
+_archive_md5="fc024d757395eebfdee342571671332b"
 
 _bundle=('humblebundle4' 'humblebundle5')
 
@@ -69,16 +67,17 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/${pkgname}/data"
+  cd "${srcdir}/${pkgname}"
 
-  install -d "${pkgdir}/opt/${pkgname}"
-  cp -dpr --no-preserve=ownership Levels resources UserData "${pkgdir}/opt/${pkgname}"
+  install -d "${pkgdir}/opt"
+  cp -Rl data "${pkgdir}/opt/${pkgname}"
+  chmod 644 "${pkgdir}/opt/${pkgname}/resources/Shaders/"*.bin
+  rm -rf "${pkgdir}/opt/${pkgname}/x86"
 
-  install -Dm644 buttonmap.cfg gameaudio.dat gamedata.dat locdb.txt README-linux.txt supermeatboy.png \
-    "${pkgdir}/opt/${pkgname}"
-  install -Dm755 "${_arch}/SuperMeatBoy-${_arch}" "${pkgdir}/opt/${pkgname}/SuperMeatBoy"
+  rm "${pkgdir}/opt/${pkgname}/amd64/libopenal.so.1"
 
-  install -Dm755 "${srcdir}/supermeatboy.sh" "${pkgdir}/usr/bin/supermeatboy"
+  install -d "${pkgdir}/usr/bin/"
+  ln -s "/opt/${pkgname}/SuperMeatBoy" "${pkgdir}/usr/bin/${pkgname}"
   install -Dm644 "${srcdir}/supermeatboy.desktop" "${pkgdir}/usr/share/applications/supermeatboy.desktop"
 }
 

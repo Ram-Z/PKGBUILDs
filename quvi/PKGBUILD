@@ -3,7 +3,7 @@
 # Contributor: joyfulgirl@archlinux.us
 
 pkgname=quvi
-pkgver=0.9.3
+pkgver=0.9.5
 pkgrel=1
 pkgdesc='Command-line tool for parsing video download links.'
 arch=('i686' 'x86_64')
@@ -12,7 +12,7 @@ license=('LGPL')
 depends=('libquvi')
 options=('!libtool')
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('365a505b8e64e0c47c315ddecd642168')
+md5sums=('baa1d7b25e9fd173e952e27d4aa4b933')
 
 build() {
   cd "${pkgname}-${pkgver}"

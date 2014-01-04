@@ -1,0 +1,40 @@
+# Maintainer: Ram-Z <ram-z[at]chakra-project[dot]org>
+# Contributor: Valère Monseur <valere dot monseur at ymail dot com>
+
+_pkgname=compton
+pkgname=compton-git
+pkgver=2014.01.02.g14ef615
+pkgrel=1
+pkgdesc="X Compositor (a fork of xcompmgr-dana)"
+arch=('x86_64')
+url="https://github.com/chjj/compton"
+license=('MIT')
+depends=('libgl' 'dbus' 'libxcomposite' 'libxdamage' 'libxrandr' 'pcre' 'libconfig')
+makedepends=('git' 'asciidoc')
+source=("${pkgname}::git://github.com/chjj/compton.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git log -1 --format="%cd.g%h" --date=short | sed 's/-/./g'
+}
+
+build() {
+  cd $pkgname
+
+  make PREFIX=/usr
+  make docs
+}
+
+package() {
+  cd $pkgname
+
+  make PREFIX=$pkgdir/usr install
+
+  # install license
+  install -D -m644 "LICENSE" "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+
+  # example conf
+  install -D -m644 "compton.sample.conf" "$pkgdir/etc/xdg/compton.conf.example"
+}

@@ -13,3 +13,4 @@ pkg/
 *.jar
 # where did that come from?
 .directory
+*.tgz

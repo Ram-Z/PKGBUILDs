@@ -3,8 +3,8 @@
 # Contributor: portix <portix@gmx.net>
 
 pkgname=dwb-git
-_gitname=dwb
-pkgver=2013.11.14.gfe486b3
+_pkgname=dwb
+pkgver=2014.01.03.g51681f6
 pkgrel=1
 pkgdesc="A webkit web browser with vi-like keyboard shortcuts, latest git-pull" 
 url="http://portix.bitbucket.org/dwb"
@@ -20,15 +20,15 @@ makedepends=('git' 'json-c')
 md5sums=('SKIP')
 
 pkgver() {
-    cd "$srcdir"/$_gitname
+    cd "$srcdir"/$_pkgname
     git log -1 --format="%cd.g%h" --date=short | sed 's/-/./g'
 }
 build() {
-  cd "$srcdir/$_gitname"
+  cd "$srcdir/$_pkgname"
   make
 }
 package() {
-  cd "${srcdir}/${_gitname}"
+  cd "${srcdir}/${_pkgname}"
   make DESTDIR="${pkgdir}" install \
       BASHCOMPLETION=/usr/share/bash-completion/completions
 }

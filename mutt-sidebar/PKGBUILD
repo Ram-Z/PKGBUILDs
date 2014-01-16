@@ -1,0 +1,117 @@
+# Port from Fedora
+# Maintained by: Gris Ge <cnfourt@gmail.com>
+pkgname=mutt-sidebar
+pkgver=1.5.21
+pkgrel=3
+pkgdesc="A small but very powerful text-based mail client with sidebar-patch"
+patchdate="20120829"
+arch=('x86_64')
+url='http://www.lunar-linux.org/mutt-sidebar/'
+depends=('openssl' 'gdbm' 'mime-types' 'libsasl' 'slang' 'gpgme')
+conflicts=('mutt')
+provides=('mutt')
+source=("ftp://ftp.mutt.org/mutt/devel/mutt-${pkgver}.tar.gz"
+        "http://lunar-linux.org/~tchan/mutt/patch-${pkgver}.sidebar.$patchdate.txt"
+        "mutt-1.5.13-nodotlock.patch"
+        "mutt-1.5.18-manual.patch"
+        "mutt-1.5.18-muttrc.patch"
+        "mutt-1.5.21-cabundle.patch"
+        "mutt-1.5.21-certscomp.patch"
+        "mutt-1.5.21-gpgme-1.2.0.patch"
+        "mutt-1.5.21-hdrcnt.patch"
+        "mutt-1.5.21-notation.patch"
+        "mutt-1.5.21-pgp_verbose_mime.patch"
+        "mutt-1.5.21-pophash.patch"
+        "mutt-1.5.21-syncdebug.patch"
+        "mutt-1.5.21-testcert.patch"
+        "mutt-1.5.21-tmpdir.patch"
+        "mutt-1.5.21-updating.patch"
+        "mutt-1.5.21-writehead.patch"
+        "mutt_ldap_query"
+        "mutt-sidebar-1.5.21-20120829-nion.sidebar-color.diff"
+)
+noextract=("mutt-${pkgver}.tar.gz")
+md5sums=('a29db8f1d51e2f10c070bf88e8a553fd'
+         'e4bb3b47ebf56da15bbd778b8e1ce002'
+         'd749fcedba17a77b5734fa1ab5886e21'
+         '1c8e9ef90b7ce8ce52ac4158b1fa2f14'
+         '9d18a51a9439dc29d768b442439bf59a'
+         '796a571e5ba4aa0f092fc627a0f251d7'
+         '515f95e944d7fcfff3abeeec3b043784'
+         'a7e55400ff1c3e445bf67082ce12a568'
+         '9ddfe180c86e7cf3b57dd6ec4638b472'
+         'f0f610ad4d0c0a3ab5141c4720fdf5fa'
+         'f6520b832a1705c4d6b8502cf15a0538'
+         'a377b81826c0473b4d92f73f474c6bcd'
+         '09d9938f16069dc26cb214a7be93ba7c'
+         '3be4349a1d5fc20bc23e7693210c4c26'
+         '9e7385ee59b58e77b5b6274e2d22364d'
+         '7980737eef5fc871e2ae5ceeb3c48b9d'
+         '815e9bf823107ee0c62e1c0762a376c4'
+         'c92d9e778d1c06d62105dc4f756baa41'
+         'ca2ee9092cf6f8217753a8d2c441f803')
+license=('GPL')
+
+prepare() {
+    rm -rf $srcdir/mutt-$pkgver
+    tar xfv $srcdir/mutt-${pkgver}.tar.gz -C $srcdir/
+    cd $srcdir/mutt-$pkgver
+    patch -p1 -i $srcdir/mutt-1.5.13-nodotlock.patch
+    patch -p1 -i $srcdir/mutt-1.5.18-muttrc.patch
+    patch -p1 -i $srcdir/mutt-1.5.18-manual.patch
+    patch -p1 -i $srcdir/mutt-1.5.21-updating.patch
+    patch -p1 -i $srcdir/mutt-1.5.21-hdrcnt.patch
+    patch -p1 -i $srcdir/mutt-1.5.21-testcert.patch
+    patch -p1 -i $srcdir/mutt-1.5.21-cabundle.patch
+    patch -p1 -i $srcdir/mutt-1.5.21-gpgme-1.2.0.patch
+    patch -p1 -i $srcdir/mutt-1.5.21-pophash.patch
+    patch -p1 -i $srcdir/mutt-1.5.21-certscomp.patch
+    patch -p1 -i $srcdir/mutt-1.5.21-notation.patch
+    patch -p1 -i $srcdir/mutt-1.5.21-syncdebug.patch
+    patch -p1 -i $srcdir/mutt-1.5.21-writehead.patch
+    patch -p1 -i $srcdir/mutt-1.5.21-tmpdir.patch
+    patch -p1 -i $srcdir/mutt-1.5.21-pgp_verbose_mime.patch
+    patch -p1 -i $srcdir/patch-${pkgver}.sidebar.$patchdate.txt
+    patch -p1 -i $srcdir/mutt-sidebar-1.5.21-20120829-nion.sidebar-color.diff
+
+    sed -i.gpgerror 's/`$GPGME_CONFIG --libs`/"\0 -lgpg-error"/' configure
+
+    install -p -m644 $srcdir/mutt_ldap_query mutt_ldap_query
+}
+
+build() {
+    cd $srcdir/mutt-$pkgver
+
+    ./configure \
+        ISPELL=/usr/bin/hunspell \
+        SENDMAIL=/usr/sbin/sendmail \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --disable-external-dotlock \
+        --with-homespool=/var/spool/mail/ \
+        --enable-pop \
+        --enable-imap \
+        --enable-smtp \
+        --enable-pgp \
+        --enable-hcache \
+        --enable-gpgme \
+        --with-ssl=/usr \
+        --with-sasl \
+        --without-idn \
+        --with-regex \
+        --with-slang
+
+    make
+}
+
+package() {
+    cd $srcdir/mutt-$pkgver
+
+    make DESTDIR=$pkgdir install
+
+    rm -f ${pkgdir}/usr/bin/{flea,muttbug}
+    rm -f ${pkgdir}/usr/share/man/man1/{flea,muttbug}.1
+    rm -f ${pkgdir}/etc/mime.types*
+    grep -5 "^color" contrib/sample.muttrc >> \
+      ${pkgdir}/etc/Muttrc
+}

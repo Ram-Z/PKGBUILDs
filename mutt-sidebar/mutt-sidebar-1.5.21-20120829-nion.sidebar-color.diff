@@ -1,0 +1,412 @@
+diff -Nur mutt-1.5.21_old_sidebar/color.c mutt-1.5.21/color.c
+--- mutt-1.5.21_old_sidebar/color.c	2012-10-24 11:49:51.573793383 +0800
++++ mutt-1.5.21/color.c	2012-10-24 12:31:42.805914575 +0800
+@@ -1,20 +1,20 @@
+ /*
+  * Copyright (C) 1996-2002 Michael R. Elkins <me@mutt.org>
+- * 
++ *
+  *     This program is free software; you can redistribute it and/or modify
+  *     it under the terms of the GNU General Public License as published by
+  *     the Free Software Foundation; either version 2 of the License, or
+  *     (at your option) any later version.
+- * 
++ *
+  *     This program is distributed in the hope that it will be useful,
+  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  *     GNU General Public License for more details.
+- * 
++ *
+  *     You should have received a copy of the GNU General Public License
+  *     along with this program; if not, write to the Free Software
+  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+- */ 
++ */
+ 
+ #if HAVE_CONFIG_H
+ # include "config.h"
+@@ -95,6 +95,7 @@
+   { "index",		MT_COLOR_INDEX },
+   { "sidebar_new",	MT_COLOR_NEW },
+   { "sidebar_flagged",	MT_COLOR_FLAGGED },
++  { "sidebar",		MT_COLOR_SIDEBAR},
+   { NULL,		0 }
+ };
+ 
+@@ -105,15 +106,15 @@
+   COLOR_LINE *p = safe_calloc (1, sizeof (COLOR_LINE));
+ 
+   p->fg = p->bg = -1;
+-  
++
+   return (p);
+ }
+ 
+-static void mutt_free_color_line(COLOR_LINE **l, 
++static void mutt_free_color_line(COLOR_LINE **l,
+ 				 int free_colors)
+ {
+   COLOR_LINE *tmp;
+- 
++
+   if(!l || !*l)
+     return;
+ 
+@@ -127,7 +128,7 @@
+   /* we should really introduce a container
+    * type for regular expressions.
+    */
+-  
++
+   regfree(&tmp->rx);
+   mutt_pattern_free(&tmp->color_pattern);
+   FREE (&tmp->pattern);
+@@ -144,6 +145,7 @@
+ 
+   /* set some defaults */
+   ColorDefs[MT_COLOR_STATUS] = A_REVERSE;
++  ColorDefs[MT_COLOR_SIDEBAR] = A_REVERSE;
+   ColorDefs[MT_COLOR_INDICATOR] = A_REVERSE;
+   ColorDefs[MT_COLOR_SEARCH] = A_REVERSE;
+   ColorDefs[MT_COLOR_MARKERS] = A_REVERSE;
+@@ -173,7 +175,7 @@
+     case COLOR_WHITE:
+       strfcpy (dest, missing[1], destlen);
+       return dest;
+-      
++
+     case COLOR_DEFAULT:
+       strfcpy (dest, missing[2], destlen);
+       return dest;
+@@ -201,7 +203,7 @@
+ {
+   COLOR_LIST *p = ColorList;
+   int i;
+-  
++
+ #if defined (USE_SLANG_CURSES)
+   char fgc[SHORT_STRING], bgc[SHORT_STRING];
+ #endif
+@@ -345,8 +347,8 @@
+  * 	  unmono  index pattern [pattern...]
+  */
+ 
+-static int 
+-_mutt_parse_uncolor (BUFFER *buf, BUFFER *s, unsigned long data, BUFFER *err, 
++static int
++_mutt_parse_uncolor (BUFFER *buf, BUFFER *s, unsigned long data, BUFFER *err,
+ 			 short parse_uncolor);
+ 
+ 
+@@ -405,7 +407,7 @@
+   if(
+ #ifdef HAVE_COLOR
+      /* we're running without curses */
+-     option (OPTNOCURSES) 
++     option (OPTNOCURSES)
+      || /* we're parsing an uncolor command, and have no colors */
+      (parse_uncolor && !has_colors())
+      /* we're parsing an unmono command, and have colors */
+@@ -474,14 +476,14 @@
+ }
+ 
+ 
+-static int 
++static int
+ add_pattern (COLOR_LINE **top, const char *s, int sensitive,
+ 	     int fg, int bg, int attr, BUFFER *err,
+ 	     int is_index)
+ {
+ 
+   /* is_index used to store compiled pattern
+-   * only for `index' color object 
++   * only for `index' color object
+    * when called from mutt_parse_color() */
+ 
+   COLOR_LINE *tmp = *top;
+@@ -525,7 +527,7 @@
+     char buf[LONG_STRING];
+ 
+     tmp = mutt_new_color_line ();
+-    if (is_index) 
++    if (is_index)
+     {
+       int i;
+ 
+@@ -568,13 +570,13 @@
+ {
+   int q_level = 0;
+   char *eptr;
+-  
++
+   if(!MoreArgs(s))
+   {
+     strfcpy(err->data, _("Missing arguments."), err->dsize);
+     return -1;
+   }
+-  
++
+   mutt_extract_token(buf, s, 0);
+   if(!mutt_strncmp(buf->data, "quoted", 6))
+   {
+@@ -589,7 +591,7 @@
+     }
+     else
+       *ql = 0;
+-    
++
+     *o = MT_COLOR_QUOTED;
+   }
+   else if ((*o = mutt_getvaluebyname (buf->data, Fields)) == -1)
+@@ -624,12 +626,12 @@
+     strfcpy (err->data, _("color: too few arguments"), err->dsize);
+     return (-1);
+   }
+-  
++
+   mutt_extract_token (buf, s, 0);
+ 
+   if (parse_color_name (buf->data, bg, attr, A_BLINK, err) != 0)
+     return (-1);
+-  
++
+   return 0;
+ }
+ 
+@@ -638,8 +640,8 @@
+ static int
+ parse_attr_spec(BUFFER *buf, BUFFER *s, int *fg, int *bg, int *attr, BUFFER *err)
+ {
+-  
+-  if(fg) *fg = -1; 
++
++  if(fg) *fg = -1;
+   if(bg) *bg = -1;
+ 
+   if (! MoreArgs (s))
+@@ -667,7 +669,7 @@
+     snprintf (err->data, err->dsize, _("%s: no such attribute"), buf->data);
+     return (-1);
+   }
+-  
++
+   return 0;
+ }
+ 
+@@ -681,12 +683,12 @@
+     return attr;
+ }
+ 
+-/* usage: color <object> <fg> <bg> [ <regexp> ] 
++/* usage: color <object> <fg> <bg> [ <regexp> ]
+  * 	  mono  <object> <attr> [ <regexp> ]
+  */
+ 
+-static int 
+-_mutt_parse_color (BUFFER *buf, BUFFER *s, BUFFER *err, 
++static int
++_mutt_parse_color (BUFFER *buf, BUFFER *s, BUFFER *err,
+ 		   parser_callback_t callback, short dry_run)
+ {
+   int object = 0, attr = 0, fg = 0, bg = 0, q_level = 0;
+@@ -699,7 +701,7 @@
+     return -1;
+ 
+   /* extract a regular expression if needed */
+-  
++
+   if (object == MT_COLOR_HEADER || object == MT_COLOR_BODY || object == MT_COLOR_INDEX)
+   {
+     if (!MoreArgs (s))
+@@ -710,18 +712,18 @@
+ 
+     mutt_extract_token (buf, s, 0);
+   }
+-   
++
+   if (MoreArgs (s))
+   {
+     strfcpy (err->data, _("too many arguments"), err->dsize);
+     return (-1);
+   }
+-  
++
+   /* dry run? */
+-  
++
+   if(dry_run) return 0;
+ 
+-  
++
+ #ifdef HAVE_COLOR
+ # ifdef HAVE_USE_DEFAULT_COLORS
+   if (!option (OPTNOCURSES) && has_colors()
+@@ -734,7 +736,7 @@
+   }
+ # endif /* HAVE_USE_DEFAULT_COLORS */
+ #endif
+-  
++
+   if (object == MT_COLOR_HEADER)
+     r = add_pattern (&ColorHdrList, buf->data, 0, fg, bg, attr, err,0);
+   else if (object == MT_COLOR_BODY)
+@@ -757,7 +759,7 @@
+     if (q_level == 0)
+     {
+       ColorDefs[MT_COLOR_QUOTED] = fgbgattr_to_color(fg, bg, attr);
+-      
++
+       ColorQuote[0] = ColorDefs[MT_COLOR_QUOTED];
+       for (q_level = 1; q_level < ColorQuoteUsed; q_level++)
+       {
+@@ -786,10 +788,10 @@
+ int mutt_parse_color(BUFFER *buff, BUFFER *s, unsigned long data, BUFFER *err)
+ {
+   int dry_run = 0;
+-  
++
+   if(option(OPTNOCURSES) || !has_colors())
+     dry_run = 1;
+-  
++
+   return _mutt_parse_color(buff, s, err, parse_color_pair, dry_run);
+ }
+ 
+@@ -798,7 +800,7 @@
+ int mutt_parse_mono(BUFFER *buff, BUFFER *s, unsigned long data, BUFFER *err)
+ {
+   int dry_run = 0;
+-  
++
+ #ifdef HAVE_COLOR
+   if(option(OPTNOCURSES) || has_colors())
+     dry_run = 1;
+diff -Nur mutt-1.5.21_old_sidebar/mutt_curses.h mutt-1.5.21/mutt_curses.h
+--- mutt-1.5.21_old_sidebar/mutt_curses.h	2012-10-24 11:49:51.600808286 +0800
++++ mutt-1.5.21/mutt_curses.h	2012-10-24 12:32:06.758617037 +0800
+@@ -1,21 +1,21 @@
+ /*
+  * Copyright (C) 1996-2000 Michael R. Elkins <me@mutt.org>
+  * Copyright (C) 2004 g10 Code GmbH
+- * 
++ *
+  *     This program is free software; you can redistribute it and/or modify
+  *     it under the terms of the GNU General Public License as published by
+  *     the Free Software Foundation; either version 2 of the License, or
+  *     (at your option) any later version.
+- * 
++ *
+  *     This program is distributed in the hope that it will be useful,
+  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  *     GNU General Public License for more details.
+- * 
++ *
+  *     You should have received a copy of the GNU General Public License
+  *     along with this program; if not, write to the Free Software
+  *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+- */ 
++ */
+ 
+ #ifndef _MUTT_CURSES_H_
+ #define _MUTT_CURSES_H_ 1
+@@ -125,6 +125,7 @@
+   MT_COLOR_ATTACHMENT,
+   MT_COLOR_SEARCH,
+   MT_COLOR_BOLD,
++  MT_COLOR_SIDEBAR,
+   MT_COLOR_UNDERLINE,
+   MT_COLOR_INDEX,
+   MT_COLOR_NEW,
+diff -Nur mutt-1.5.21_old_sidebar/sidebar.c mutt-1.5.21/sidebar.c
+--- mutt-1.5.21_old_sidebar/sidebar.c	2012-10-24 11:49:51.618813660 +0800
++++ mutt-1.5.21/sidebar.c	2012-10-24 12:33:56.367205685 +0800
+@@ -1,21 +1,21 @@
+ /*
+  * Copyright (C) ????-2004 Justin Hibbits <jrh29@po.cwru.edu>
+  * Copyright (C) 2004 Thomer M. Gil <mutt@thomer.com>
+- * 
++ *
+  *     This program is free software; you can redistribute it and/or modify
+  *     it under the terms of the GNU General Public License as published by
+  *     the Free Software Foundation; either version 2 of the License, or
+  *     (at your option) any later version.
+- * 
++ *
+  *     This program is distributed in the hope that it will be useful,
+  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  *     GNU General Public License for more details.
+- * 
++ *
+  *     You should have received a copy of the GNU General Public License
+  *     along with this program; if not, write to the Free Software
+  *     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA.
+- */ 
++ */
+ 
+ 
+ #if HAVE_CONFIG_H
+@@ -197,7 +197,7 @@
+         static short saveSidebarWidth;
+         int lines = 0;
+         int SidebarHeight;
+-        
++
+         if(option(OPTSTATUSONTOP) || option(OPTHELP))
+                 lines++; /* either one will occupy the first line */
+ 
+@@ -250,13 +250,13 @@
+     }
+ 
+         /* get attributes for divider */
+-	SETCOLOR(MT_COLOR_STATUS);
++	SETCOLOR(MT_COLOR_SIDEBAR);
+ #ifndef USE_SLANG_CURSES
+         attr_get(&attrs, &color_pair, 0);
+ #else
+         color_pair = attr_get();
+ #endif
+-	SETCOLOR(MT_COLOR_NORMAL);
++	/* SETCOLOR(MT_COLOR_NORMAL); */
+ 
+ 	/* draw the divider */
+ 
+@@ -266,10 +266,14 @@
+ 
+ 	for ( ; lines < SidebarHeight; lines++ ) {
+ 		move(lines, SidebarWidth - delim_len);
+-		addstr(NONULL(SidebarDelim));
+-#ifndef USE_SLANG_CURSES
+-                mvchgat(lines, SidebarWidth - delim_len, delim_len, 0, color_pair, NULL);
+-#endif
++		if (option (OPTASCIICHARS))
++			addstr (NONULL (SidebarDelim));
++		else if (!option (OPTASCIICHARS) && !strcmp (NONULL(SidebarDelim), "|"))
++			addch (ACS_VLINE);
++		else if ((Charset_is_utf8) && !strcmp (NONULL(SidebarDelim), "|"))
++			addstr ("\342\224\202");
++		else
++			addstr (NONULL (SidebarDelim));
+ 	}
+ 
+ 	if ( Incoming == 0 ) return 0;
+@@ -277,7 +281,7 @@
+         if(option(OPTSTATUSONTOP) || option(OPTHELP))
+                 lines++; /* either one will occupy the first line */
+ 
+-	if ( known_lines != LINES || TopBuffy == 0 || BottomBuffy == 0 ) 
++	if ( known_lines != LINES || TopBuffy == 0 || BottomBuffy == 0 )
+ 		calc_boundaries(menu);
+ 	if ( CurBuffy == 0 ) CurBuffy = Incoming;
+ 
+@@ -317,7 +321,7 @@
+ 			tmp_folder_name = tmp->path + strlen(Maildir);
+ 			for (i = 0; i < strlen(tmp->path) - strlen(Maildir); i++) {
+  				if (tmp_folder_name[i] == '/'  || tmp_folder_name[i] == '.') sidebar_folder_depth++;
+-			}   
++			}
+ 			if (sidebar_folder_depth > 0) {
+  				if (option(OPTSIDEBARSHORTPATH)) {
+  					tmp_folder_name = strrchr(tmp->path, '.');

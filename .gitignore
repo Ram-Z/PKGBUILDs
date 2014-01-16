@@ -4,6 +4,7 @@
 # no build stuff
 src/
 pkg/
+/*/*/
 # no backups
 *~
 *.swp

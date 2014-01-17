@@ -13,34 +13,14 @@ conflicts=('screenfetch')
 depends=('bash' 'xorg-utils')
 optdepends=('scrot: To take screenshot')
 makedepends=('git')
-
-_gitroot="http://git.silverirc.com/cgit.cgi/screenfetch.git/"
-_gitname="screenfetch-dev"
-
-build() {
-	# Git
-	cd "$srcdir"
-	msg "Connecting to GIT server...."
-
-	if [ -d $_gitname ] ; then
-		cd $_gitname && git pull origin
-		msg "The local files are updated."
-	else
-		git clone $_gitroot $_gitname
-	fi
-
-	msg "GIT checkout done or server timeout"
-	msg "Starting make..."
-
-	rm -rf "$srcdir/$_gitname-build"
-	git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
-}
+source=("${pkgname}::git://git.silverirc.com/screenfetch.git")
+md5sums=('SKIP')
 
 package() {
-  cd "$srcdir/$_gitname-build"
+  cd $pkgname
 
-	# Install
-	install -Dm755 screenfetch-dev $pkgdir/usr/bin/screenfetch
+  # Install
+  install -Dm755 screenfetch-dev $pkgdir/usr/bin/screenfetch
 }
 
 # vim: sts=2 ts=2 sw=2 et

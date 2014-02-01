@@ -1,0 +1,15 @@
+# Maintainer: Alexej Magura <agm2819*gmail*>
+# 
+# 
+pkgname=libtinfo
+pkgver=5
+pkgrel=1
+pkgdesc="symlink to ncurses for use in cuda and other packages"
+arch=('x86_64')
+url="http://www.gnu.org/software/ncurses/"
+license=('unknown')
+depends=('ncurses')
+
+package() {
+    install -d "$pkgdir/usr/lib" && ln -s "/usr/lib/libncurses.so.$pkgver" -T "$pkgdir/usr/lib/libtinfo.so.$pkgver"
+}

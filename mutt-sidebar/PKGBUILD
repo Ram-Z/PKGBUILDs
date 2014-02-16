@@ -1,68 +1,34 @@
 # Maintainer: Ram-Z <ram-z[at]chakra-project[dot]org>
+# Contributor: Alessio Sergi <asergi at archlinux dot us>
 # Contributor: Gris Ge <cnfourt@gmail.com>
 
 pkgname=mutt-sidebar
-pkgver=1.5.21
-_patchdate="20130219"
-pkgrel=4
+pkgver=1.5.22
+pkgrel=1
 pkgdesc="A small but very powerful text-based mail client with sidebar-patch"
 arch=('x86_64')
-url='http://www.lunar-linux.org/mutt-sidebar/'
+url='http://www.mutt.org/'
 license=('GPL')
 depends=('openssl' 'gdbm' 'mime-types' 'libsasl' 'slang' 'gpgme')
 conflicts=('mutt')
 provides=('mutt')
 source=("ftp://ftp.mutt.org/mutt/devel/mutt-${pkgver}.tar.gz"
-        "http://lunar-linux.org/~tchan/mutt/patch-${pkgver}.sidebar.$_patchdate.txt"
-        "http://dbg.download.sourcemage.org/grimoire/codex/stable/mail/mutt/patches/trash_folder/trash_folder-1.5.18.patch.bz2"
-        "crypt-gpgme.patch"
-        "mutt-1.5.21-cabundle.patch"
-        "mutt-1.5.21-notation.patch"
-        "mutt-1.5.21-pophash.patch"
-        "mutt-1.5.21-syncdebug.patch"
-        "mutt-1.5.21-testcert.patch"
-        "mutt-1.5.21-tmpdir.patch"
-        "mutt-1.5.21-updating.patch"
-        "mutt-1.5.21-writehead.patch"
-        "mutt-sidebar-1.5.21-20120829-nion.sidebar-color.diff"
-        "pop-cachedir.patch"
-        "sidebar-corrected-by-jf.patch"
+        "ftp://ftp.openbsd.org/pub/OpenBSD/distfiles/mutt/sidebar-${pkgver}.diff1.gz"
+        "ftp://ftp.openbsd.org/pub/OpenBSD/distfiles/mutt/trashfolder-${pkgver}.diff0.gz"
 )
-md5sums=('a29db8f1d51e2f10c070bf88e8a553fd'
-         '537e6e55255ce82bd7877f4b696bca50'
-         '9d95c08295f8ec5171f774f776ef8413'
-         '6cb5b3ca56bd03c00c6768864070a2d4'
-         '796a571e5ba4aa0f092fc627a0f251d7'
-         'f0f610ad4d0c0a3ab5141c4720fdf5fa'
-         'a377b81826c0473b4d92f73f474c6bcd'
-         '09d9938f16069dc26cb214a7be93ba7c'
-         '3be4349a1d5fc20bc23e7693210c4c26'
-         '9e7385ee59b58e77b5b6274e2d22364d'
-         '7980737eef5fc871e2ae5ceeb3c48b9d'
-         '815e9bf823107ee0c62e1c0762a376c4'
-         'ca2ee9092cf6f8217753a8d2c441f803'
-         '7df7780d8bbdcbad1eb0d673de9976b2'
-         '5872ba294d010ed2115fe4c0be9452d4')
+md5sums=('48267aba1bc53db636777f4a1ec87cb6'
+         'f9eeabbd99b5c0ebfa659d0a30d8f2fa'
+         '1e7d786112c2bb3cc50dfe743c6e0bec')
 
 prepare() {
     rm -rf $srcdir/mutt-$pkgver
     tar xfv $srcdir/mutt-${pkgver}.tar.gz -C $srcdir/
     cd $srcdir/mutt-$pkgver
 
-    patch -p1 -i $srcdir/mutt-1.5.21-cabundle.patch
-    patch -p1 -i $srcdir/mutt-1.5.21-updating.patch
-    patch -p1 -i $srcdir/mutt-1.5.21-testcert.patch
-    patch -p1 -i $srcdir/mutt-1.5.21-pophash.patch
-    patch -p1 -i $srcdir/mutt-1.5.21-notation.patch
-    patch -p1 -i $srcdir/mutt-1.5.21-syncdebug.patch
-    patch -p1 -i $srcdir/mutt-1.5.21-writehead.patch
-    patch -p1 -i $srcdir/mutt-1.5.21-tmpdir.patch
-    patch -p1 -i $srcdir/patch-${pkgver}.sidebar.$_patchdate.txt
-    patch -p1 -i $srcdir/mutt-sidebar-1.5.21-20120829-nion.sidebar-color.diff
-    patch -i $srcdir/pop-cachedir.patch
-    patch -p1 -i $srcdir/crypt-gpgme.patch
-    patch -p1 -i $srcdir/sidebar-corrected-by-jf.patch
-    patch -p1 -i $srcdir/trash_folder-1.5.18.patch
+    patch -p1 -i "$srcdir"/trashfolder-${pkgver}.diff0
+    patch -p1 -i "$srcdir"/sidebar-${pkgver}.diff1
+
+    autoreconf -vfi
 }
 
 build() {

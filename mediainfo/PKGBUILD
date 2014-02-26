@@ -1,0 +1,29 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+pkgname=mediainfo
+pkgver=0.7.67
+pkgrel=1
+pkgdesc="Supplies technical and tag information about a video or audio file"
+arch=('x86_64')
+url="http://mediainfo.sourceforge.net"
+license=('GPL')
+depends=('libmediainfo>=0.7.60')
+makedepends=('libtool' 'automake' 'autoconf')
+source=("http://downloads.sourceforge.net/mediainfo/mediainfo_${pkgver}.tar.bz2")
+md5sums=('480ac31a4080737f21937f9d260b96de')
+
+build() {
+  cd "${srcdir}/MediaInfo/Project/GNU/CLI"
+
+  sh ./autogen
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/MediaInfo/Project/GNU/CLI"
+
+  make install DESTDIR="${pkgdir}"
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,68 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
+
+pkgbase=webkitgtk
+pkgname=(webkitgtk webkitgtk2)
+pkgver=2.2.5
+pkgrel=1
+pkgdesc="GTK+ Web content engine library"
+arch=(x86_64)
+url="http://webkitgtk.org/"
+license=("custom")
+depends=(libxt libxslt sqlite3 libsoup enchant libgl geoclue gst-plugins-base
+         libsecret libwebp harfbuzz)
+makedepends=(gtk2 gtk3 gperf gobject-introspection python mesa ruby gtk-doc)
+optdepends=('gtk2: Netscape plugin support')
+provides=("webkitgtk3=${pkgver}" "libwebkit3=${pkgver}")
+conflicts=(webkitgtk3 libwebkit3)
+replaces=(webkitgtk3 libwebkit3)
+options=(!emptydirs)
+source=("http://webkitgtk.org/releases/$pkgname-${pkgver}.tar.xz")
+sha256sums=('c710994a1ed0ec78f746a05ae7dc65369ed56d7475f0de576ca7a73ad9c6e670')
+
+prepare() {
+  mkdir -p build-gtk{,2}
+}
+
+_build() {
+  local _ver="$1"; shift
+  cd $srcdir/build-$_ver
+
+  ../$pkgname-$pkgver/configure --prefix=/usr \
+    --libexecdir=/usr/lib/webkit$_ver \
+    --enable-introspection \
+    "$@"
+
+  # https://bugzilla.gnome.org/show_bug.cgi?id=655517
+  sed -i 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+
+  make all stamp-po
+}
+
+build() {
+  _build gtk --enable-gtk-doc
+  _build gtk2 --disable-webkit2 --with-gtk=2.0
+}
+
+package_webkitgtk() {
+  depends+=(gtk3)
+  optdepends=('gtk2: Netscape plugin support')
+  provides=("webkitgtk3=${pkgver}" "libwebkit3=${pkgver}")
+  conflicts=(webkitgtk3 libwebkit3)
+  replaces=(webkitgtk3 libwebkit3)
+
+  make -C build-gtk -j1 DESTDIR="$pkgdir" install
+  install -Dm644 $pkgbase-$pkgver/Source/WebKit/LICENSE "$pkgdir/usr/share/licenses/webkitgtk/LICENSE"
+}
+
+package_webkitgtk2() {
+  pkgdesc+=" for GTK2"
+  depends+=(gtk2)
+  provides=("libwebkit-gtk2=${pkgver}")
+  conflicts=(libwebkit-gtk2)
+  replaces=(libwebkit-gtk2)
+
+  make -C build-gtk2 -j1 DESTDIR="$pkgdir" install
+  install -Dm644 $pkgbase-$pkgver/Source/WebKit/LICENSE "$pkgdir/usr/share/licenses/webkitgtk2/LICENSE"
+}

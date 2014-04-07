@@ -15,15 +15,22 @@ depends=('python2')
 makedepends=('python2-setuptools')
 source=("http://pypi.python.org/packages/source/p/python-tvrage/$_realname-$pkgver.tar.gz")
 md5sums=('48e589dd51ea67b4926bfe9cdcd07ea7')
-build(){
-  #Really ugly, but what can be done.
-  cd "$srcdir/ckreutzer-python-tvrage-e371d46a4464"
 
+prepare() {
+  cd "$srcdir/ckreutzer-python-tvrage-e371d46a4464"
   # python2 fix
   for file in $(find . -name '*.py' -print); do
     sed -i 's_#!.*/usr/bin/python_#!/usr/bin/python2_' $file
     sed -i 's_#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
   done
+}
 
-  python2 setup.py install --root="$pkgdir" --optimize=1
+build(){
+  cd "$srcdir/ckreutzer-python-tvrage-e371d46a4464"
+  python2 setup.py build --optimize=1
+}
+
+package(){
+  cd "$srcdir/ckreutzer-python-tvrage-e371d46a4464"
+  python2 setup.py install --root="$pkgdir"
 }

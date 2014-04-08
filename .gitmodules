@@ -1,0 +1,4 @@
+[submodule "ros-stacks"]
+	path = ros-stacks
+	url = git@github.com:ram-z/chakra-ros-stacks
+	branch = chakra

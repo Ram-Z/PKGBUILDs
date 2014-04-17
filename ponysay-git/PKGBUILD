@@ -3,42 +3,37 @@
 
 pkgname=ponysay-git
 _pkgname=ponysay
-pkgver=20120916
+pkgver=3.0.1.r348.ga04e0bb
 pkgrel=1
-pkgdesc="Cowsay reimplementation for ponies. "
-arch=('any')
+pkgdesc="Cowsay reimplementation for ponies."
+arch=(any)
 url="https://github.com/erkin/ponysay"
-license=('WTFPL')
-depends=('python3' 'coreutils' )
+license=(GPL3 FDL)
+depends=(python3 coreutils)
+makedepends=(git texinfo python3-setuptools)
 optdepends=('util-say:  Improved TTY support utilising KMS and support for PNG files')
-makedepends=('git' 'texinfo')
+source=(git://github.com/erkin/$_pkgname.git)
+md5sums=('SKIP')
 
-_gitroot=git://github.com/erkin/ponysay.git
-_gitname=ponysay
-
-build() {
-  cd "$srcdir"
-  msg "Connecting to GIT server...."
-
-  if [[ -d "$_gitname" ]]; then
-    cd "$_gitname" && git pull origin
-    msg "The local files are updated."
-  else
-    git clone "$_gitroot" "$_gitname"
-  fi
-
-  msg "GIT checkout done or server timeout"
-  msg "Starting build..."
-
-  rm -rf "$srcdir/$_gitname-build"
-  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
-
+pkgver() {
+  cd $_pkgname
+  git describe --long | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
 }
 
 package() {
-  cd "$srcdir/$_gitname-build"
-  python3 ./setup.py --prefix=/usr --dest-dir="$pkgdir" install
-  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  cd $_pkgname
+  python3 ./setup.py build \
+    --prefix=/usr \
+    --without-fish
+}
+
+package() {
+  cd $_pkgname
+  python3 setup.py install \
+    --dest-dir="$pkgdir" \
+    --freedom=partial \
+    --without-info
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
 }
 
 # vim:set ts=2 sw=2 et:

@@ -4,7 +4,7 @@
 
 pkgbase=webkitgtk
 pkgname=(webkitgtk webkitgtk2)
-pkgver=2.2.5
+pkgver=2.3.91
 pkgrel=1
 pkgdesc="GTK+ Web content engine library"
 arch=(x86_64)
@@ -17,9 +17,9 @@ optdepends=('gtk2: Netscape plugin support')
 provides=("webkitgtk3=${pkgver}" "libwebkit3=${pkgver}")
 conflicts=(webkitgtk3 libwebkit3)
 replaces=(webkitgtk3 libwebkit3)
-options=(!emptydirs)
+options=(debug !emptydirs)
 source=("http://webkitgtk.org/releases/$pkgname-${pkgver}.tar.xz")
-sha256sums=('c710994a1ed0ec78f746a05ae7dc65369ed56d7475f0de576ca7a73ad9c6e670')
+sha256sums=('d6a0bc4db2fdeb5fdf9200ec11a43fba054d387d2689a2afafca63d2935f65f4')
 
 prepare() {
   mkdir -p build-gtk{,2}

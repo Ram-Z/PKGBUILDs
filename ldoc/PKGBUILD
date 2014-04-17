@@ -1,0 +1,32 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor:  Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Sébastien Luttringer
+
+pkgname=ldoc
+pkgver=1.4.2
+pkgrel=1
+pkgdesc='LuaDoc-compatible documentation generation system'
+arch=('any')
+url='http://stevedonovan.github.com/ldoc/'
+license=('custom')
+depends=('lua' 'lua-penlight')
+source=("https://github.com/stevedonovan/ldoc/archive/$pkgver.tar.gz")
+md5sums=('4388d5739f7ca4fbea988bec9a11d91e')
+
+package() {
+  cd LDoc-$pkgver
+
+  # install library
+  install -dm755 "$pkgdir/usr/share/lua/5.1"
+  cp -a ldoc "$pkgdir/usr/share/lua/5.1"
+
+  # install binaries
+  install -Dm755 ldoc.lua "$pkgdir/usr/bin/ldoc.lua"
+  ln -s ldoc.lua "$pkgdir/usr/bin/ldoc"
+
+  # copy docs
+  install -Dm644 readme.md "$pkgdir/usr/share/doc/$pkgname/readme.md"
+  install -Dm644 doc/doc.md "$pkgdir/usr/share/doc/$pkgname/doc.md"
+  install -Dm644 COPYRIGHT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

@@ -3,7 +3,7 @@
 
 _pkgname=compton
 pkgname=compton-git
-pkgver=2014.01.02.g14ef615
+pkgver=2014.01.21.gaeda148
 pkgrel=1
 pkgdesc="X Compositor (a fork of xcompmgr-dana)"
 arch=('x86_64')

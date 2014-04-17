@@ -1,6 +1,6 @@
 pkgname=clementine-git
 _gitname=clementine-player
-pkgver=1.2.1.106.ga43116b
+pkgver=1.2.2.393.g0a67a00
 pkgrel=1
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ makedepends=('git' 'boost' 'cmake' 'mesa')
 provides=('clementine')
 conflicts=('clementine' 'clementine-svn')
 replaces=('clementine' 'clementine-svn')
-source=("${pkgname}::git+https://code.google.com/p/${_gitname}")
+source=("${pkgname}::git+https://github.com/clementine-player/Clementine.git")
 md5sums=('SKIP')
 
 pkgver() {

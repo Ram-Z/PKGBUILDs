@@ -6,15 +6,22 @@
 
 pkgname=xautolock
 pkgver=2.2
-pkgrel=1
+pkgrel=2
 pkgdesc="An automatic X screen-locker/screen-saver"
 arch=(i686 x86_64)
 url="ftp://ibiblio.org/pub/Linux/X11/screensavers/"
 license=('GPL2')
 depends=('libxss')
 makedepends=('imake')
-source=("ftp://ibiblio.org/pub/Linux/X11/screensavers/$pkgname-$pkgver.tgz")
-md5sums=('9526347a202694ad235d731d9d3de91f')
+source=("ftp://ibiblio.org/pub/Linux/X11/screensavers/$pkgname-$pkgver.tgz"
+        "max-time.patch")
+md5sums=('9526347a202694ad235d731d9d3de91f'
+         '45663ba5b2578fd153ff3f8d58899a31')
+
+prepare() {
+  cd "$srcdir/$pkgname-$pkgver"
+  patch -p1 -i "$srcdir"/max-time.patch
+}
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"

@@ -1,0 +1,40 @@
+diff -ru xautolock-2.2/include/config.h xautolock-2.2.new/include/config.h
+--- xautolock-2.2/include/config.h	2007-09-30 22:27:49.000000000 +0100
++++ xautolock-2.2.new/include/config.h	2014-05-03 02:43:41.594810656 +0100
+@@ -77,12 +77,12 @@
+ #define MIN_LOCK_MINS     1           /* minimum number of minutes
+                                          before firing up the locker       */
+ #define LOCK_MINS         10          /* default ...                       */
+-#define MAX_LOCK_MINS     60          /* maximum ...                       */
++#define MAX_LOCK_MINS     360         /* maximum ...                       */
+ 
+-#define MIN_KILL_MINS     10          /* minimum number of minutes
++#define MIN_KILL_MINS     1           /* minimum number of minutes
+                                          before firing up the killer       */
+ #define KILL_MINS         20          /* default ...                       */
+-#define MAX_KILL_MINS     120         /* maximum ...                       */
++#define MAX_KILL_MINS     360         /* maximum ...                       */
+ 
+ #define CREATION_DELAY    30          /* should be > 10 and
+                                          < min(45,(MIN_LOCK_MINS*30))      */
+diff -ru xautolock-2.2/xautolock.man xautolock-2.2.new/xautolock.man
+--- xautolock-2.2/xautolock.man	2007-12-28 17:05:40.000000000 +0000
++++ xautolock-2.2.new/xautolock.man	2014-05-03 02:44:27.683322001 +0100
+@@ -130,7 +130,7 @@
+ .TP 
+ \fB\-time\fR
+ Specifies the primary timeout interval. The default is 10 minutes,
+-the minimum is 1 minute, and the maximum is 1 hour.
++the minimum is 1 minute, and the maximum is 6 hour.
+ .TP 
+ \fB\-locker\fR
+ Specifies the \fIlocker\fR to be used. The default is xlock. Notice that if
+@@ -145,7 +145,7 @@
+ This timer is only active as long as the \fIlocker\fR is running, and is 
+ reset each time user activity is detected. If it expires before the 
+ \fIlocker\fR exits, the \fIkiller\fR command is run. The default is
+-20 minutes, the minimum is 10 minutes, and the maximum is 2 hours.
++20 minutes, the minimum is 10 minutes, and the maximum is 6 hours.
+ This option is only useful in conjunction with \fB\-killer\fR.
+ .TP 
+ \fB\-killer\fR

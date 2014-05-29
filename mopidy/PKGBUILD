@@ -1,0 +1,40 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Alexandre Petitjean <alpetitjean at gmail dot com>
+
+pkgname=mopidy
+_pypiname=Mopidy
+pkgver=0.17.0
+pkgrel=1
+pkgdesc="Mopidy is a music server which can play music both from multiple sources, like your local hard drive, radio streams, and from Spotify and SoundCloud."
+arch=('any')
+url="http://www.mopidy.com"
+license=('APACHE')
+depends=('python2'
+         'python2-pykka'
+         'python2-distribute'
+         'gstreamer0.10-python'
+         'gstreamer0.10-base-plugins'
+         'gstreamer0.10-good-plugins'
+         'gstreamer0.10-ugly-plugins'
+         'python2-cherrypy'
+         'python2-ws4py')
+makedepends=('python2')
+optdepends=('mopidy-spotify: Spotify backend'
+            'mopidy-scrobbler: Last.FM scrobbler'
+            'mopidy-MPRIS: MPRIS frontend')
+conflicts=('mopidy-git')
+provides=('mopidy')
+source=("https://pypi.python.org/packages/source/M/${_pypiname}/${_pypiname}-${pkgver}.tar.gz"
+        'mopidy@.service')
+md5sums=('68415c6fe81725ae8f275bb6fdaf75fe'
+         'c10ddec535b5534771db27e8f4310ec3')
+
+package() {
+  cd "$srcdir/$_pypiname-$pkgver"
+  python2 setup.py install --root="$pkgdir/" --optimize=1
+
+  install -Dm644 "$srcdir/mopidy@.service" "$pkgdir/usr/lib/systemd/system/mopidy@.service"
+}
+
+# vim:set ts=2 sw=2 et:

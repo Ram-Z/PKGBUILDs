@@ -4,7 +4,7 @@
 
 pkgname=mopidy
 _pypiname=Mopidy
-pkgver=0.17.0
+pkgver=0.18.3
 pkgrel=1
 pkgdesc="Mopidy is a music server which can play music both from multiple sources, like your local hard drive, radio streams, and from Spotify and SoundCloud."
 arch=('any')
@@ -26,15 +26,28 @@ optdepends=('mopidy-spotify: Spotify backend'
 conflicts=('mopidy-git')
 provides=('mopidy')
 source=("https://pypi.python.org/packages/source/M/${_pypiname}/${_pypiname}-${pkgver}.tar.gz"
-        'mopidy@.service')
-md5sums=('68415c6fe81725ae8f275bb6fdaf75fe'
-         'c10ddec535b5534771db27e8f4310ec3')
+        'mopidy@.service'
+        'user-mopidy.service'
+        'mopidy.conf')
+md5sums=('5848665c7649219e5ded0cc47948a3d4'
+         'c10ddec535b5534771db27e8f4310ec3'
+         '5b51b01d161f0db8928f87b37b1d62b3'
+         '9be7935701d39231ae230694fde2cf13')
+backup=('etc/xdg/mopidy/mopidy.conf')
+install=$pkgname.install
+
+build() {
+  cd "$srcdir/$_pypiname-$pkgver"
+  python2 setup.py build
+}
 
 package() {
   cd "$srcdir/$_pypiname-$pkgver"
   python2 setup.py install --root="$pkgdir/" --optimize=1
 
   install -Dm644 "$srcdir/mopidy@.service" "$pkgdir/usr/lib/systemd/system/mopidy@.service"
+  install -Dm644 "$srcdir/user-mopidy.service" "$pkgdir/usr/lib/systemd/user/mopidy.service"
+  install -Dm644 "$srcdir/mopidy.conf" "$pkgdir/etc/xdg/mopidy/mopidy.conf"
 }
 
 # vim:set ts=2 sw=2 et:

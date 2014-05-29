@@ -1,0 +1,44 @@
+--- extensions/formfiller	2014-05-11 00:39:39.000000000 +0100
++++ extensions/formfiller	2014-01-14 16:09:29.100845544 +0000
+@@ -287,7 +287,7 @@
+         if (formData !== null) 
+             return formData;
+         if ((data = formfiller.exports.onRead())) 
+-            return JSON.parse(data.replace(/\\"/g, '"'));
++            return JSON.parse(data);
+ 
+         if (!config.GPGAgent)
+             getPassWord();
+@@ -302,7 +302,7 @@
+         }
+         try 
+         {
+-            ret = JSON.parse(stat.stdout.replace(/\\"/g, '"'));
++            ret = JSON.parse(stat.stdout);
+             if (config.keepFormdata) 
+                 formData = ret;
+ 
+@@ -344,7 +344,7 @@
+     var data;
+     if (config.useGPG) 
+     {
+-        var data = JSON.stringify(object).replace(/"/g, "\\\"");
++        var data = JSON.stringify(object).replace(/([`"\\])/g, "\\$1");
+         if (formfiller.exports.onWrite(data))
+             return true;
+         if (!(config.GPGAgent || config.GPGKeyID))
+@@ -354,12 +354,11 @@
+                 return false;
+         }
+ 
+-        ret = system.spawnSync("sh -c \"echo '" + data + 
+-            "' | gpg2 " + config.GPGOptEncrypt +
++        ret = system.spawnSync("sh -c \"gpg2 " + config.GPGOptEncrypt +
+             ((config.GPGAgent || config.GPGKeyID) ? " " : " --passphrase " + passWord) +
+             " --batch --no-tty --yes " +
+             (config.GPGKeyID ? " --encrypt --recipient " + config.GPGKeyID : " --symmetric ") +
+-            " --output " + config.formData + "\"");
++            " --output " + config.formData + " <<\\\"EOF\\\"\n"+data+"\nEOF\"");
+         if (ret.status == 512) 
+         {
+             io.error("Wrong password");

@@ -1,0 +1,10 @@
+--- extensions/perdomainsettings	2014-05-11 00:39:39.000000000 +0100
++++ extensions/perdomainsettings	2014-01-16 11:08:51.630344457 +0000
+@@ -234,6 +234,7 @@
+         if (!config) 
+             return false;
+ 
++        exports.defaults = defaults = config.defaults;
+         exports.domains = domains = config.domains || defaultConfig.domains;
+         domains && getDefaultValue(domains);
+ 

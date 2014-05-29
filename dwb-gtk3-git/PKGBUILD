@@ -1,0 +1,46 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: portix <portix@gmx.net>
+
+pkgname=dwb-gtk3-git
+_gitname=dwb
+pkgver=2014.05.27.gdf58ba8
+pkgrel=1
+pkgdesc="A webkit web browser with vi-like keyboard shortcuts, latest git-pull" 
+url="http://portix.bitbucket.org/dwb-git"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('webkitgtk' 'desktop-file-utils')
+provides=("dwb")
+conflicts=('dwb' 'dwb-git' 'dwb-gtk3' 'dwb-gtk3-hg' 'dwb-hg')
+source=("git+https://portix@bitbucket.org/portix/dwb.git"
+        "perdomainsettings.patch"
+        "formfiller.patch")
+md5sums=('SKIP'
+         'b20597e24cfae795d253c7dbb66d6295'
+         '1436949999e6617df4c686e449a7188d')
+install=dwb.install
+makedepends=('git' 'json-c')
+#options=(debug)
+
+pkgver() {
+  cd "$srcdir"/$_gitname
+  git log -1 --format="%cd.g%h" --date=short | sed 's/-/./g'
+}
+
+prepare() {
+  cd "$srcdir/$_gitname"
+  patch -p0 < $srcdir/perdomainsettings.patch
+  patch -p0 < $srcdir/formfiller.patch
+}
+
+build() {
+  cd "$srcdir/$_gitname"
+  make GTK=3
+}
+
+package() {
+  cd "${srcdir}/${_gitname}"
+  make DESTDIR="${pkgdir}" install \
+      BASHCOMPLETION=/usr/share/bash-completion/completions
+}

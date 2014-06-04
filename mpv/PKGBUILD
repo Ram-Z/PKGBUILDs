@@ -3,51 +3,57 @@
 # Contributor: Eivind Uggedal <eivind@uggedal.com>
 
 pkgname=mpv
-pkgver=0.2.3
+pkgver=0.3.10
 pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
 license=('GPL')
 url="http://mpv.io"
-depends=('portaudio' 'ffmpeg' 'lcms2' 'libxinerama' 'libdvdread' 'libquvi' 'mpg123' 'libxv' 'libxkbcommon' 'libva' 'desktop-file-utils' 'xdg-utils')
-makedepends=('mesa' 'python2-docutils')
-options=(!emptydirs)
-install=${pkgname}.install
+depends=('desktop-file-utils' 'ffmpeg' 'hicolor-icon-theme' 'lcms2'
+         'libcdio-paranoia' 'libdvdnav' 'libdvdread' 'libgl' 'libquvi' 'libva'
+         'libxinerama' 'libxkbcommon' 'libxv' 'lirc-utils' 'lua' 'mpg123'
+         'portaudio' 'wayland' 'xdg-utils')
+makedepends=('mesa' 'python2-docutils' 'ladspa')
+options=(!emptydirs !buildflags)
+install=mpv.install
 source=("https://github.com/mpv-player/$pkgname/archive/v${pkgver}.tar.gz")
-md5sums=('11f25760d7666e6d41d85f06cece8f17')
+md5sums=('9cfd0a4118b260bff4a3bc21cac7d1ab')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  ./bootstrap.py
+}
 
 build() {
-  # Custom CFLAGS break the mpv build
-  unset CFLAGS
-  unset LDFLAGS
-
   cd "$pkgname-$pkgver"
 
-  ./configure --prefix=/usr \
-      --confdir=/etc/mpv \
-      --disable-lircc \
-      --disable-joystick \
-      --disable-radio \
-      --disable-radio-capture \
-      --disable-radio-v4l2 \
-      --disable-rpath \
-      --disable-libbs2b \
-      --disable-direct3d \
-      --disable-corevideo \
-      --disable-cocoa \
-      --disable-coreaudio
-  make
+  ./waf configure \
+      --prefix=/usr \
+      --confdir=/etc/mpv
+      # --disable-lircc \
+      # --disable-joystick \
+      # --disable-radio \
+      # --disable-radio-capture \
+      # --disable-radio-v4l2 \
+      # --disable-rpath \
+      # --disable-libbs2b \
+      # --disable-direct3d \
+      # --disable-corevideo \
+      # --disable-cocoa \
+      # --disable-coreaudio
+  ./waf build
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "$pkgname-$pkgver"
 
-  make -j1 DESTDIR="${pkgdir}" install
+  ./waf install --destdir="$pkgdir"
 
   install -d ${pkgdir}/usr/share/doc/mpv/examples
 
   # some extra useful stuff "make install" doesn't install
-  install -m644 ${srcdir}/$pkgname-$pkgver/etc/{input,example,encoding-example-profiles}.conf "${pkgdir}/usr/share/doc/mpv/examples"
-  install -m644 ${srcdir}/$pkgname-$pkgver/DOCS/{encoding.rst,tech-overview.txt} "${pkgdir}/usr/share/doc/mpv"
-  install -m755 ${srcdir}/$pkgname-$pkgver/TOOLS/mpv_identify.sh "${pkgdir}/usr/bin"
+  install -m644 etc/{input,example}.conf \
+    "${pkgdir}/usr/share/doc/mpv/examples"
+  install -m644 DOCS/{encoding.rst,tech-overview.txt} \
+    "${pkgdir}/usr/share/doc/mpv"
 }

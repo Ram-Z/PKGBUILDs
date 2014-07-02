@@ -5,25 +5,25 @@
 
 pkgname=mkvtoolnix-cli
 _pkgname=mkvtoolnix
-pkgver=6.4.1
+pkgver=7.0.0
 pkgrel=1
 pkgdesc="Set of tools to create, edit and inspect Matroska files."
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.bunkus.org/videotools/mkvtoolnix/index.html"
 depends=('flac' 'libmatroska' 'libogg' 'libvorbis' 'xdg-utils' 'libebml' 'zlib' 'boost-libs')
-optdepends=('flac: for FLAC support (Free Lossless Audio Codec)'
-'lzo2: for additional compression capabilities'
-'bzip2: for additional compression capabilities'
-'file: for automatic content type detection'
-'curl: for online update checks')
+optdepends=('flac: for FLAC support'
+            'lzo2: for additional compression capabilities'
+            'bzip2: for additional compression capabilities'
+            'file: for automatic content type detection'
+            'curl: for online update checks')
 makedepends=('gcc>=4.6.0' 'boost>=1.46.0' 'ruby')
 categories=('multimedia')
 provides=mkvtoolnix
 replaces=mkvtoolnix
 conflicts=mkvtoolnix
 source=("http://www.bunkus.org/videotools/$_pkgname/sources/$_pkgname-$pkgver.tar.xz")
-md5sums=('1e878646b34eb2c32772d05b91f84f4c')
+md5sums=('ddd5ce6288d2fdaa6b79cb6d7bfffb04')
 
 build() {
   cd $srcdir/$_pkgname-$pkgver

@@ -1,0 +1,8 @@
+[Unit]
+Description=SABnzbd binary newsreader
+
+[Service]
+ExecStart=/opt/sabnzbd/SABnzbd.py --config-file %h/.config/sabnzbd/sabnzbd.conf
+
+[Install]
+WantedBy=default.target

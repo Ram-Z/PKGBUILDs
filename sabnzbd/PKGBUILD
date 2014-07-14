@@ -3,7 +3,7 @@
 
 pkgname=sabnzbd
 _pkgname=SABnzbd
-pkgver=0.7.17
+pkgver=0.7.18
 pkgrel=1
 pkgdesc="A web-interface based binary newsgrabber with NZB file support"
 url="http://www.sabnzbd.org"
@@ -16,8 +16,16 @@ optdepends=("xdg-utils: registration of .nzb files" "python2-feedparser: rss sup
 install=$pkgname.install
 backup=("etc/conf.d/sabnzbd" "opt/${pkgname}/${pkgname}.ini")
 source=("http://downloads.sourceforge.net/sabnzbdplus/${_pkgname}-${pkgver}-src.tar.gz"
-        "${pkgname}" "${pkgname}.desktop" "addnzb.sh" "nzb-2.png" "sab2_64.png" "x-nzb.xml" "${pkgname}.service" "${pkgname}.confd")
-md5sums=('5056006fb15d6e62654af9f80955eba3'
+        "${pkgname}"
+        "${pkgname}.desktop"
+        "addnzb.sh"
+        "nzb-2.png"
+        "sab2_64.png"
+        "x-nzb.xml"
+        "${pkgname}.service"
+        "${pkgname}.user.service"
+        "${pkgname}.confd")
+md5sums=('64d8b675da010dbd444c932bbb3112b6'
          '48d60a1c626503c7fef1bc5374390513'
          'f9bd5485072714b11f8c30a28024dc4d'
          '69b9bcbcf67ff3e7a4cdd9f26e001341'
@@ -25,6 +33,7 @@ md5sums=('5056006fb15d6e62654af9f80955eba3'
          'fdc878dd0f6f25617e627b04409abbbd'
          '11fb2cd1451e3725b08bfc2bd045be54'
          '7da9222f3b86abfed590950f48dc2e77'
+         '4f36b49aa6544e4dcf37f202ebdf0558'
          '8fc2607a7961fc643ef4f6640166322a')
 
 package() {
@@ -42,6 +51,7 @@ package() {
   install -Dm755 "${srcdir}/${pkgname}"       "${pkgdir}/usr/bin/${pkgname}"
   install -Dm644 "${srcdir}/${pkgname}.confd" "${pkgdir}/etc/conf.d/${pkgname}"
   install -Dm644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
+  install -Dm644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/user/${pkgname}.service"
   install -Dm755 "${srcdir}/${pkgname}.desktop" \
     "${pkgdir}/usr/share/applications/${pkgname}.desktop"
   install -Dm755 "${srcdir}/addnzb.sh"    "${pkgdir}/opt/${pkgname}/addnzb.sh"

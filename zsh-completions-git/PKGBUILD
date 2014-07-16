@@ -1,0 +1,29 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
+
+pkgname=zsh-completions-git
+pkgver=0.10.0.112.g059df4e
+pkgrel=1
+pkgdesc="Additional completion definitions for Zsh"
+arch=("any")
+url="https://github.com/zsh-users/zsh-completions"
+license=("GPL")
+depends=("zsh")
+makedepends=("git")
+source=('git://github.com/zsh-users/zsh-completions.git')
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/zsh-completions"
+  git describe --tags --always | sed 's|-|.|g'
+}
+
+package() {
+  cd "$srcdir/zsh-completions/src"
+  install -m0755 -d "$pkgdir/usr/share/zsh/site-functions"
+  install -m0644 _* "$pkgdir/usr/share/zsh/site-functions"
+
+  cd "$pkgdir"/usr/share/zsh/site-functions
+  rm _mpv _pass _envoy
+}

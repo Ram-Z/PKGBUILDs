@@ -4,16 +4,17 @@
 
 pkgname=goobook-git
 _gitname=mainline
-pkgver=1.5
+pkgver=1.6
 pkgrel=1
-pkgdesc="Makes it possible to use your Google Contacts in an MUA such as Mutt. It's use mimics that of abook (somewhat)."
+pkgdesc="Manage your google contacts from the command-line or mutt"
 arch=('any')
 url="http://goobook.googlecode.com/"
 license=('GPL')
 conflicts=('goobook')
 provides=('goobook')
-depends=('python2' 'python2-gdata>=2.0.7' 'python2-setuptools' 'python2-simplejson' 'python2-hcs_utils>=1.3' 'python2-keyring' 'python2-six')
+depends=('python2' 'python2-gdata>=2.0.7' 'python2-simplejson')
 makedepends=('git' 'python2-setuptools')
+optdepends=('python2-keyring')
 source=("${pkgname}::git://gitorious.org/goobook/$_gitname.git")
 md5sums=('SKIP')
 install=goobook.install

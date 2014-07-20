@@ -1,0 +1,35 @@
+# Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
+# Contributor: <Themaister> <maister@archlinux.us>
+
+pkgname=retroarch-git
+_pkgname=${pkgname%-git}
+pkgver=0.9.9.r4274.g18be846
+pkgrel=1
+pkgdesc="Simple frontend for the libretro API."
+url="https://github.com/libretro/RetroArch"
+arch=('x86_64')
+license=('GPL')
+depends=('sdl')
+optdepends=('libretro-super-git: A collection of many libretro implementations.')
+makedepends=('git')
+source=("git+https://github.com/libretro/${_pkgname}.git")
+md5sums=('SKIP')
+
+pkgver()
+{
+  cd $_pkgname
+  git describe --long --tags | sed -r 's/v//;s/([^-]*-g)/r\1/;s/-/./g'
+}
+
+build()
+{
+  cd $_pkgname
+  ./configure --prefix=/usr
+  make
+}
+
+package()
+{
+  cd $_pkgname
+  make install DESTDIR=$pkgdir
+}

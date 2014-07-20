@@ -1,0 +1,32 @@
+# Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
+
+pkgname=libretro-super-git
+_pkgname=${pkgname%-git}
+pkgver=r512.5169af8
+pkgrel=1
+pkgdesc="A collection of libretro implementations for RetroArch."
+arch=('x86_64')
+url="https://github.com/libretro/libretro-super"
+license=('various')
+provides=('libretro')
+source=("git+https://github.com/libretro/libretro-super.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$_pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build()
+{
+  cd "$srcdir/$_pkgname"
+  ./libretro-fetch.sh
+  ./libretro-build.sh
+}
+
+package()
+{
+  cd "$srcdir/$_pkgname"
+  install -dm755 "$pkgdir"/usr/lib/libretro
+  ./libretro-install.sh "$pkgdir"/usr/lib/libretro
+}

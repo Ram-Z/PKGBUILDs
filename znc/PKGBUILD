@@ -5,7 +5,7 @@
 # Contributor: mickael9 <mickael9 at gmail dot com>
 
 pkgname=znc
-pkgver=1.2
+pkgver=1.4
 pkgrel=1
 pkgdesc='An IRC bouncer with modules & scripts support'
 url='http://en.znc.in/wiki/index.php/ZNC'
@@ -19,7 +19,7 @@ optdepends=('tcl: modtcl module'
             'cyrus-sasl: saslauth module')
 install=$pkgname.install
 source=("http://znc.in/releases/$pkgname-$pkgver.tar.gz")
-md5sums=('ef18e5402a82cc3fcab5c2ac5c2e6f3b')
+md5sums=('630cb74db34d2d5451ba30b47869f6bb')
 
 build() {
   cd $pkgname-$pkgver

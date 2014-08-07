@@ -1,0 +1,38 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Levente Polyak <levente[at]leventepolyak[dot]net>
+# Contributor: Ivan Sichmann Freitas <ivansichfreitas@gmail.com>
+
+pkgname=vit
+pkgver=1.1
+pkgrel=1
+pkgdesc="A full-screen terminal interface for Taskwarrior with Vi key bindings and complete support for native Taskwarrior colorization"
+arch=('any')
+url="http://taskwarrior.org/projects/taskwarrior/wiki/Vit"
+license=('GPL3')
+depends=('perl-curses' 'task')
+source=("http://taskwarrior.org/download/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('9b8cce2447b1d8247c6e6317b75dc76daf4f0f30a2a8160755c3befeafc8c6be')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+
+  # use /usr/share/vit instead of /etc/vit
+  sed -i "s|/etc|/share/vit|" Makefile.in vit.pl
+
+  # use DESTDIR and do NOT use sudo for install
+  sed -i "s|sudo ||;s| \(@prefix\)| \$(DESTDIR)/\1|" Makefile.in
+}
+
+build() {
+  cd ${pkgname}-${pkgver}
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  make DESTDIR="${pkgdir}" install
+}
+
+# vim: ts=2 sw=2 et:

@@ -1,0 +1,57 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Stijn Segers <francesco dot borromini at gmail dot com>
+
+pkgname=beid-svn
+pkgver=r1537
+pkgrel=1
+pkgdesc="The eID Middleware software for using the Belgian eID on your computer"
+arch=('x86_64' 'i686')
+url="http://code.google.com/p/eid-mw/"
+license=('LGPL')
+depends=('pcsclite' 'gtk2')
+makedepends=('subversion' 'ccache' 'java-runtime')
+conflicts=('beid')
+replaces=('beid')
+install=beid-svn.install
+options=('makeflags')
+source=("$pkgname::svn+http://eid-mw.googlecode.com/svn/trunk/")
+md5sums=('SKIP')
+changelog=$pkgname.changelog
+
+pkgver() {
+  cd "$pkgname"
+  local ver="$(svnversion)"
+  printf "r%s" "${ver//[[:alpha:]]}"
+}
+
+build() {
+  cd "$pkgname"
+
+  # This is temporary (but filthy) - we need to add the java compiler's location to the PATH
+  # in order to use it. Since sensible people have only one java environment installed, we 
+  # won't be doing any checking on whether we source twice instead of just once. 
+  [ -e /etc/profile.d/jre.sh ] && . /etc/profile.d/jre.sh
+
+  # Bootstrap
+  msg "Bootstrapping, might take a bit..."
+  autoreconf -i --force
+
+  # Run configure
+  msg "Configuring beid"
+  ./configure \
+    --prefix=/usr \
+    --libexecdir=/usr/bin \
+    --disable-static
+
+  # Build
+  msg "Running make" 
+  make
+}
+
+package() {
+  cd "$pkgname"
+  msg "Running make install" 
+  make DESTDIR=$pkgdir install
+
+}

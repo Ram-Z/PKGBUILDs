@@ -1,22 +1,26 @@
 # Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
 
 pkgname=eid-mw
-pkgver=4.0.4
-_build=1253
-_build2=tcm406-178475
+pkgver=4.0.6
+_build=1480
+_build2=tcm406-250016
 pkgrel=1
 pkgdesc="The eID middleware for the Belgian eID"
 arch=('i686' 'x86_64')
 url="http://eid.belgium.be/"
-license=('LGPL')
+license=('LGPL3')
 depends=('pcsclite' 'gtk2')
-makedepends=('pkg-config')
-source=("http://eid.belgium.be/en/binaries/${pkgname}-${pkgver}-${_build}_${_build2}.tgz")
-md5sums=('485eb2ebafd44efaf0b487122485ecf8')
+makedepends=('ccache' 'java-runtime')
+source=("http://eid.belgium.be/en/binaries/${pkgname}-${pkgver}-${_build}.tar_${_build2}.gz")
+
+# source=("http://eid.belgium.be/fr/binaries/${pkgname}-${pkgver}-1253_tcm226-178475.tgz")
+# http://eid.belgium.be/en/binaries/eid-mw-4.0.6-1480.tar_tcm406-250016.gz
+md5sums=('006371f4fc4b6653b5005a63bba473b1')
+options=(!libtool)
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
-  ./configure --prefix=/usr --libexecdir=/usr/bin
+  ./configure --prefix=/usr --libexecdir=/usr/bin --disable-static
   make
 }
 

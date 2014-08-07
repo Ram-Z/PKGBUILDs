@@ -3,22 +3,24 @@
 # Contributor: Vianney le Clément <vleclement AT gmail·com>
 
 pkgname=eid-viewer
-pkgver=4.0.4
-_revision=146
-_build=tcm226-178483
+pkgver=4.0.7
+_revision=184
+_build=tcm406-250014
 pkgrel=1
 pkgdesc="Viewer for Belgian Electronic Identity Card"
 arch=("any")
 url="https://code.google.com/p/eid-viewer/"
 license=('LGPL3')
 depends=('java-runtime' 'pcsclite')
-source=("http://eid.belgium.be/fr/binaries/$pkgname-$pkgver-$_revision.src_$_build.tgz")
-md5sums=('c2ce4921e49abe7bdbedfaf05f78c170')
-sha1sums=('ed8f9ca3ae78b5db06c6e9ec2849246d188c51aa')
+source=("http://eid.belgium.be/en/binaries/$pkgname-$pkgver-$_revision.src.tar_$_build.gz")
+# http://eid.belgium.be/en/binaries/eid-viewer-4.0.7-184.src_tar_tcm406-250014.gz
+md5sums=('53f452aefc33a7271ae4d19425ef7a1c')
+sha1sums=('cc8495929e7121c111ac65c84daef20da7dcf629')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
   ./configure --prefix=/usr
+  make
 }
 
 package() {

@@ -3,24 +3,25 @@
 # Contributor: kittykatt <kittykatt@kittykatt.us>
 
 pkgname=screenfetch-git
+_pkgname=screenfetch
 pkgver=20130324
 pkgrel=1
 pkgdesc="Bash screenshot info grabber (DE, WM, theme, uptime, ...) GIT Version"
 arch=("any")
-url="http://git.silverirc.com/cgit.cgi/screenfetch-dev.git/"
+url="https://github.com/KittyKatt/screenfetch"
 license=('GPL')
 conflicts=('screenfetch')
 depends=('bash' 'xorg-utils')
 optdepends=('scrot: To take screenshot')
 makedepends=('git')
-source=("${pkgname}::git://git.silverirc.com/screenfetch.git")
+source=("git+https://github.com/KittyKatt/screenfetch")
 md5sums=('SKIP')
 
 package() {
-  cd $pkgname
+  cd $_pkgname
 
-  # Install
-  install -Dm755 screenfetch-dev $pkgdir/usr/bin/screenfetch
+  install -Dm755 "screenfetch-dev" "$pkgdir/usr/bin/screenfetch"
+  install -Dm644 "screenfetch.1" "$pkgdir/usr/share/man/man1/screenfetch.1"
 }
 
 # vim: sts=2 ts=2 sw=2 et

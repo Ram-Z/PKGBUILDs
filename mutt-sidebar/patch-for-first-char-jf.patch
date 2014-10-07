@@ -1,6 +1,5 @@
-diff -Naur mutt-1.5.21-orig/sidebar.c mutt-1.5.21/sidebar.c
---- mutt-1.5.21-orig/sidebar.c	2013-02-23 19:49:33.504715752 +0100
-+++ mutt-1.5.21/sidebar.c	2013-02-23 19:54:27.128053571 +0100
+--- sidebar.c.orig	2014-04-15 19:54:06.977669530 +0200
++++ sidebar.c	2014-04-15 19:54:59.739045269 +0200
 @@ -310,7 +310,7 @@
  		/* calculate depth of current folder and generate its display name with indented spaces */
  		int sidebar_folder_depth = 0;

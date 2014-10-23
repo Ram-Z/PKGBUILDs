@@ -5,15 +5,14 @@
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: cantabile <cantabile dot desu at gmail dot com>
 
-_pkgname=xdg-utils
-pkgname=${_pkgname}-mimeo
-pkgver=1.1.0.git
+pkgname=xdg-utils-mimeo
+pkgver=1.1.0.rc1.r101.g34e0338
 pkgrel=1
 pkgdesc='Command line tools that assist applications with a variety of desktop integration tasks; patched to use mimeo'
 arch=('any')
 url='http://portland.freedesktop.org/'
 license=('MIT')
-depends=('sh' 'xorg-server-utils' 'mimeo')
+depends=('sh' 'xorg-xset')
 makedepends=('docbook-xsl' 'lynx' 'xmlto' 'git')
 optdepends=('kdebase-runtime: for KDE support in xdg-open'
         'libgnome: for GNOME support in xdg-open'
@@ -24,33 +23,33 @@ optdepends=('kdebase-runtime: for KDE support in xdg-open'
         'perl-file-mimeinfo: for generic support in xdg-open')
 provides=('xdg-utils')
 conflicts=('xdg-utils')
-source=("git://anongit.freedesktop.org/xdg/xdg-utils#commit=2373d9b2b7"
+source=("git://anongit.freedesktop.org/xdg/xdg-utils#commit=34e03384"
         mimeo-detection.diff)
 md5sums=('SKIP'
-         'a8511724a7d652917901ecb32cbb3d48')
+         '8d2bc063f1599ec0a959875614263910')
 
 pkgver() {
-    cd ${_pkgname}
-    echo "1.1.0.git$(git log -1 --format="%cd" --date=short | set 's/-//g')"
+    cd xdg-utils
+    git describe --long | sed -r 's/^v//;s/([^-]*-g)/r\1/;s/-/./g'
 }
 
 prepare() {
-    cd ${_pkgname}
+    cd xdg-utils
     patch -p1 -i "${srcdir}"/mimeo-detection.diff
 }
 
 build() {
-    cd ${_pkgname}
+    cd xdg-utils
     ./configure --prefix=/usr --mandir=/usr/share/man
-    make scripts-clean -C scripts
-    make man scripts -C scripts
+    # make scripts-clean -C scripts
+    # make man scripts -C scripts
     make
 }
 
 package() {
-    cd ${_pkgname}
+    cd xdg-utils
     make DESTDIR="${pkgdir}" install
-    install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
+    install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
     # install empty directory to prevent xdg-desktop-menu install *.desktop to fail, see FS#33316
     install -dm755 $pkgdir/usr/share/desktop-directories

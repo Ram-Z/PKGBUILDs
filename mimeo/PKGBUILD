@@ -1,9 +1,9 @@
-# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Maintainer:  Samir Benmendil <ram-z[at]chakra-project[dot]org>
 # Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
-#Maintainer: Xyne <ac xunilhcra enyx, backwards>
+# Contributor: Xyne <ac xunilhcra enyx, backwards>
 
 pkgname=mimeo
-pkgver=2013.7.24
+pkgver=2014
 pkgrel=1
 pkgdesc='Open files by MIME-type or file name using regular expressions.'
 arch=("any")
@@ -12,8 +12,8 @@ url="http://xyne.archlinux.ca/projects/mimeo"
 depends=(python2 pyxdg file)
 optdepends=('MIME-types: for recognizing more MIME-types')
 source=("http://xyne.archlinux.ca/projects/mimeo/src/${pkgname}-${pkgver}.tar.xz")
-md5sums=('a77819c62039680c23be718ccb5d5382')
-sha512sums=('056dbc2219e13f21bf8db3076c346d2638bc42a48d2573dec9632c9148f7c33db1dd24c151965b66ee13cb4039aeaa17c271902b21aa86e09c209728c3cb3e46')
+md5sums=('28e2968571c11a5a66c8b16b932af91a')
+sha512sums=('ce940944402f26b53ec8b524e066f986bc4b8c79f879a8f3e7b29b09a9ec6ea9389c4162d13f0ec090c838bda2722d33de0ef048eae220fe44b3dc5cf61cacea')
 
 package ()
 {
@@ -21,6 +21,5 @@ package ()
   python2 setup.py install --root="$pkgdir"/ --optimize=1
   install -Dm755 "$pkgname" "$pkgdir/usr/bin/$pkgname"
 }
-
 
 # vim: set ts=2 sw=2 et:

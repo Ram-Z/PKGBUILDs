@@ -3,17 +3,17 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=msmtp
-pkgver=1.4.31
+pkgver=1.4.32
 pkgrel=1
 arch=('x86_64')
 license=('GPL3')
 pkgdesc="A mini smtp client"
 url="http://${pkgname}.sourceforge.net"
-depends=('gsasl')
+depends=('libgsasl')
 #makedepends=('texlive-latexextra')
 install=msmtp.install
 source=("http://download.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('c0edce1e1951968853f15209c8509699ff9e9ab5')
+sha1sums=('03186a70035dbbf7a31272a20676b96936599704')
 
 prepare() {
   cd ${pkgbase}-${pkgver}

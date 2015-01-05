@@ -2,7 +2,7 @@
 Description=SABnzbd binary newsreader
 
 [Service]
-ExecStart=/opt/sabnzbd/SABnzbd.py --config-file %h/.config/sabnzbd/sabnzbd.conf
+ExecStart=/opt/sabnzbd/SABnzbd.py
 
 [Install]
 WantedBy=default.target

@@ -3,7 +3,7 @@
 # Contributor: Florian Bruhin (The Compiler) <archlinux.org@the-compiler.org>
 
 pkgname=qutebrowser-git
-pkgver=r3427.fff7c50
+pkgver=r3628.48c8350
 pkgrel=1
 pkgdesc="A keyboard-driven, vim-like browser based on PyQt5 and QtWebKit"
 arch=("any")
@@ -11,9 +11,10 @@ url="http://www.qutebrowser.org/"
 license=('GPL')
 depends=('python3>=3.4' 'python3-setuptools' 'python3-pyqt5>=5.2' 'qt5-base>=5.2'
          'qt5-webkit>=5.2' 'libxkbcommon' 'python3-pypeg2' 'python3-jinja'
-         'python3-pygments')
+         'python3-pygments' 'xdg-utils' 'desktop-file-utils')
 makedepends=('asciidoc')
 optdepends=(
+  'python3-colorlog: colored logging output'
   'gst-libav: media playback'
   'gst-plugins-base: media playback'
   'gst-plugins-good: media playback'
@@ -21,10 +22,12 @@ optdepends=(
   'gst-plugins-ugly: media playback'
 )
 options=(!emptydirs)
+conflicts=('qutebrowser')
+provides=('qutebrowser')
 source=('git+https://github.com/The-Compiler/qutebrowser.git'
         'qutebrowser-git.install')
 sha256sums=('SKIP'
-            '3622243cf88eef2bb3381fec5e3cede59288b263a0ef6387510e0ad92e2cb690')
+            '4a88871e91f894890ce96feb620e4174c686db12e4fa91b5a7306454dc96bf67')
 install=qutebrowser-git.install
 
 pkgver() {

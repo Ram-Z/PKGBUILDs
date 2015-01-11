@@ -1,0 +1,23 @@
+395,396c371
+<     if lay == layout.suit.tile 
+<      or lay == lain.layout.uselesstile then
+---
+>     if lay == layout.suit.tile then
+405,406c380
+<     elseif lay == layout.suit.tile.left
+<      or lay == lain.layout.uselesstile.left then
+---
+>     elseif lay == layout.suit.tile.left then
+461,462c435
+<                                       if lay == layout.suit.tile or
+< 					lay == lain.layout.uselesstile then
+---
+>                                       if lay == layout.suit.tile then
+465,466c438
+<                                       elseif lay == layout.suit.tile.left or
+< 					lay == lain.layout.uselesstile.left then
+---
+>                                       elseif lay == layout.suit.tile.left then
+570,571d541
+< 	or lay == lain.layout.uselesstile
+< 	or lay == lain.layout.uselesstile.left

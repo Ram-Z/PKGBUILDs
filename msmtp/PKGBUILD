@@ -3,39 +3,37 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=msmtp
-pkgver=1.4.32
+pkgver=1.6.1
 pkgrel=1
 arch=('x86_64')
 license=('GPL3')
 pkgdesc="A mini smtp client"
 url="http://${pkgname}.sourceforge.net"
 depends=('libgsasl')
-#makedepends=('texlive-latexextra')
+makedepends=('texlive-latexextra')
 install=msmtp.install
-source=("http://download.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('03186a70035dbbf7a31272a20676b96936599704')
-
-prepare() {
-  cd ${pkgbase}-${pkgver}
-  sed -i 's|/usr/bin/python|/usr/bin/python2|' scripts/${pkgname}-gnome-tool/${pkgname}-gnome-tool.py
-}
+source=("http://download.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+sha1sums=('ac70151bcb53af5e192cbb147fd2b8139c637089')
 
 build() {
   cd ${pkgbase}-${pkgver}
-  ./configure --prefix=/usr --sysconfdir=/etc --with-ssl=gnutls
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --with-ssl=gnutls
   make
-  #make -C doc html pdf
+  make -C doc html
 }
 
 package() {
   cd ${pkgbase}-${pkgver}
   make DESTDIR="${pkgdir}" install 
-  #make DESTDIR="${pkgdir}" -C doc install-html install-pdf
+  make DESTDIR="${pkgdir}" -C doc install-html
 
 # Installing example configs and scripts to /usr/share/doc/${pkgname}
 # as they are not installed by default (Debian and Gentoo do it this way)
   install -d "${pkgdir}/usr/share/doc/${pkgname}"
-  cp -r scripts/{find_alias,${pkgname}-gnome-tool,${pkgname}queue,${pkgname}q,set_sendmail} "${pkgdir}/usr/share/doc/${pkgname}/"
+  cp -r scripts/{find_alias,${pkgname}queue,${pkgname}q,set_sendmail} "${pkgdir}/usr/share/doc/${pkgname}/"
   install -D -m644 doc/*.example "${pkgdir}/usr/share/doc/${pkgname}/"
 
   install -D -m644 scripts/vim/${pkgname}.vim "${pkgdir}/usr/share/vim/vimfiles/syntax/${pkgname}.vim"

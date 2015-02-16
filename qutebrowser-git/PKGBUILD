@@ -3,15 +3,26 @@
 # Contributor: Florian Bruhin (The Compiler) <archlinux.org@the-compiler.org>
 
 pkgname=qutebrowser-git
-pkgver=r3628.48c8350
+pkgver=r3832.46ca0e4
 pkgrel=1
 pkgdesc="A keyboard-driven, vim-like browser based on PyQt5 and QtWebKit"
 arch=("any")
 url="http://www.qutebrowser.org/"
 license=('GPL')
-depends=('python3>=3.4' 'python3-setuptools' 'python3-pyqt5>=5.2' 'qt5-base>=5.2'
-         'qt5-webkit>=5.2' 'libxkbcommon' 'python3-pypeg2' 'python3-jinja'
-         'python3-pygments' 'xdg-utils' 'desktop-file-utils')
+depends=(
+  'desktop-file-utils'
+  'libxkbcommon'
+  'python3-jinja'
+  'python3-pygments'
+  'python3-pypeg2'
+  'python3-pyqt5>=5.2'
+  'python3-setuptools'
+  'python3-yaml'
+  'python3>=3.4'
+  'qt5-base>=5.2'
+  'qt5-webkit>=5.2'
+  'xdg-utils'
+)
 makedepends=('asciidoc')
 optdepends=(
   'python3-colorlog: colored logging output'
@@ -31,41 +42,28 @@ sha256sums=('SKIP'
 install=qutebrowser-git.install
 
 pkgver() {
-  cd "$srcdir/qutebrowser"
+  cd "$srcdir"/qutebrowser
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
-  cd "$srcdir/qutebrowser"
+  cd "$srcdir"/qutebrowser
   python3 scripts/asciidoc2html.py
   a2x -f manpage doc/qutebrowser.1.asciidoc
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/qutebrowser"
+  cd "$srcdir"/qutebrowser
   python3 setup.py install --root="$pkgdir/" --optimize=1
-  install -Dm644 doc/qutebrowser.1 "$pkgdir/usr/share/man/man1/qutebrowser.1"
+  install -Dm644 doc/qutebrowser.1 "$pkgdir"/usr/share/man/man1/qutebrowser.1
   install -Dm755 qutebrowser.desktop \
-    "$pkgdir/usr/share/applications/qutebrowser.desktop"
-  install -Dm755 icons/qutebrowser-16x16.png \
-    "$pkgdir/usr/share/icons/hicolor/16x16/apps/qutebrowser.png"
-  install -Dm755 icons/qutebrowser-24x24.png \
-    "$pkgdir/usr/share/icons/hicolor/24x24/apps/qutebrowser.png"
-  install -Dm755 icons/qutebrowser-32x32.png \
-    "$pkgdir/usr/share/icons/hicolor/32x32/apps/qutebrowser.png"
-  install -Dm755 icons/qutebrowser-48x48.png \
-    "$pkgdir/usr/share/icons/hicolor/48x48/apps/qutebrowser.png"
-  install -Dm755 icons/qutebrowser-64x64.png \
-    "$pkgdir/usr/share/icons/hicolor/64x64/apps/qutebrowser.png"
-  install -Dm755 icons/qutebrowser-96x96.png \
-    "$pkgdir/usr/share/icons/hicolor/96x96/apps/qutebrowser.png"
-  install -Dm755 icons/qutebrowser-128x128.png \
-    "$pkgdir/usr/share/icons/hicolor/128x128/apps/qutebrowser.png"
-  install -Dm755 icons/qutebrowser-256x256.png \
-    "$pkgdir/usr/share/icons/hicolor/256x256/apps/qutebrowser.png"
-  install -Dm755 icons/qutebrowser-512x512.png \
-    "$pkgdir/usr/share/icons/hicolor/512x512/apps/qutebrowser.png"
+    "$pkgdir"/usr/share/applications/qutebrowser.desktop
+
+  for px in 16 24 32 48 64 96 128 256 512; do
+    install -Dm755 icons/qutebrowser-${px}x${px}.png \
+      "$pkgdir"/usr/share/icons/hicolor/${px}x${px}/apps/qutebrowser.png
+  done
   install -Dm755 icons/qutebrowser.svg \
-    "$pkgdir/usr/share/icons/hicolor/scalable/apps/qutebrowser.svg"
+    "$pkgdir"/usr/share/icons/hicolor/scalable/apps/qutebrowser.svg
 }

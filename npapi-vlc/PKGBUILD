@@ -3,7 +3,7 @@
 # Contributor: Hugo Osvaldo Barrera <hugo@osvaldobarrera.com.ar>
 
 pkgname=npapi-vlc
-pkgver=2.1.3
+pkgver=2.2.0
 pkgrel=1
 pkgdesc="NPAPI plugin for libvlc"
 arch=('i686' 'x86_64')

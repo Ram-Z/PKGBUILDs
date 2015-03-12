@@ -3,7 +3,7 @@
 # Contributor: graysky <graysky AT archlinux DOT us>
 
 pkgname=profile-sync-daemon
-pkgver=5.69
+pkgver=5.70
 pkgrel=1
 pkgdesc='Syncs browser profiles to tmpfs reducing SSD/HDD calls and speeding-up browsers.'
 arch=('any')
@@ -16,7 +16,7 @@ conflicts=('firefox-sync' 'firefox-tmpfs-daemon' 'chromium-tmpfs' 'tmpfs-store'
 source=("http://repo-ck.com/source/$pkgname/$pkgname-$pkgver.tar.xz")
 backup=('etc/psd.conf')
 install=psd.install
-sha256sums=('9cfa48e984046d5e33c1ac6095d871e78c183ac90b8415fce23ba45d36bfb180')
+sha256sums=('fb039c4ea7e15d0122a521cf81b3dcd9060c3e3440ca48611f0d9caffbfd323a')
 
 build() {
   cd "$pkgname-$pkgver"

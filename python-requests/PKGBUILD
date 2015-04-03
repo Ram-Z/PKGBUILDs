@@ -1,0 +1,24 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Patrice Peterson <runiq at archlinux dot us>
+# Contributor: Wieland Hoffmann <the_mineo@web.de>
+
+pkgname=python-requests
+pkgver=0.14.1
+pkgrel=1
+pkgdesc="Python HTTP for Humans, Python 3 version."
+url="http://python-requests.org"
+depends=('python3' 'python-chardet')
+makedepends=('python-distribute')
+license=('custom: ISC')
+arch=('any')
+source=("http://pypi.python.org/packages/source/r/requests/requests-$pkgver.tar.gz")
+md5sums=('3de30600072cbc7214ae342d1d08aa46')
+
+package() {
+    cd "${srcdir}/requests-${pkgver}"
+    python3 setup.py install --root=${pkgdir}/
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:

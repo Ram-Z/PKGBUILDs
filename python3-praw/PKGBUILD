@@ -1,0 +1,25 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: dnuux <dnuuxx@gmail.com>
+
+pkgname=python3-praw
+_pkgname=praw
+pkgver=2.1.20
+pkgrel=1
+pkgdesc="Python Reddit API Wrapper"
+url="https://praw.readthedocs.org/"
+arch=('any')
+license=('GPL3')
+depends=('python3-requests' 'python3-six' 'python3-update_checker')
+source=("https://pypi.python.org/packages/source/p/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('579ddd10526695405c06598901364e3f')
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python3 setup.py build
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python3 setup.py install --root="${pkgdir}" --optimize=1
+}

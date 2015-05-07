@@ -34,25 +34,12 @@ pkgver() {
 package () {
   cd "${pkgname}"
 
-# Install the vicious library
-  install -d "${pkgdir}/usr/share/lua/${_luaver}/${_gitname}"
-  install -m644 *.lua "${pkgdir}/usr/share/lua/${_luaver}/${_gitname}"
-
-# Install vicious widgets
-  install -d "${pkgdir}/usr/share/lua/${_luaver}/${_gitname}/widgets"
-  install -m644 widgets/*.lua "${pkgdir}/usr/share/lua/${_luaver}/${_gitname}/widgets"
-
-# Install user contributed widgets
-  install -d "${pkgdir}/usr/share/lua/${_luaver}/${_gitname}/contrib"
-  install -m644 contrib/*.lua "${pkgdir}/usr/share/lua/${_luaver}/${_gitname}/contrib"
-
-# Install support for legacy lua51
-  install -d "${pkgdir}/usr/share/lua/5.1"
-  ln -s /usr/share/lua/${_luaver}/vicious ${pkgdir}/usr/share/lua/5.1/vicious
-
-# Install the documentation
-  install -D -m644 CHANGES "${pkgdir}/usr/share/doc/${_gitname}/CHANGES"
-  install -m644 TODO "${pkgdir}/usr/share/doc/${_gitname}" 
-  install -m644 README "${pkgdir}/usr/share/doc/${_gitname}" 
-  install -m644 LICENSE "${pkgdir}/usr/share/doc/${_gitname}"
+  # Install the vicious library
+  install -dm755 "$pkgdir"/usr/share/awesome/lib/$_gitname/{widgets,contrib}
+  install -m644 *.lua "$pkgdir/usr/share/awesome/lib/$_gitname"
+  install -m644 widgets/*.lua "$pkgdir/usr/share/awesome/lib/$_gitname/widgets"
+  install -m644 contrib/*.lua "$pkgdir/usr/share/awesome/lib/$_gitname/contrib"
+  # Install documentation
+  install -dm755 "$pkgdir/usr/share/doc/$_gitname"
+  install -m644 README CHANGES "$pkgdir/usr/share/doc/$_gitname"
 }

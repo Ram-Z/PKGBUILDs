@@ -5,7 +5,7 @@
 # Contributor: Klemen Košir <klemen913@gmail.com>
 
 pkgname=cataclysm-dda-git
-pkgver=0.C.2413.g5f5994d
+pkgver=0.C.2942.g93c35bb
 pkgrel=1
 pkgdesc="Cataclysm: Dark Days Ahead is an actively maintained roguelike set in a post-apocalyptic world. Both SDL tiles and ascii version included."
 arch=('i686' 'x86_64')
@@ -27,8 +27,9 @@ pkgver() {
 
 build() {
   cd "${srcdir}/${pkgname}"
-  make RELEASE=1 USE_HOME_DIR=1
-  make RELEASE=1 USE_HOME_DIR=1 TILES=1 SOUND=1
+  # sed '/^RELEASE_FLAGS/d' -i Makefile # was needed to remove -Werror
+  make RELEASE=1 USE_HOME_XDG=1
+  make RELEASE=1 USE_HOME_XDG=1 TILES=1 SOUND=1
 }
 
 package() {

@@ -1,0 +1,26 @@
+# Maintainer:  Ram-Z <chakra[at]rmz[dot]io>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Daniel Wallace <danielwallace at gtmanfred dot com>
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: karnath <karnathtorjian@gmail.com>
+
+pkgname=zathura-djvu
+pkgver=0.2.4
+pkgrel=1
+pkgdesc="DjVu support for Zathura"
+arch=('i686' 'x86_64')
+url="https://pwmt.org/projects/zathura-djvu/"
+license=('custom')
+depends=('djvulibre' 'zathura')
+install="$pkgname.install"
+source=("https://pwmt.org/projects/zathura/plugins/download/zathura-djvu-$pkgver.tar.gz")
+md5sums=('672a25dc9433b2541971c2e4e052bdd3')
+
+build(){
+  make -C "${srcdir}/$pkgname-$pkgver"
+}
+
+package(){
+  make -C "${srcdir}/$pkgname-$pkgver" DESTDIR="$pkgdir" install
+  install -Dm0644 "${srcdir}/$pkgname-$pkgver/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

@@ -1,0 +1,25 @@
+# Maintainer:  Ram-Z <chakra[at]rmz[dot]io>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: karnath <karnathtorjian@gmail.com>
+
+pkgname=zathura-ps
+pkgver=0.2.2
+pkgrel=1
+pkgdesc="Adds ps support to zathura by using the libspectre library"
+arch=('i686' 'x86_64')
+url="https://pwmt.org/projects/zathura/plugins/zathura-ps/"
+license=('custom')
+depends=('libspectre' 'zathura')
+install="$pkgname.install"
+source=("https://pwmt.org/projects/zathura/plugins/download/zathura-ps-$pkgver.tar.gz")
+md5sums=('338af976c03c0aa1471b156a0efdc45c')
+
+build(){
+  make -C "$pkgname-$pkgver"
+}
+
+package(){
+  make -C "$pkgname-$pkgver" DESTDIR="$pkgdir" install
+  install -Dm0644 "$pkgname-$pkgver/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

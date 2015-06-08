@@ -1,0 +1,28 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Sebastien Leduc <sebastien@sleduc.fr>
+
+pkgbase=python-trollius
+pkgname=(python2-trollius python3-trollius)
+_realname=trollius
+pkgver=1.0.4
+pkgrel=1
+pkgdesc="Port of the Tulip project (asyncio module, PEP 3156) on Python 2.7"
+arch=("any")
+url="https://bitbucket.org/enovance/trollius"
+license=('APACHE')
+depends=('python2')
+source=("http://pypi.python.org/packages/source/t/$_realname/$_realname-$pkgver.tar.gz")
+md5sums=('3631a464d49d0cbfd30ab2918ef2b783')
+
+package_python2-trollius() {
+  cd "$srcdir/$_realname-$pkgver"
+  python2 setup.py install --root="$pkgdir/" --optimize=1
+}
+
+package_python3-trollius() {
+  cd "$srcdir/$_realname-$pkgver"
+  python3 setup.py install --root="$pkgdir/" --optimize=1
+}
+
+# vim:set ts=2 sw=2 et:

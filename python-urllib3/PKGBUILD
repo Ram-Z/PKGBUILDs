@@ -1,0 +1,62 @@
+# Maintainer:  Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Patrice Peterson <runiq at archlinux dot us>
+# Contributor: Chris Brannon <cmbrannon79@gmail.com>
+# Contributor: BorgHunter <borghunter at gmail dot com>
+
+pkgbase=python-urllib3
+pkgname=(python3-urllib3 python2-urllib3)
+pkgver=1.10.2
+pkgrel=1
+pkgdesc="HTTP library with thread-safe connection pooling and file post support"
+arch=("any")
+url="https://github.com/shazow/urllib3"
+license=("MIT")
+makedepends=('python3-setuptools' 'python2-setuptools' 'git')
+checkdepends=('python3-nose' 'python2-nose' 'python3-mock' 'python2-mock' 'python3-pyopenssl' 'python2-pyopenssl'
+              'python3-tornado' 'python2-tornado' 'python2-ndg-httpsclient' 'python3-coverage' 'python2-coverage')
+source=("$pkgbase-$pkgver.tar.gz::https://github.com/shazow/urllib3/archive/$pkgver.tar.gz"
+        LICENSE)
+md5sums=('bd1c856b66829220f02aff4f309a77fe'
+         '350846ab4dd11ce105b570c15c1b0764')
+
+prepare() {
+  # Hack version requirements for test requirements to run tests - Disabled due to tests not runable
+  #sed -e "s/==.*//" -i $_pkgname/test-requirements.txt
+
+  cp -a urllib3-$pkgver{,-py2}
+}
+
+build() {
+  cd urllib3-$pkgver
+  python3 setup.py build
+
+  cd ../urllib3-$pkgver-py2
+  python2 setup.py build
+}
+
+check() {
+  # Tests stuck
+
+  cd urllib3-$pkgver
+  # nosetests3 -e "pyopenssl"  # No ndg-httpsclient module to test with
+
+  cd ../urllib3-$pkgver-py2
+  # nosetests2
+}
+
+package_python3-urllib3() {
+  depends=('python')
+
+  cd urllib3-$pkgver
+  python3 setup.py install --root="${pkgdir}"
+  install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python2-urllib3() {
+  depends=('python2')
+
+  cd urllib3-$pkgver-py2
+  python2 setup.py install --root="${pkgdir}"
+  install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

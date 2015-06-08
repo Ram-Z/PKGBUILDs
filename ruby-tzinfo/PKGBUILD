@@ -1,0 +1,28 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: Niels Martignène <niels.martignene@gmail.com>
+# Contributor: Anatol Pomozov <anatol.pomozov@gmail.com>
+# Contributor: Nathan Phillip Brink <binki@gentoo.org>
+
+pkgname=ruby-tzinfo
+pkgver=1.2.2
+pkgrel=1
+pkgdesc='Daylight savings aware timezone library'
+arch=("any")
+url='http://tzinfo.github.io'
+license=('MIT')
+depends=('ruby' 'ruby-thread_safe')
+options=(!emptydirs)
+source=("https://rubygems.org/downloads/tzinfo-${pkgver}.gem")
+noextract=("tzinfo-${pkgver}.gem")
+sha256sums=('fdb1d3fdf2776d490c82a0e589a08e7cbde70ac1ae7d2b1f0b7e77f3e6b801b0')
+
+package() {
+  local _gemdir="$(ruby -e'puts Gem.default_dir')"
+
+  gem install --ignore-dependencies --no-user-install \
+    -i "${pkgdir}/${_gemdir}" -n "${pkgdir}/usr/bin" "tzinfo-${pkgver}.gem"
+
+  install -D -m644 "${pkgdir}/${_gemdir}/gems/tzinfo-${pkgver}/LICENSE" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

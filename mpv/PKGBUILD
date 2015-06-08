@@ -3,21 +3,23 @@
 # Contributor: Eivind Uggedal <eivind@uggedal.com>
 
 pkgname=mpv
-pkgver=0.3.10
+pkgver=0.7.2
 pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
 license=('GPL')
 url="http://mpv.io"
-depends=('desktop-file-utils' 'ffmpeg' 'hicolor-icon-theme' 'lcms2'
-         'libcdio-paranoia' 'libdvdnav' 'libdvdread' 'libgl' 'libquvi' 'libva'
-         'libxinerama' 'libxkbcommon' 'libxv' 'lirc-utils' 'lua' 'mpg123'
-         'portaudio' 'wayland' 'xdg-utils')
+depends=(
+  'ffmpeg' 'lcms2' 'libdvdread' 'libcdio-paranoia' 'libgl' 'enca' 'libguess'
+  'libxinerama' 'mpg123' 'libxv' 'libxkbcommon' 'libva' 'wayland'
+  'desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils' 'lua' 'libdvdnav'
+  'libguess' 'portaudio' 'libxrandr'
+)
 makedepends=('mesa' 'python2-docutils' 'ladspa')
 options=(!emptydirs !buildflags)
 install=mpv.install
 source=("https://github.com/mpv-player/$pkgname/archive/v${pkgver}.tar.gz")
-md5sums=('9cfd0a4118b260bff4a3bc21cac7d1ab')
+md5sums=('5081934235bf1d531364f59e5f718024')
 
 prepare() {
   cd "$pkgname-$pkgver"
@@ -52,6 +54,8 @@ package() {
   install -d ${pkgdir}/usr/share/doc/mpv/examples
 
   # some extra useful stuff "make install" doesn't install
+  install -m755 TOOLS/umpv \
+    "${pkgdir}"/usr/bin/umpv
   install -m644 etc/{input,example}.conf \
     "${pkgdir}/usr/share/doc/mpv/examples"
   install -m644 DOCS/{encoding.rst,tech-overview.txt} \

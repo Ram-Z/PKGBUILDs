@@ -3,22 +3,22 @@
 # Contributor: Xyne <ac xunilhcra enyx, backwards>
 
 pkgname=mimeo
-pkgver=2014
+pkgver=2015.1
 pkgrel=1
 pkgdesc='Open files by MIME-type or file name using regular expressions.'
 arch=("any")
 license=("GPL")
 url="http://xyne.archlinux.ca/projects/mimeo"
-depends=(python2 pyxdg file)
+depends=(python2 python2-xdg file)
 optdepends=('MIME-types: for recognizing more MIME-types')
 source=("http://xyne.archlinux.ca/projects/mimeo/src/${pkgname}-${pkgver}.tar.xz")
-md5sums=('28e2968571c11a5a66c8b16b932af91a')
-sha512sums=('ce940944402f26b53ec8b524e066f986bc4b8c79f879a8f3e7b29b09a9ec6ea9389c4162d13f0ec090c838bda2722d33de0ef048eae220fe44b3dc5cf61cacea')
+md5sums=('c5c3465e9471227b845afe4fffedf6f3')
+sha512sums=('128af7d619b28015f928b06fd3d2f48e0818f84b3045a8c99ca2083952f5a9a1bbe62d8f8366e25f2bd3e25385481870cc25851fa081e60a857714cc7c65ef75')
 
 package ()
 {
   cd "$srcdir/$pkgname-$pkgver"
-  python2 setup.py install --root="$pkgdir"/ --optimize=1
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
   install -Dm755 "$pkgname" "$pkgdir/usr/bin/$pkgname"
 }
 

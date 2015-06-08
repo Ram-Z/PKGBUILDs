@@ -29,6 +29,7 @@ build() {
         -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so \
         -DENABLE_MAN=ON \
         -DENABLE_DOC=ON
+  make
 }
 
 package() {

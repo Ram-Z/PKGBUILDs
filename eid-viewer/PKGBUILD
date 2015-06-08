@@ -1,30 +1,29 @@
-# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Maintainer:  Ram-Z <chakra[at]rmz[dot]io>
 # Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
 # Contributor: Vianney le Clément <vleclement AT gmail·com>
 
 pkgname=eid-viewer
-pkgver=4.0.7
-_revision=184
-_build=tcm406-250014
+pkgver=4.0.7_195
+_build=tcm406-258907
 pkgrel=1
 pkgdesc="Viewer for Belgian Electronic Identity Card"
 arch=("any")
 url="https://code.google.com/p/eid-viewer/"
 license=('LGPL3')
 depends=('java-runtime' 'pcsclite')
-source=("http://eid.belgium.be/en/binaries/$pkgname-$pkgver-$_revision.src.tar_$_build.gz")
+source=("http://eid.belgium.be/en/binaries/$pkgname-${pkgver//_/-}.src.tar_$_build.gz")
 # http://eid.belgium.be/en/binaries/eid-viewer-4.0.7-184.src_tar_tcm406-250014.gz
-md5sums=('53f452aefc33a7271ae4d19425ef7a1c')
-sha1sums=('cc8495929e7121c111ac65c84daef20da7dcf629')
+md5sums=('c1ce3e09bed2cdd8cf4ce8569d9348b5')
+sha1sums=('a6758266cbb015f7b9ac57240a16311e5a5950b7')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd $pkgname-${pkgver%_*}
   ./configure --prefix=/usr
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd $pkgname-${pkgver%_*}
   make install DESTDIR="$pkgdir"
 }
 

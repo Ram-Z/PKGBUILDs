@@ -1,0 +1,17 @@
+# Maintainer:  Ram-Z <chakra[at]rmz[dot]io>
+
+pkgname=python2-gdata
+pkgver=2.0.18
+pkgrel=1
+arch=(any)
+pkgdesc="Python client library for Google data APIs"
+url="http://code.google.com/p/gdata-python-client/"
+license=('APACHE')
+depends=('python2')
+source=(http://gdata-python-client.googlecode.com/files/gdata-${pkgver}.tar.gz)
+sha1sums=('4cd6804f2af81697219307421996c6055c7c16e4')
+
+package() {
+  cd "${srcdir}/gdata-${pkgver}"
+  python2 setup.py install --prefix=/usr --root "${pkgdir}"
+}

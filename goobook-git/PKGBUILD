@@ -4,18 +4,19 @@
 
 pkgname=goobook-git
 _gitname=mainline
-pkgver=1.6
+pkgver=1.9.4.gbd5845f
 pkgrel=1
 pkgdesc="Manage your google contacts from the command-line or mutt"
 arch=('any')
-url="http://goobook.googlecode.com/"
+url="https://gitlab.com/goobook/goobook"
 license=('GPL')
 conflicts=('goobook')
 provides=('goobook')
-depends=('python2' 'python2-gdata>=2.0.7' 'python2-simplejson')
+depends=('python2' 'python2-gdata>=2.0.7' 'python2-simplejson'
+         'python2-oauth2client' 'python2-httplib2' 'python2-pyasn1-modules')
 makedepends=('git' 'python2-setuptools')
 optdepends=('python2-keyring')
-source=("${pkgname}::git://gitorious.org/goobook/$_gitname.git")
+source=("${pkgname}::git+https://gitlab.com/goobook/goobook.git")
 md5sums=('SKIP')
 install=goobook.install
 

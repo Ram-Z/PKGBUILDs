@@ -3,20 +3,19 @@
 # Contributor: graysky <graysky AT archlinux DOT us>
 
 pkgname=profile-sync-daemon
-pkgver=5.75
+pkgver=6.11
 pkgrel=1
 pkgdesc='Syncs browser profiles to tmpfs reducing SSD/HDD calls and speeding-up browsers.'
 arch=('any')
 url='https://github.com/graysky2/profile-sync-daemon'
 license=('MIT')
-depends=('bash' 'binutils' 'coreutils' 'gawk' 'glibc' 'grep' 'procps-ng'
-         'ncurses' 'rsync' 'sed')
+depends=('procps-ng' 'rsync' 'systemd')
 conflicts=('firefox-sync' 'firefox-tmpfs-daemon' 'chromium-tmpfs' 'tmpfs-store'
            'goanysync' 'goanysync-git' 'tmpfs-sync' 'user-profile-sync-daemon')
 source=("http://repo-ck.com/source/$pkgname/$pkgname-$pkgver.tar.xz")
 backup=('etc/psd.conf')
 install=psd.install
-sha256sums=('ecb9acc0f274eb645b7dcb0510f692194feda8dbeffa3bb2834ce91cba76fcf6')
+sha256sums=('08aedbb783284b0f32281cad551c6e0299fe69f2b4b987fd53bb9a8ef72ed6dd')
 
 build() {
   cd "$pkgname-$pkgver"
@@ -25,7 +24,7 @@ build() {
 
 package() {
   cd "$pkgname-$pkgver"
-  make DESTDIR="$pkgdir" install-systemd-all
+  make DESTDIR="$pkgdir" install
   install -Dm644 MIT "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 

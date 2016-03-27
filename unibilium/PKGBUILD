@@ -2,21 +2,26 @@
 # Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
 
 pkgname=unibilium
-pkgver=1.1.4
+pkgver=1.2.0
 pkgrel=1
 pkgdesc="a terminfo parsing library"
 arch=('x86_64' 'i686')
 url="https://github.com/mauke/unibilium/"
-license=('LGPLv3')
+license=(LGPL3)
 source=("https://github.com/mauke/unibilium/archive/v$pkgver.tar.gz")
-md5sums=('89c1e26f846b394065dd1287ef07b07a')
+md5sums=('9b1c97839a880a373da6c097443b43c4')
 
 build() {
-	cd "${pkgname}-${pkgver}"
-	make PREFIX=/usr
+  cd "${pkgname}-${pkgver}"
+  make PREFIX=/usr
+}
+
+check() {
+  cd "${pkgname}-${pkgver}"
+  make test
 }
 
 package() {
-	cd "${pkgname}-${pkgver}"
-	DESTDIR="${pkgdir}" make install PREFIX=/usr
+  cd "${pkgname}-${pkgver}"
+  DESTDIR="${pkgdir}" make install PREFIX=/usr
 }

@@ -7,18 +7,26 @@
 
 pkgbase=python-neovim
 pkgname=(python2-neovim python3-neovim)
-pkgver=0.0.36
+_realname=python-client
+pkgver=0.1.4
 pkgrel=1
 arch=('any')
 license=('Apache')
 url='https://github.com/neovim/python-client'
 makedepends=('python2-setuptools' 'python3-setuptools')
 source=("https://github.com/neovim/python-client/archive/${pkgver}.tar.gz")
-sha256sums=('64149b2d7bb2db61e21da22e4df4cba93686688784928021b544d54329187b96')
+sha256sums=('dc4718ab8e239b60093d3f04bd41e9348c6b6b5850c8418e1f8fafc71c62eba5')
 
-build_python2-neovim() {
-  cd "${srcdir}/python-client-${pkgver}"
+prepare() {
+  cp -r $_realname-$pkgver{,-python2}
+}
+
+build() {
+  cd $_realname-${pkgver}-python2
   python2 setup.py build
+
+  cd $_realname-${pkgver}
+  python3 setup.py build
 }
 
 package_python2-neovim() {
@@ -29,13 +37,8 @@ package_python2-neovim() {
               'python2-click: for experimental GUI (pynvim)'
               'python2-gobject: for experimental GUI (pynvim)')
 
-  cd "${srcdir}/python-client-${pkgver}"
+  cd $_realname-${pkgver}-python2
   python2 setup.py install --prefix=/usr --root="${pkgdir}"
-}
-
-build_python3-neovim() {
-  cd "${srcdir}/python-client-${pkgver}"
-  python3 setup.py build
 }
 
 package_python3-neovim() {
@@ -44,7 +47,7 @@ package_python3-neovim() {
   provides=("python3-neovim=${pkgver}")
   conflicts=('python3-neovim')
 
-  cd "${srcdir}/python-client-${pkgver}"
+  cd $_realname-${pkgver}
   python3 setup.py install --prefix=/usr --root="${pkgdir}"
 }
 

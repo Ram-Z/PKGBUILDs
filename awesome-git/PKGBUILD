@@ -5,7 +5,7 @@
 # Contributor: wtchappell <wtchappell@gmail.com>
 
 pkgname=awesome-git
-pkgver=3.5.2.423.g1542722
+pkgver=3.5.2.1306.ge83832f
 pkgrel=1
 pkgdesc='Highly configurable framework window manager'
 arch=('i686' 'x86_64')

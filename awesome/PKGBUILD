@@ -3,7 +3,7 @@
 # Contributor: Vesa Kaihlavirta
 
 pkgname=awesome
-pkgver=3.5.6
+pkgver=3.5.7
 pkgrel=1
 pkgdesc="A tiling window manager initialy based on a dwm code rewriting."
 arch=('x86_64')
@@ -12,13 +12,13 @@ license=('GPL2')
 depends=('cairo' 'dbus' 'gdk-pixbuf2' 'imlib2' 'libxdg-basedir' 'lua' 'lua-lgi'
          'pango' 'startup-notification' 'xcb-util-cursor' 'xcb-util-keysyms'
          'xcb-util-wm' 'xorg-apps')
-makedepends=('asciidoc' 'cmake' 'docbook-xsl' 'doxygen' 'imagemagick' 'ldoc' 'xmlto')
+makedepends=('asciidoc' 'cmake' 'docbook-xsl' 'doxygen' 'imagemagick' 'xmlto')
 optdepends=('rlwrap: readline support for awesome-client'
             'dex: autostart your desktop files'
             'vicious: widgets for the Awesome window manager')
 backup=('etc/xdg/awesome/rc.lua')
 source=("$url/download/$pkgname-$pkgver.tar.xz")
-sha256sums=('37f49de187825425cb3096fc870959d5fec9302b22ffd0f2874d8a18e85046d7')
+sha256sums=('ba7f92b0ab8b729c569b19b098b0a08339d8654e3c040d07ad02cf99641ceecf')
 
 prepare() {
   mkdir -p build

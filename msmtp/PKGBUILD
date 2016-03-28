@@ -3,7 +3,7 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=msmtp
-pkgver=1.6.1
+pkgver=1.6.4
 pkgrel=1
 arch=('x86_64')
 license=('GPL3')
@@ -13,7 +13,7 @@ depends=('libgsasl')
 makedepends=('texlive-latexextra')
 install=msmtp.install
 source=("http://download.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.xz")
-sha1sums=('ac70151bcb53af5e192cbb147fd2b8139c637089')
+sha1sums=('fba760dc7977b90a970f3559ff47eac8afdd9611')
 
 build() {
   cd ${pkgbase}-${pkgver}

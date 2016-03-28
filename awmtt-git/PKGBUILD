@@ -1,0 +1,30 @@
+# Maintainer: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+
+_pkgname=awmtt
+pkgname=awmtt-git
+pkgver=r41.d94b035
+pkgrel=1
+pkgdesc="test and preview your awesomewm configuration with xephyr"
+arch=("any")
+url="https://github.com/mikar/awmtt"
+license=("MIT")
+depends=("xorg-server-xephyr")
+conflicts=(awmtt)
+provides=(awmtt)
+source=("git+https://github.com/mikar/awmtt.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $_pkgname
+  ( set -o pipefail
+    git describe --long --tags 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
+package() {
+  cd $_pkgname
+  install -d ${pkgdir}/usr/bin
+  install -m755 ${_pkgname}.sh ${pkgdir}/usr/bin/${_pkgname}
+}

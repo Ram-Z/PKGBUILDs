@@ -5,12 +5,13 @@
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: cantabile <cantabile dot desu at gmail dot com>
 
+_pkgname=xdg-utils
 pkgname=xdg-utils-mimeo
-pkgver=1.1.0.rc1.r101.g34e0338
+pkgver=1.1.1
 pkgrel=1
 pkgdesc='Command line tools that assist applications with a variety of desktop integration tasks; patched to use mimeo'
 arch=('any')
-url='http://portland.freedesktop.org/'
+url='https://wiki.freedesktop.org/www/Software/xdg-utils'
 license=('MIT')
 depends=('sh' 'xorg-xset')
 makedepends=('docbook-xsl' 'lynx' 'xmlto' 'git')
@@ -21,36 +22,31 @@ optdepends=('kdebase-runtime: for KDE support in xdg-open'
         'pcmanfm: for LXDE support in xdg-open'
         'mimeo: for mimeo support in xdg-open'
         'perl-file-mimeinfo: for generic support in xdg-open')
-provides=('xdg-utils')
-conflicts=('xdg-utils')
-source=("git://anongit.freedesktop.org/xdg/xdg-utils#commit=34e03384"
+provides=($_pkgname)
+conflicts=($_pkgname)
+source=(http://portland.freedesktop.org/download/$_pkgname-$pkgver.tar.gz{,.asc}
         mimeo-detection.diff)
-md5sums=('SKIP'
-         '8d2bc063f1599ec0a959875614263910')
-
-pkgver() {
-    cd xdg-utils
-    git describe --long | sed -r 's/^v//;s/([^-]*-g)/r\1/;s/-/./g'
-}
+md5sums=('2d0aec6037769a5f138ff404b1bb4b15'
+         'SKIP'
+         '0783dbeb478b91bbfc467be167a7145d')
+validpgpkeys=('8B75CA7811367175D05F3B03C43570F80CC295E6') # "Per Olofsson <pelle@pqz.se>"
 
 prepare() {
-    cd xdg-utils
-    patch -p1 -i "${srcdir}"/mimeo-detection.diff
+  cd $_pkgname-$pkgver
+  patch -p1 -i "${srcdir}"/mimeo-detection.diff
 }
 
 build() {
-    cd xdg-utils
-    ./configure --prefix=/usr --mandir=/usr/share/man
-    # make scripts-clean -C scripts
-    # make man scripts -C scripts
-    make
+  cd $_pkgname-$pkgver
+  ./configure --prefix=/usr --mandir=/usr/share/man
+  make
 }
 
 package() {
-    cd xdg-utils
-    make DESTDIR="${pkgdir}" install
-    install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  cd $_pkgname-$pkgver
+  make DESTDIR="${pkgdir}" install
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
-    # install empty directory to prevent xdg-desktop-menu install *.desktop to fail, see FS#33316
-    install -dm755 $pkgdir/usr/share/desktop-directories
+  # install empty directory to prevent xdg-desktop-menu install *.desktop to fail, see FS#33316
+  install -dm755 $pkgdir/usr/share/desktop-directories
 }

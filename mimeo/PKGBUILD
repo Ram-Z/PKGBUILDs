@@ -3,7 +3,7 @@
 # Contributor: Xyne <ac xunilhcra enyx, backwards>
 
 pkgname=mimeo
-pkgver=2016.1.14.3
+pkgver=2016.2
 pkgrel=1
 pkgdesc='Open files by MIME-type or file name using regular expressions.'
 arch=("any")
@@ -12,9 +12,9 @@ url="http://xyne.archlinux.ca/projects/mimeo"
 depends=(python3 python3-xdg file)
 optdepends=('MIME-types: for recognizing more MIME-types')
 source=("http://xyne.archlinux.ca/projects/mimeo/src/${pkgname}-${pkgver}.tar.xz"{,.sig})
-md5sums=('d88d5cf433967646760bb57169cde96a'
+md5sums=('4284e630c9102bae167b88335f944174'
          'SKIP')
-sha512sums=('5bdcf551a8e53855bec6de1be6ecbf1b6890ffaa8463fcf89f506d24271c5840735d792686eb396b9495f5d1e90a736a2b366807fcba0b98ad300ceda2c4fd7a'
+sha512sums=('5d140a78e4504d0b1338e8558507c47b664e1ea2d59742c7fca3f6f8f779b59a714497dd4a44bba62896d9146170fa5b2102bef17801b48ff33f336bea346d92'
             'SKIP')
 validpgpkeys=('EC3CBE7F607D11E663149E811D1F0DC78F173680')
 

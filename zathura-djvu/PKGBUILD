@@ -5,7 +5,7 @@
 # Contributor: karnath <karnathtorjian@gmail.com>
 
 pkgname=zathura-djvu
-pkgver=0.2.4
+pkgver=0.2.5
 pkgrel=1
 pkgdesc="DjVu support for Zathura"
 arch=('i686' 'x86_64')
@@ -14,7 +14,7 @@ license=('custom')
 depends=('djvulibre' 'zathura')
 install="$pkgname.install"
 source=("https://pwmt.org/projects/zathura/plugins/download/zathura-djvu-$pkgver.tar.gz")
-md5sums=('672a25dc9433b2541971c2e4e052bdd3')
+md5sums=('b7fcd813a8eba888340e9556769eaf62')
 
 build(){
   make -C "${srcdir}/$pkgname-$pkgver"

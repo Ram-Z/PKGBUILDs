@@ -3,7 +3,7 @@
 # Contributor: Bartłomiej Piotrowski <nospam@bpiotrowski.pl>
 
 pkgname=gitolite
-pkgver=3.6.1
+pkgver=3.6.5
 pkgrel=1
 pkgdesc="An access control layer on top of git" 
 arch=('any')
@@ -12,11 +12,11 @@ license=('GPL2')
 depends=('git' 'perl')
 conflicts=('gitolite-git' 'gitolite-g2-git' 'gitolite-g3-git')
 source=("https://github.com/sitaramc/$pkgname/archive/v${pkgver}.tar.gz")
-sha1sums=('c453231813c11de9c4709f3eb52f543e3fbb7104')
+sha1sums=('90273d462d85ebbe8c4522777df1c4b5d527bce2')
 
 prepare() {
   cd $pkgname-$pkgver
-  echo "v$pkgver" > src/VERSION
+  echo "$pkgver" > src/VERSION
 }
 
 package() {

@@ -1,0 +1,32 @@
+# Maintainer:  Ram-Z <ram-z[at]chakraos[dot]org>
+# Contributor: Jeff Parent <jecxjo@sdf.lonestar.org>
+
+_pkgname=pulsemixer
+pkgname=pulsemixer-git
+pkgver=1.1.0.r4.g6a3ec17
+pkgrel=1
+pkgdesc="cli and curses mixer for pulseaudio"
+arch=(any)
+url="https://github.com/GeorgeFilipkin/pulsemixer"
+license=('MIT')
+depends=('python' 'pulseaudio')
+makedepends=('git')
+source=(git+https://github.com/GeorgeFilipkin/pulsemixer.git)
+md5sums=('SKIP')
+
+pkgver() {
+  cd $_pkgname
+  ( set -o pipefail
+    git describe --long --tags 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
+package() {
+  cd $_pkgname
+
+  install -m 755 -d "$pkgdir/usr/bin"
+  install -m 755 pulsemixer "$pkgdir/usr/bin/"
+}
+
+# vim:set ts=2 sw=2 et:

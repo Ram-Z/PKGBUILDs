@@ -5,59 +5,69 @@
 # Contributor: Klemen Košir <klemen913@gmail.com>
 
 pkgname=cataclysm-dda-git
-pkgver=0.C.2942.g93c35bb
+pkgver=0.C.r6945.gb8b399f
 pkgrel=1
 pkgdesc="Cataclysm: Dark Days Ahead is an actively maintained roguelike set in a post-apocalyptic world. Both SDL tiles and ascii version included."
 arch=('i686' 'x86_64')
 url="http://www.cataclysmdda.com/"
 license=('CCPL:by-sa')
 conflicts=('cataclysm-dda', 'cataclysm-dda-ncurses')
-depends=('ncurses' 'sdl2' 'sdl2_image' 'sdl2_ttf' 'sdl2_mixer' 'freetype2' 'gcc-libs' 'glibc' 'zlib' 'bzip2')
+depends=('ncurses' 'sdl2_image' 'sdl2_ttf' 'sdl2_mixer' 'luajit')
 makedepends=('git' 'gettext')
-optdepends=('lua51')
 install=
-source=("$pkgname"::'git://github.com/CleverRaven/Cataclysm-DDA.git#branch=master')
-md5sums=('SKIP')
+source=("$pkgname"::'git://github.com/CleverRaven/Cataclysm-DDA.git'
+        "cataclysm-dda.desktop")
+md5sums=('SKIP'
+         '6a0a2a10583c3909230c798ee6ad622f')
 
 pkgver() {
-  cd "${srcdir}/${pkgname}"
-  make version >&2
-  printf "%s" $(sed -n 's/.*VERSION \"\(.*[^\\]\)\"/\1/;s/[- ]/./gp' src/version.h)
+  cd $pkgname
+  ( set -o pipefail
+    git describe --long --tags 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
 }
-
 build() {
-  cd "${srcdir}/${pkgname}"
+  cd "${pkgname}"
   # sed '/^RELEASE_FLAGS/d' -i Makefile # was needed to remove -Werror
-  make RELEASE=1 USE_HOME_XDG=1
-  make RELEASE=1 USE_HOME_XDG=1 TILES=1 SOUND=1
+  make RELEASE=1 USE_XDG_DIR=1 LUA=1
+  make RELEASE=1 USE_XDG_DIR=1 TILES=1 SOUND=1
 }
 
 package() {
-  cd "${srcdir}/${pkgname}"
+  cd "${pkgname}"
 
   local instdir=/usr/share/cataclysm-dda
 
-  install -dm755 "$pkgdir/${instdir}/"{data,gfx}
-  cp -ru --no-preserve=ownership data gfx "$pkgdir/${instdir}/"
-  install -Dm755 cataclysm cataclysm-tiles cataclysm-launcher "$pkgdir/${instdir}/"
+  PREFIX="$pkgdir"/usr make install TILES=1 SOUND=1 LUA=1
 
+  # .desktop
+  install -dm755 "$pkgdir/usr/share/applications"
+  cp "$srcdir/cataclysm-dda.desktop" "$pkgdir/usr/share/applications"
+
+  # icon
+  install -D 'data/osx/AppIcon.iconset/icon_128x128.png' "$pkgdir/usr/share/icons/hicolor/128x128/apps/cataclysm-dda.png"
+
+  # doc
   install -dm755 "$pkgdir/usr/share/doc/cataclysm-dda"
-  cp -ru --no-preserve=ownership doc "$pkgdir/usr/share/doc/cataclysm-dda/"
+  cp -r --no-preserve=ownership doc/* "$pkgdir/usr/share/doc/cataclysm-dda/"
+  rm "$pkgdir/usr/share/doc/cataclysm-dda/JSON_LOADING_ORDER.md"
+  cp 'data/json/LOADING_ORDER.md' "$pkgdir/usr/share/doc/cataclysm-dda/JSON_LOADING_ORDER.md"
 
   # License file
   install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
 
-  # User default mod list needs to be writeable
-  [ -f "$srcdir/user-default-mods.json" ] || echo "{}" > "$srcdir/user-default-mods.json"
-  install -Dm775 -g games "$srcdir/user-default-mods.json" "$pkgdir/var/games/cataclysm-dda/data/mods/user-default-mods.json"
-  ln -s "/var/games/cataclysm-dda/data/mods/user-default-mods.json" "$pkgdir/${instdir}/data/mods/user-default-mods.json"
-
-  # Launcher symlinks
-  install -dm755  "$pkgdir/usr/bin/"
-  ln -s "${instdir}/cataclysm-launcher" "$pkgdir/usr/bin/cataclysm"
-  ln -s "${instdir}/cataclysm-launcher" "$pkgdir/usr/bin/cataclysm-tiles"
-
-  # Localization
-  install -dm755 "$pkgdir/usr/share/locale"
-  LOCALE_DIR="$pkgdir/usr/share/locale" lang/compile_mo.sh
+  # # User default mod list needs to be writeable
+  # [ -f "$srcdir/user-default-mods.json" ] || echo "{}" > "$srcdir/user-default-mods.json"
+  # install -Dm775 -g games "$srcdir/user-default-mods.json" "$pkgdir/var/games/cataclysm-dda/data/mods/user-default-mods.json"
+  # ln -s "/var/games/cataclysm-dda/data/mods/user-default-mods.json" "$pkgdir/${instdir}/data/mods/user-default-mods.json"
+  #
+  # # Launcher symlinks
+  # install -dm755  "$pkgdir/usr/bin/"
+  # ln -s "${instdir}/cataclysm-launcher" "$pkgdir/usr/bin/cataclysm"
+  # ln -s "${instdir}/cataclysm-launcher" "$pkgdir/usr/bin/cataclysm-tiles"
+  #
+  # # Localization
+  # install -dm755 "$pkgdir/usr/share/locale"
+  # LOCALE_DIR="$pkgdir/usr/share/locale" lang/compile_mo.sh
 }

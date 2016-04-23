@@ -2,9 +2,9 @@
 # Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
 # Contributor: portix <portix@gmx.net>
 
-pkgname=dwb-gtk3-git
-_gitname=dwb
-pkgver=2014.05.27.gdf58ba8
+pkgname=dwb_collect-git
+_gitname=dwb_collect
+pkgver=2014.12.29.ga47c835
 pkgrel=1
 pkgdesc="A webkit web browser with vi-like keyboard shortcuts, latest git-pull" 
 url="http://portix.bitbucket.org/dwb-git"
@@ -12,13 +12,11 @@ arch=('i686' 'x86_64')
 license=('GPL')
 depends=('webkitgtk' 'desktop-file-utils')
 provides=("dwb")
-conflicts=('dwb' 'dwb-git' 'dwb-gtk3' 'dwb-gtk3-hg' 'dwb-hg')
-source=("git+https://portix@bitbucket.org/portix/dwb.git"
-        "perdomainsettings.patch"
-        "formfiller.patch")
+conflicts=('dwb' 'dwb-git' 'dwb-gtk3' 'dwb-gtk3-git')
+source=("git+https://bitbucket.org/0mark/dwb_collect.git"
+        "perdomainsettings.patch")
 md5sums=('SKIP'
-         'b20597e24cfae795d253c7dbb66d6295'
-         '1436949999e6617df4c686e449a7188d')
+         'b20597e24cfae795d253c7dbb66d6295')
 install=dwb.install
 makedepends=('git' 'json-c')
 #options=(debug)
@@ -31,7 +29,6 @@ pkgver() {
 prepare() {
   cd "$srcdir/$_gitname"
   patch -p0 < $srcdir/perdomainsettings.patch
-  patch -p0 < $srcdir/formfiller.patch
 }
 
 build() {

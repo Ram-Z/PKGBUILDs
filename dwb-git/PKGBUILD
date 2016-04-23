@@ -4,7 +4,7 @@
 
 pkgname=dwb-git
 _pkgname=dwb
-pkgver=2014.03.24.g4566d58
+pkgver=2015.07.26.gdda5aa7
 pkgrel=1
 pkgdesc="A webkit web browser with vi-like keyboard shortcuts, latest git-pull" 
 url="http://portix.bitbucket.org/dwb"
@@ -23,10 +23,12 @@ pkgver() {
     cd "$srcdir"/$_pkgname
     git log -1 --format="%cd.g%h" --date=short | sed 's/-/./g'
 }
+
 build() {
   cd "$srcdir/$_pkgname"
   make
 }
+
 package() {
   cd "${srcdir}/${_pkgname}"
   make DESTDIR="${pkgdir}" install \

@@ -3,7 +3,7 @@
 # Contributor: Devin Christensen <quixoten at gmail dot com>
 
 pkgname=powerline-fonts-git
-pkgver=r73.c4262ba
+pkgver=r100.a44abd0
 pkgrel=1
 pkgdesc="Powerline fonts for X11 and the console"
 arch=('any')

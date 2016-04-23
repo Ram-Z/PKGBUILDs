@@ -3,7 +3,7 @@
 # Contributor: Florian Bruhin (The Compiler) <archlinux.org@the-compiler.org>
 
 pkgname=qutebrowser-git
-pkgver=r3832.46ca0e4
+pkgver=r6161.5541e3e
 pkgrel=1
 pkgdesc="A keyboard-driven, vim-like browser based on PyQt5 and QtWebKit"
 arch=("any")

@@ -3,7 +3,7 @@
 
 pkgname=retroarch-git
 _pkgname=${pkgname%-git}
-pkgver=0.9.9.r4274.g18be846
+pkgver=1.2.2.r99.g652e614
 pkgrel=1
 pkgdesc="Simple frontend for the libretro API."
 url="https://github.com/libretro/RetroArch"

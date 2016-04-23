@@ -2,7 +2,7 @@
 # Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
 
 pkgname=mps-youtube-git
-pkgver=0.2.4.r106.g577657a
+pkgver=0.2.6.r44.g3d86b5b
 pkgrel=1
 pkgdesc="Terminal based YouTube jukebox with playlist management"
 url='https://github.com/np1/mps-youtube'

@@ -4,7 +4,7 @@
 
 pkgbase=webkitgtk
 pkgname=(webkitgtk webkitgtk2)
-pkgver=2.4.4
+pkgver=2.4.9
 pkgrel=1
 pkgdesc="GTK+ Web content engine library"
 arch=(x86_64)
@@ -12,22 +12,17 @@ url="http://webkitgtk.org/"
 license=("custom")
 depends=(libxt libxslt sqlite3 libsoup enchant libgl geoclue gst-plugins-base
          libsecret libwebp harfbuzz)
-makedepends=(gtk2 gtk3 gperf gobject-introspection python mesa ruby gtk-doc)
+makedepends=(gtk2 gtk3 gperf gobject-introspection python mesa ruby)
 optdepends=('gtk2: Netscape plugin support')
 provides=("webkitgtk3=${pkgver}" "libwebkit3=${pkgver}")
 conflicts=(webkitgtk3 libwebkit3)
 replaces=(webkitgtk3 libwebkit3)
 options=(!emptydirs)
-source=("http://webkitgtk.org/releases/$pkgname-${pkgver}.tar.xz"
-        "fix-pretty-quotes.patch")
-sha256sums=('58cbfc7e352ae1e1f5e383f9f766795794d88483e9a52377a295f56eedf53ab9'
-            '56316228bbbf0b7ebcbe210a35120f4e72cb9c1b680dd82cc2bde0f4549245e6')
+source=("http://webkitgtk.org/releases/$pkgname-${pkgver}.tar.xz")
+sha256sums=('afdf29e7828816cad0be2604cf19421e96d96bf493987328ffc8813bb20ac564')
 
 prepare() {
   mkdir -p build-gtk{,2}
-
-  cd $pkgbase-$pkgver
-  patch -p0 -i ../fix-pretty-quotes.patch
 }
 
 _build() {
@@ -37,6 +32,8 @@ _build() {
   ../$pkgname-$pkgver/configure --prefix=/usr \
     --libexecdir=/usr/lib/webkit$_ver \
     --enable-introspection \
+    --disable-webkit2 \
+    --disable-gtk-doc \
     "$@"
 
   # https://bugzilla.gnome.org/show_bug.cgi?id=655517
@@ -46,8 +43,8 @@ _build() {
 }
 
 build() {
-  _build gtk --enable-gtk-doc
-  _build gtk2 --disable-webkit2 --with-gtk=2.0
+  _build gtk
+  _build gtk2 --with-gtk=2.0
 }
 
 package_webkitgtk() {

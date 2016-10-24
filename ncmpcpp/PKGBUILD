@@ -5,7 +5,7 @@
 # Contributor: Army <uli[dot]armbruster[at]gmail[dot]com>
 
 pkgname=ncmpcpp
-pkgver=0.6.2
+pkgver=0.7.5
 pkgrel=1
 pkgdesc='Almost exact clone of ncmpc with some new features'
 arch=('i686' 'x86_64')
@@ -14,7 +14,7 @@ license=('GPL')
 depends=('curl' 'libmpdclient' 'taglib' 'ncurses' 'fftw' 'boost-libs')
 source=(http://ncmpcpp.rybczak.net/stable/$pkgname-$pkgver.tar.bz2
         missing-include.patch)
-md5sums=('323498bac479c026dbc2a8fd0d7ac1fa'
+md5sums=('2edae67445a925175e75c223edc95ce7'
          '14fa33349661c8e6c2a323970ef1e98c')
 
 prepare() {
@@ -35,12 +35,11 @@ build() {
     --with-taglib
 
   make
+  make -C extras
 }
 
 package() {
   cd $pkgname-$pkgver
   make DESTDIR="$pkgdir" install
-
-  make -C extras
   install -Dm755 extras/artist_to_albumartist $pkgdir/usr/bin/
 }

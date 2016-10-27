@@ -1,0 +1,30 @@
+# Maintainer:  Ram-Z <ram-z[at]chakraos[dot]org>
+# Contributor: Alexander Rødseth <rodseth@gmail.com>
+# Contributor: Jeff Horelick <jdhore1@gmail.com>
+# Contributor: skydrome <skydrome@i2pmail.org>
+
+pkgname=the_silver_searcher
+pkgver=0.33.0
+pkgrel=1
+pkgdesc='Code searching tool similar to Ack, but faster'
+url='https://github.com/ggreer/the_silver_searcher'
+license=('Apache')
+depends=('pcre' 'xz')
+makedepends=('git')
+arch=('x86_64' 'i686')
+source=("git://github.com/ggreer/$pkgname.git#tag=$pkgver")
+md5sums=('SKIP')
+
+prepare() {
+  sed -i 's:configure:configure --prefix=/usr:' "$pkgname/build.sh"
+}
+
+build() {
+  "./$pkgname/build.sh"
+}
+
+package() {
+  make -C "$pkgname" DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

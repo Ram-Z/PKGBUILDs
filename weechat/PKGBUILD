@@ -5,7 +5,7 @@
 # Contributor: lucke <lucke at o2 dot pl>
 
 pkgname=weechat
-pkgver=1.1.1
+pkgver=1.6
 pkgrel=1
 pkgdesc="Fast, light and extensible IRC client (curses UI)"
 arch=('x86_64')
@@ -13,10 +13,11 @@ url="http://www.weechat.org/"
 screenshot="http://i.imgur.com/sMKk1zZ.png"
 license=('GPL')
 depends=('gnutls' 'curl' 'libgcrypt')
-makedepends=('asciidoc' 'source-highlight' 'cmake' 'pkg-config' 'perl' 'python2' 'lua' 'tcl' 'ruby' 'aspell' 'guile')
+makedepends=('asciidoc' 'source-highlight' 'cmake' 'pkg-config' 'perl'
+             'python2' 'lua' 'tcl' 'ruby' 'aspell' 'guile')
 optdepends=('perl' 'python2' 'lua' 'tcl' 'ruby' 'aspell' 'guile')
 source=("http://www.weechat.org/files/src/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('3bb8d27301262bc434de9bcf7d77dce7')
+md5sums=('37c0388e5cb82fd3c3d1a533a5a5695d')
 
 prepare() {
   mkdir -p build
@@ -24,7 +25,8 @@ prepare() {
 
 build() {
   cd build
-  cmake ../${pkgname}-${pkgver} -DPREFIX=/usr \
+  cmake -Wno-dev ../${pkgname}-${pkgver} \
+        -DCMAKE_INSTALL_PREFIX=/usr \
         -DPYTHON_EXECUTABLE=/usr/bin/python2 \
         -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so \
         -DENABLE_MAN=ON \

@@ -1,44 +1,52 @@
-# Maintainer: FranzMari <framarinucci@gmail.com>
+# Maintainer:  Ram-Z <ram-z[at]chakraos[dot]org>
+# Contributor: FranzMari <framarinucci@gmail.com>
+# Contributor: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Sébastien Luttringer
+# Contributor: xduugu
 # Contributor: Ronald van Haren <ronald.archlinux.org>
 # Contributor: Vesa Kaihlavirta
 
 pkgname=awesome
-pkgver=3.5.9
+pkgver=4.0
 pkgrel=1
-pkgdesc="A tiling window manager initialy based on a dwm code rewriting."
+pkgdesc='Highly configurable framework window manager'
+url='https://awesomewm.org/'
 arch=('x86_64')
-url="http://awesome.naquadah.org/"
 license=('GPL2')
-depends=('cairo' 'dbus' 'gdk-pixbuf2' 'imlib2' 'libxdg-basedir' 'lua' 'lua-lgi'
-         'pango' 'startup-notification' 'xcb-util-cursor' 'xcb-util-keysyms'
-         'xcb-util-wm' 'xorg-apps')
+depends=('cairo' 'dbus' 'gdk-pixbuf2' 'imlib2' 'libxdg-basedir' 'lua' 'lua-lgi' 'pango'
+         'startup-notification' 'xcb-util-cursor' 'xcb-util-keysyms' 'xcb-util-wm'
+         'xorg-apps')
 makedepends=('asciidoc' 'cmake' 'docbook-xsl' 'doxygen' 'imagemagick' 'xmlto')
 optdepends=('rlwrap: readline support for awesome-client'
             'dex: autostart your desktop files'
             'vicious: widgets for the Awesome window manager')
 backup=('etc/xdg/awesome/rc.lua')
-source=("$url/download/$pkgname-$pkgver.tar.xz")
-sha256sums=('c7f8b5e4578751688d70ec8c410c55316e22bca8ec1195c622274f1f7254d64f')
+source=(https://github.com/awesomeWM/awesome/releases/download/v${pkgver}/awesome-${pkgver}.tar.xz{,.asc})
+sha512sums=('80bdfe5f9166f5e9b0266cd630b48607d17605330d0f172666dbfa3f239ef04aeafafebe8949c3bf1c31a7bd372b60252d56c815048a24e015858585c3d0432b'
+            'SKIP')
+validpgpkeys=('2BB32F88FF3D1E76E682303F22E428EBCB8FCB06') # Uli Schlachter <psychon@znc.in>
 
 prepare() {
+  cd ${pkgname}-${pkgver}
   mkdir -p build
 }
 
 build() {
-  cd build
-
-  cmake ../$pkgname-$pkgver \
-      -DCMAKE_BUILD_TYPE=RELEASE \
-      -DCMAKE_INSTALL_PREFIX=/usr \
-      -DSYSCONFDIR=/etc
+  cd ${pkgname}-${pkgver}/build
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DSYSCONFDIR=/etc \
+    -DLUA_LIBRARY=/usr/lib/liblua.so
   make
 }
 
 package() {
-  cd build
-  make DESTDIR="${pkgdir}" install
-
-  # install desktop file so you can start awesome from your login manager
-  install -Dm644 "$srcdir"/$pkgname-$pkgver/awesome.desktop \
-    "${pkgdir}/usr/share/xsessions/awesome.desktop"
+  cd ${pkgname}-${pkgver}
+  make -C build DESTDIR="${pkgdir}" install
+  install -Dm 644 awesome.desktop -t "${pkgdir}/usr/share/xsessions"
 }
+
+# vim: ts=2 sw=2 et:

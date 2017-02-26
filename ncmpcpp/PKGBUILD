@@ -1,11 +1,11 @@
-# Maintainer:  Samir Benmendil <samir.benmendil[at]gmail[dot]com>
+# Maintainer:  Ram-Z <ram-z[at]chakraos[dot]org>
 # Contributor: Bartłomiej Piotrowski
 # Contributor: graysky <graysky AT archlinux DOT us>
 # Contributor: Mateusz Herych <heniekk@gmail.com>
 # Contributor: Army <uli[dot]armbruster[at]gmail[dot]com>
 
 pkgname=ncmpcpp
-pkgver=0.7.5
+pkgver=0.7.7
 pkgrel=1
 pkgdesc='Almost exact clone of ncmpc with some new features'
 arch=('i686' 'x86_64')
@@ -13,13 +13,13 @@ url='http://ncmpcpp.rybczak.net/'
 license=('GPL')
 depends=('curl' 'libmpdclient' 'taglib' 'ncurses' 'fftw' 'boost-libs')
 source=(http://ncmpcpp.rybczak.net/stable/$pkgname-$pkgver.tar.bz2
-        missing-include.patch)
-md5sums=('2edae67445a925175e75c223edc95ce7'
-         '14fa33349661c8e6c2a323970ef1e98c')
+        bindings-xdg.patch::https://github.com/arybczak/ncmpcpp/commit/ace4c7d683936dd7d5e1aaf42e00439755e2bf69.patch)
+md5sums=('8a44de577fcf8b7a7063d0c5bf47298f'
+         '5ea32e81438e7d87b38a979d222bfa56')
 
 prepare() {
   cd $pkgname-$pkgver
-  patch -p1 -i ../missing-include.patch
+  patch -p1 -i $srcdir/bindings-xdg.patch
 }
 
 build() {

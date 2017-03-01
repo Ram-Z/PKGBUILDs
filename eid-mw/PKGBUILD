@@ -1,25 +1,27 @@
-# Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
+# Maintainer:  Ram-Z <ram-z[at]chakraos[dot]org>
 
 pkgname=eid-mw
-pkgver=4.1.21
+pkgver=4.2.0
 pkgrel=1
-pkgdesc="The eID middleware for the Belgian eID"
+pkgdesc='The middleware, viewer and Firefox extension for the Belgian electronic identity card (Belgian eID)'
 arch=('i686' 'x86_64')
 url="http://eid.belgium.be/"
 license=('LGPL3')
-depends=('pcsclite' 'gtk2')
+depends=('pcsclite' 'gtk3' 'libproxy')
 optdepends=('firefox: extension for Belgian eid'
             'acsccid: ACS CCID smart card readers'
             'ccid: A generic USB Chip/Smart Card Interface Devices driver'
             'pcsc-tools: PC/SC smartcard tools')
+conflicts=('eid-viewer')
+replaces=('eid-viewer')
 source=("https://dist.eid.belgium.be/continuous/sources/$pkgname-$pkgver-v$pkgver.tar.gz"{,.asc})
-md5sums=('651ff5056cf85d447c79dd44649f26c4'
-         'SKIP')
+sha512sums=('01aeba0450a57a82b4c51ed1fa611f92a32a06cf8cc735e0cd5f93693646e2e6e514e699c22855ab361789f9748dfed5ee51dc14deb5b8e3fc0b3ac4c8bc76c5'
+            'SKIP')
 validpgpkeys=('D95426E309C0492990D8E8E2824A5E0010A04D46')
 
 build() {
   cd $pkgname-$pkgver-v$pkgver
-  ./configure --prefix=/usr --libexecdir=/usr/bin --disable-static
+  ./configure --prefix=/usr --libexecdir=/usr/bin
   make
 }
 

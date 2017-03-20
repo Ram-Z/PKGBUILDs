@@ -3,7 +3,7 @@
 
 _pkgname=awmtt
 pkgname=awmtt-git
-pkgver=r41.d94b035
+pkgver=0.5.r0.g92ababc
 pkgrel=1
 pkgdesc="test and preview your awesomewm configuration with xephyr"
 arch=("any")

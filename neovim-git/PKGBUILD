@@ -4,14 +4,14 @@
 # Contributor: Florian Hahn <flo@fhahn.com>
 
 pkgname=neovim-git
-pkgver=nightly.r0.g2e2b575
+pkgver=0.1.4.r508.g47a15d0
 pkgrel=1
 pkgdesc='Fork of Vim aiming to improve user experience, plugins, and GUIs.'
 arch=('i686' 'x86_64')
 url='https://neovim.org'
 license=('custom:neovim')
 depends=('jemalloc' 'libtermkey' 'libuv' 'msgpack-c' 'unibilium' 'libvterm')
-makedepends=('git' 'cmake' 'luajit' 'lua' 'lua51-messagepack' 'lua51-lpeg')
+makedepends=('git' 'cmake' 'luajit' 'lua' 'lua51-mpack' 'lua-lpeg')
 optdepends=('python2-neovim: for Python 2 plugin support (see :help nvim-python)'
             'python3-neovim: for Python 3 plugin support (see :help nvim-python)'
             'xclip: for clipboard support (or xsel) (see :help nvim-clipboard)'
@@ -21,13 +21,11 @@ sha256sums=('SKIP')
 provides=('neovim')
 conflicts=('neovim')
 install=neovim-git.install
+option=(!strip)
 
 pkgver() {
   cd $pkgname
-  ( set -o pipefail
-    git describe --long --tags 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-  )
+  git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
@@ -35,9 +33,11 @@ build() {
   cd ${pkgname}/build
 
   cmake .. \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -G 'Unix Makefiles' \
+    -DCMAKE_BUILD_TYPE=Dev \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DENABLE_JEMALLOC=ON
+    -DENABLE_JEMALLOC=ON \
+    -DLUA_PRG=/usr/bin/luajit
 
   make
 }

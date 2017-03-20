@@ -3,7 +3,7 @@
 
 _pkgname=pulsemixer
 pkgname=pulsemixer-git
-pkgver=1.1.0.r4.g6a3ec17
+pkgver=1.1.0.r13.g4a7417a
 pkgrel=1
 pkgdesc="cli and curses mixer for pulseaudio"
 arch=(any)

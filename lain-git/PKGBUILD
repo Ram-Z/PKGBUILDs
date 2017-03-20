@@ -3,7 +3,7 @@
 # Contributor: luke bonham <dada [at] archlinux [dot] info>
 
 pkgname=lain-git
-pkgver=473.0f5ce4d
+pkgver=1521.87a3277
 pkgrel=1
 pkgdesc="Layouts, Utilities and Widgets for Awesome WM (successor of vain-git)"
 arch=('any')

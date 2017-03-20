@@ -3,7 +3,7 @@
 # Contributor: Simon Zimmermann <simon@insmo.com>
 
 pkgname=pass-git
-pkgver=1.6.3.5.g5a6df91
+pkgver=1.6.5.47.g0b2f803
 pkgrel=1
 pkgdesc='stores, retrieves, generates, and synchronizes passwords securely'
 url=http://zx2c4.com/projects/password-store/
@@ -24,4 +24,7 @@ pkgver() {
 package() {
     cd ${srcdir}/${pkgname}
     make FORCE_ALL=1 DESTDIR="${pkgdir}" install
+
+    cd contrib/dmenu
+    install -Dm0755 passmenu "${pkgdir}"/usr/bin/passmenu
 }

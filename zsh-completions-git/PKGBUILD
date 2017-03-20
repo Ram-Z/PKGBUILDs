@@ -3,7 +3,7 @@
 # Contributor: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
 
 pkgname=zsh-completions-git
-pkgver=0.10.0.112.g059df4e
+pkgver=0.22.0.13.gd170ef1
 pkgrel=1
 pkgdesc="Additional completion definitions for Zsh"
 arch=("any")
@@ -23,7 +23,4 @@ package() {
   cd "$srcdir/zsh-completions/src"
   install -m0755 -d "$pkgdir/usr/share/zsh/site-functions"
   install -m0644 _* "$pkgdir/usr/share/zsh/site-functions"
-
-  cd "$pkgdir"/usr/share/zsh/site-functions
-  rm _mpv _pass _envoy
 }

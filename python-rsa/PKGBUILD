@@ -1,35 +1,49 @@
-# Maintainer:  Ram-Z <chakra[at]rmz[dot]io>
+# Maintainer:  Ram-Z <ram-z[at]chakraos[dot]org>
 # Contributor: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
 
 pkgbase=python-rsa
-pkgname=(python2-rsa)
-pkgver=3.1.4
+pkgname=(python3-rsa python2-rsa)
+pkgver=3.4.2
 pkgrel=1
 _libname=rsa
 pkgdesc="Pure-Python RSA implementation"
 arch=(any)
 url="http://stuvel.eu/rsa"
 license=('BSD')
-makedepends=(python2-setuptools)
 source=(http://pypi.python.org/packages/source/r/$_libname/$_libname-$pkgver.tar.gz)
 #source=(https://bitbucket.org/sybren/$pkgname/get/version-$pkgver.tar.bz2)
-sha256sums=('e2b0b05936c276b1edd2e1525553233b666df9e29b5c3ba223eed738277c82a0')
+sha256sums=('25df4e10c263fb88b5ace923dd84bf9aa7f5019687b5e55382ffcdb8bede9db5')
+makedepends=(python3-setuptools python2-setuptools)
 
 build() {
   cd "$srcdir/$_libname-$pkgver"
+  #cd "$srcdir/sybren-python3-rsa-8f50f506b4a2"
+
+  rm -rf ../buildpy3; mkdir ../buildpy3
+  python3 setup.py build -b ../buildpy3
 
   rm -rf ../buildpy2; mkdir ../buildpy2
   python2 setup.py build -b ../buildpy2
+}
+
+package_python3-rsa() {
+  depends=(python3-pyasn1)
+
+  cd "$srcdir/$_libname-$pkgver"
+  #cd "$srcdir/sybren-python3-rsa-8f50f506b4a2"
+  rm -rf build; ln -s ../buildpy3 build
+  python3 setup.py install --skip-build -O1 --root="$pkgdir"
+  install -m0644 -D "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_python2-rsa() {
   depends=(python2-pyasn1)
 
   cd "$srcdir/$_libname-$pkgver"
+  #cd "$srcdir/sybren-python3-rsa-8f50f506b4a2"
   rm -rf build; ln -s ../buildpy2 build
   python2 setup.py install --skip-build -O1 --root="$pkgdir"
   install -m0644 -D "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
   find "$pkgdir/usr/bin" -type f | while read f; do mv "$f" "$f"2; done
 }
-

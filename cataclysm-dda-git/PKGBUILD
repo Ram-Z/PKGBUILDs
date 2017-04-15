@@ -5,7 +5,7 @@
 # Contributor: Klemen Košir <klemen913@gmail.com>
 
 pkgname=cataclysm-dda-git
-pkgver=0.C.r6945.gb8b399f
+pkgver=0.C.r22069.g491bcd9
 pkgrel=1
 pkgdesc="Cataclysm: Dark Days Ahead is an actively maintained roguelike set in a post-apocalyptic world. Both SDL tiles and ascii version included."
 arch=('i686' 'x86_64')
@@ -27,11 +27,11 @@ pkgver() {
     printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
   )
 }
+
 build() {
   cd "${pkgname}"
-  # sed '/^RELEASE_FLAGS/d' -i Makefile # was needed to remove -Werror
-  make RELEASE=1 USE_XDG_DIR=1 LUA=1
-  make RELEASE=1 USE_XDG_DIR=1 TILES=1 SOUND=1
+  make PREFIX=/usr RELEASE=1 ZLEVELS=1 USE_XDG_DIR=1 LUA=1
+  make PREFIX=/usr RELEASE=1 ZLEVELS=1 USE_XDG_DIR=1 LUA=1 TILES=1 SOUND=1
 }
 
 package() {
@@ -39,7 +39,9 @@ package() {
 
   local instdir=/usr/share/cataclysm-dda
 
-  PREFIX="$pkgdir"/usr make install TILES=1 SOUND=1 LUA=1
+  make install DESTDIR="$pkgdir" PREFIX=/usr TILES= SOUND= LUA=1
+
+  make install DESTDIR="$pkgdir" PREFIX=/usr TILES=1 SOUND=1 LUA=1
 
   # .desktop
   install -dm755 "$pkgdir/usr/share/applications"
@@ -56,18 +58,4 @@ package() {
 
   # License file
   install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
-
-  # # User default mod list needs to be writeable
-  # [ -f "$srcdir/user-default-mods.json" ] || echo "{}" > "$srcdir/user-default-mods.json"
-  # install -Dm775 -g games "$srcdir/user-default-mods.json" "$pkgdir/var/games/cataclysm-dda/data/mods/user-default-mods.json"
-  # ln -s "/var/games/cataclysm-dda/data/mods/user-default-mods.json" "$pkgdir/${instdir}/data/mods/user-default-mods.json"
-  #
-  # # Launcher symlinks
-  # install -dm755  "$pkgdir/usr/bin/"
-  # ln -s "${instdir}/cataclysm-launcher" "$pkgdir/usr/bin/cataclysm"
-  # ln -s "${instdir}/cataclysm-launcher" "$pkgdir/usr/bin/cataclysm-tiles"
-  #
-  # # Localization
-  # install -dm755 "$pkgdir/usr/share/locale"
-  # LOCALE_DIR="$pkgdir/usr/share/locale" lang/compile_mo.sh
 }

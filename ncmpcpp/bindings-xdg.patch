@@ -1,0 +1,181 @@
+From ace4c7d683936dd7d5e1aaf42e00439755e2bf69 Mon Sep 17 00:00:00 2001
+From: Wieland Hoffmann <themineo@gmail.com>
+Date: Tue, 1 Nov 2016 20:31:36 +0100
+Subject: [PATCH] bindings: Support a bindings file in $XDG_CONFIG_HOME/ncmpcpp
+
+Fixes https://github.com/arybczak/ncmpcpp/issues/91
+
+This also rewrites the intro in doc/bindings to be more like doc/config.
+---
+ doc/bindings          |  9 +++++----
+ src/bindings.cpp      | 11 +++++++++++
+ src/bindings.h        | 26 ++++++++++++++------------
+ src/configuration.cpp | 18 +++++++++---------
+ 4 files changed, 39 insertions(+), 25 deletions(-)
+
+diff --git a/doc/bindings b/doc/bindings
+index 468f5ad..f37aab4 100644
+--- a/doc/bindings
++++ b/doc/bindings
+@@ -1,7 +1,8 @@
+-##########################################################
+-## this is example bindings configuration file, copy it ##
+-## to ~/.ncmpcpp/bindings and set up your preferences   ##
+-##########################################################
++##############################################################
++## This is the example bindings file. Copy it to            ##
++## ~/.ncmpcpp/bindings or $XDG_CONFIG_HOME/ncmpcpp/bindings ##
++## and set up your preferences                              ##
++##############################################################
+ ##
+ ##### General rules #####
+ ##
+diff --git a/src/bindings.cpp b/src/bindings.cpp
+index 4d89c47..1c1b1aa 100644
+--- a/src/bindings.cpp
++++ b/src/bindings.cpp
+@@ -471,6 +471,17 @@ bool BindingsConfiguration::read(const std::string &file)
+ 	return result;
+ }
+ 
++bool BindingsConfiguration::read(const std::vector<std::string> &binding_paths)
++{
++	return std::all_of(
++		binding_paths.begin(),
++		binding_paths.end(),
++		[&](const std::string &binding_path) {
++			return read(binding_path);
++		}
++	);
++}
++
+ void BindingsConfiguration::generateDefaults()
+ {
+ 	NC::Key::Type k = NC::Key::None;
+diff --git a/src/bindings.h b/src/bindings.h
+index 987311e..a6857d4 100644
+--- a/src/bindings.h
++++ b/src/bindings.h
+@@ -34,7 +34,7 @@ std::wstring keyToWString(const NC::Key::Type key);
+ struct Binding
+ {
+ 	typedef std::vector<std::shared_ptr<Actions::BaseAction>> ActionChain;
+-	
++
+ 	template <typename ArgT>
+ 	Binding(ArgT &&actions_)
+ 	: m_actions(std::forward<ArgT>(actions_)) {
+@@ -42,13 +42,13 @@ struct Binding
+ 	}
+ 	Binding(Actions::Type at)
+ 	: Binding(ActionChain({Actions::get_(at)})) { }
+-	
++
+ 	bool execute() const {
+ 		return std::all_of(m_actions.begin(), m_actions.end(),
+ 			std::bind(&Actions::BaseAction::execute, std::placeholders::_1)
+ 		);
+ 	}
+-	
++
+ 	bool isSingle() const {
+ 		return m_actions.size() == 1;
+ 	}
+@@ -73,10 +73,10 @@ struct Command
+ 	template <typename ArgT>
+ 	Command(ArgT &&binding_, bool immediate_)
+ 	: m_impl(std::forward<ArgT>(binding_), immediate_) { }
+-	
++
+ 	const Binding &binding() const { return std::get<0>(m_impl); }
+ 	bool immediate() const { return std::get<1>(m_impl); }
+-	
++
+ private:
+ 	std::tuple<Binding, bool> m_impl;
+ };
+@@ -86,31 +86,33 @@ class BindingsConfiguration
+ {
+ 	typedef std::unordered_map<std::string, Command> CommandsSet;
+ 	typedef std::unordered_map<NC::Key::Type, std::vector<Binding>> BindingsMap;
+-	
++
+ public:
+ 	typedef BindingsMap::value_type::second_type::iterator BindingIterator;
+ 	typedef BindingsMap::value_type::second_type::const_iterator ConstBindingIterator;
+ 	typedef std::pair<BindingIterator, BindingIterator> BindingIteratorPair;
+ 
+-	bool read(const std::string &file);
++	bool read(const std::vector<std::string> &binding_paths);
+ 	void generateDefaults();
+-	
++
+ 	const Command *findCommand(const std::string &name);
+ 	BindingIteratorPair get(const NC::Key::Type &k);
+-	
++
+ 	BindingsMap::const_iterator begin() const { return m_bindings.begin(); }
+ 	BindingsMap::const_iterator end() const { return m_bindings.end(); }
+-	
++
+ private:
+ 	bool notBound(const NC::Key::Type &k) const {
+ 		return k != NC::Key::None && m_bindings.find(k) == m_bindings.end();
+ 	}
+-	
++
+ 	template <typename ArgT>
+ 	void bind(NC::Key::Type k, ArgT &&t) {
+ 		m_bindings[k].push_back(std::forward<ArgT>(t));
+ 	}
+-	
++
++	bool read(const std::string &file);
++
+ 	BindingsMap m_bindings;
+ 	CommandsSet m_commands;
+ };
+diff --git a/src/configuration.cpp b/src/configuration.cpp
+index b5ef96e..8d47ea5 100644
+--- a/src/configuration.cpp
++++ b/src/configuration.cpp
+@@ -71,7 +71,12 @@ bool configure(int argc, char **argv)
+ 		xdg_config_home() + "ncmpcpp/config"
+ 	};
+ 
+-	std::string bindings_path;
++	const std::vector<std::string> default_bindings_paths = {
++		"~/.ncmpcpp/bindings",
++		xdg_config_home() + "ncmpcpp/bindings"
++	};
++
++	std::vector<std::string> bindings_paths;
+ 	std::vector<std::string> config_paths;
+ 
+ 	po::options_description options("Options");
+@@ -81,7 +86,7 @@ bool configure(int argc, char **argv)
+ 		("current-song", po::value<std::string>()->implicit_value("{{{(%l) }{{%a - }%t}}|{%f}}"), "print current song using given format and exit")
+ 		("config,c", po::value<std::vector<std::string>>(&config_paths)->default_value(default_config_paths, join<std::string>(default_config_paths, " AND ")), "specify configuration file(s)")
+ 		("ignore-config-errors", "ignore unknown and invalid options in configuration files")
+-		("bindings,b", po::value<std::string>(&bindings_path)->default_value("~/.ncmpcpp/bindings"), "specify bindings file")
++		("bindings,b", po::value<std::vector<std::string>>(&bindings_paths)->default_value(default_bindings_paths, join<std::string>(default_bindings_paths, " AND ")), "specify bindings file(s)")
+ 		("screen,s", po::value<std::string>(), "specify the startup screen")
+ 		("slave-screen,S", po::value<std::string>(), "specify the startup slave screen")
+ 		("help,?", "show help message")
+@@ -150,14 +155,9 @@ bool configure(int argc, char **argv)
+ 		if (Config.read(config_paths, vm.count("ignore-config-errors")) == false)
+ 			exit(1);
+ 
+-		// if bindings file was not specified, use the one from main directory.
+-		if (vm["bindings"].defaulted())
+-			bindings_path = Config.ncmpcpp_directory + "bindings";
+-		else
+-			expand_home(bindings_path);
+-
+ 		// read bindings
+-		if (Bindings.read(bindings_path) == false)
++		std::for_each(bindings_paths.begin(), bindings_paths.end(), expand_home);
++		if (Bindings.read(bindings_paths) == false)
+ 			exit(1);
+ 		Bindings.generateDefaults();
+ 

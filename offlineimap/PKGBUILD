@@ -1,0 +1,45 @@
+# In chakra:
+# Contributor: Giuseppe Calà <  jiveaxe@gmail.com>
+# Contributor: Gris Ge <cnfourt@gmail.com>
+
+pkgname=offlineimap
+pkgver=7.0.14
+pkgrel=1
+pkgdesc='Synchronizes emails between two repositories'
+arch=('any')
+url='http://offlineimap.org/'
+license=('GPL')
+depends=('python2-six')
+makedepends=('asciidoc')
+source=($pkgname-$pkgver.tar.gz::https://github.com/OfflineIMAP/offlineimap/archive/v${pkgver}.tar.gz)
+sha256sums=('19494ecad4d7234ac69480abb7462d0cdcfcec444b55f5381651057d9fdfad44')
+
+prepare() {
+  cd "${srcdir}"/${pkgname}-${pkgver}
+  find . -type f -exec sed '1s,^#! \?/usr/bin/\(env \|\)python$,#!/usr/bin/python2,' -i {} \;
+}
+
+build() {
+  cd "${srcdir}"/${pkgname}-${pkgver}
+  python2 setup.py build
+
+  cd "${srcdir}"/${pkgname}-${pkgver}/docs
+  make man
+}
+
+package() {
+  cd "${srcdir}"/${pkgname}-${pkgver}
+
+  python2 setup.py install --root="${pkgdir}" --optimize=1
+  install -Dm644 docs/offlineimap.1 "${pkgdir}"/usr/share/man/man1/offlineimap.1
+  install -Dm644 docs/offlineimapui.7 "${pkgdir}"/usr/share/man/man7/offlineimapui.7
+  install -Dm644 offlineimap.conf "${pkgdir}"/usr/share/offlineimap/offlineimap.conf
+  install -Dm644 offlineimap.conf.minimal "${pkgdir}"/usr/share/offlineimap/offlineimap.conf.minimal
+
+#systemd files
+  install -Dm644 contrib/systemd/mail.target "${pkgdir}"/usr/lib/systemd/user/mail.target
+  install -Dm644 contrib/systemd/$pkgname.service "${pkgdir}"/usr/lib/systemd/user/$pkgname.service
+  install -Dm644 contrib/systemd/$pkgname.timer "${pkgdir}"/usr/lib/systemd/user/$pkgname.timer
+  install -Dm644 contrib/systemd/$pkgname@.service "${pkgdir}"/usr/lib/systemd/user/$pkgname@.service
+  install -Dm644 contrib/systemd/$pkgname@.timer "${pkgdir}"/usr/lib/systemd/user/$pkgname@.timer
+}

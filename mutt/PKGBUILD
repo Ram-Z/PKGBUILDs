@@ -3,7 +3,7 @@
 # Contributor: Gaetan Bisson <bisson@archlinux.org>
 
 pkgname=mutt
-pkgver=1.6.1
+pkgver=1.8.1
 pkgrel=1
 pkgdesc='Small but very powerful text-based mail client'
 arch=('x86_64')
@@ -12,11 +12,10 @@ license=('GPL')
 optdepends=('smtp-forwarder: to send mail')
 depends=('gpgme' 'ncurses' 'openssl' 'libsasl' 'gdbm' 'libidn' 'mime-types' 'krb5')
 source=("ftp://ftp.mutt.org/pub/mutt/${pkgname}-${pkgver}.tar.gz"{,.asc})
-sha1sums=('ff1c76209a5c299018fc72b9e2e1ab98bf5138dd'
-          'SKIP')
+sha256sums=('0be55a8cae6db2ef7ce831a70cbf6b2d8a0de558a08814933a67855ef07b0dad'
+            'SKIP')
 validpgpkeys=('8975A9B33AA37910385C5308ADEF768480316BDA')
 backup=('etc/Muttrc')
-
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -28,12 +27,13 @@ build() {
     --enable-imap \
     --enable-smtp \
     --enable-hcache \
+    --enable-sidebar \
     --with-curses=/usr \
     --with-regex \
     --with-gss=/usr \
     --with-ssl=/usr \
     --with-sasl \
-    --with-idn \
+    --with-idn
 
   make
 }
@@ -42,9 +42,9 @@ package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   make DESTDIR="${pkgdir}" install
 
+  rm "${pkgdir}"/etc/mime.types{,.dist}
   rm "${pkgdir}"/usr/bin/{flea,muttbug}
   rm "${pkgdir}"/usr/share/man/man1/{flea,muttbug}.1
-  rm "${pkgdir}"/etc/mime.types{,.dist}
   install -Dm644 contrib/gpg.rc "${pkgdir}"/etc/Muttrc.gpg.dist
 }
 

@@ -1,0 +1,59 @@
+# Maintainer:  Ram-Z <ram-z[at]chakraos[dot]org>
+# Contributor: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: Jelle van der Waa <jelle@archlinux.org>
+
+pkgbase=python-jellyfish
+pkgname=('python3-jellyfish' 'python2-jellyfish')
+pkgver=0.5.6
+pkgrel=1
+pkgdesc='A python library for doing approximate and phonetic matching of strings'
+arch=('i686' 'x86_64')
+url='https://github.com/jamesturk/jellyfish'
+license=('BSD')
+depends=('glibc')
+makedepends=('git' 'python3-setuptools' 'python2-setuptools')
+_commit='a319d6ae04134f3c2bcd383012afab5645fba503'
+source=("python-jellyfish-${pkgver}.tar.gz::https://github.com/jamesturk/jellyfish/archive/${pkgver}.tar.gz"
+        "git+https://github.com/jamesturk/cjellyfish.git#commit=${_commit}")
+sha256sums=('2e31dddf863a360966fd997ebd60c692ad56cbdbb0a352956c0aeae6af1b07b5'
+            'SKIP')
+
+prepare() {
+  pushd jellyfish-${pkgver}
+  rm -rf cjellyfish
+  ln -s ../cjellyfish .
+  popd
+
+  mv {,python2-}jellyfish-${pkgver}
+  cp -r python{2,3}-jellyfish-${pkgver}
+}
+
+build() {
+  for py in python{2,3}; do
+    pushd ${py}-jellyfish-${pkgver}
+    ${py} setup.py build
+    popd
+  done
+}
+
+package_python2-jellyfish() {
+  depends+=('python2')
+
+  cd python2-jellyfish-${pkgver}
+
+  python2 setup.py install --root="${pkgdir}" --optimize='1'
+
+  install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/python2-jellyfish/
+}
+
+package_python3-jellyfish() {
+  depends+=('python')
+
+  cd python3-jellyfish-${pkgver}
+
+  python3 setup.py install --root="${pkgdir}" --optimize='1'
+
+  install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/python3-jellyfish/
+}
+
+# vim: ts=2 sw=2 et:

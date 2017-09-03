@@ -1,0 +1,60 @@
+# Maintainer:  Ram-Z <ram-z[at]chakraos[dot]org>
+# Contributor: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: Adrian Sampson <adrian@radbox.org>
+
+pkgname=beets
+pkgver=1.4.5
+pkgrel=1
+pkgdesc='Flexible music library manager and tagger'
+arch=('any')
+url='http://beets.radbox.org/'
+license=('MIT')
+depends=('python3-jellyfish' 'python3-munkres' 'python3-musicbrainzngs'
+         'python3-mutagen' 'python3-setuptools' 'python3-six' 'python3-unidecode'
+         'python3-yaml')
+optdepends=('bash-completion: Bash completion'
+            'bs1770gain: ReplayGain plugin'
+            'gst-plugins-bad: Chromaprint/Acoustid, BPD, ReplayGain plugins'
+            'gst-plugins-good: Chromaprint/Acoustid, BPD, ReplayGain plugins'
+            'gst-plugins-ugly: Chromaprint/Acoustid, BPD, ReplayGain plugins'
+            'gst-libav: Chromaprint/Acoustid, BPD, ReplayGain plugins'
+            'gst-python: Chromaprint/Acoustid, BPD, ReplayGain plugins'
+            'imagemagick: Thumbnails plugin'
+            'python3-beautifulsoup4: Lyrics plugin'
+            'python3-flask: Web plugin'
+            'python3-gobject: ReplayGain plugin'
+            'python3-mpd: MPDStats plugin'
+            'python3-pyacoustid: Chromaprint/Acoustid plugin'
+            'python3-pylast: LastGenre plugin'
+            'python3-requests: Chromaprint/Acoustid, BPD, FetchArt plugins'
+            'python3-xdg: Thumbnails plugin')
+source=("https://github.com/sampsyo/beets/releases/download/v${pkgver}/beets-${pkgver}.tar.gz"
+        'beet')
+sha256sums=('1bea88c5c23137a36d09590856df8c2f4e857ef29890d16c4d14b1170e9202fc'
+            'b081285b202f82d09802ebca73d28bbf1902179ad3a820e4c0157f80bf959d89')
+
+build() {
+  cd beets-${pkgver}
+
+  python setup.py build
+}
+
+package() {
+  cd beets-${pkgver}
+
+  python setup.py install --root="${pkgdir}" --optimize='1'
+
+  install -dm 755 "${pkgdir}"/usr/share/bash-completion/completions/
+  install -m 644 ../beet "${pkgdir}"/usr/share/bash-completion/completions/
+  install -dm 755 "${pkgdir}"/usr/share/zsh/site-functions
+  install -m 644 extra/_beet "${pkgdir}"/usr/share/zsh/site-functions/
+
+  install -dm 755 "${pkgdir}"/usr/share/man/man{1,5}
+  install -m 644 man/beet.1 "${pkgdir}"/usr/share/man/man1/
+  install -m 644 man/beetsconfig.5 "${pkgdir}"/usr/share/man/man5/
+
+  install -dm 755 "${pkgdir}"/usr/share/licenses/beets
+  install -m 644 LICENSE "${pkgdir}"/usr/share/licenses/beets/
+}
+
+# vim: ts=2 sw=2 et:

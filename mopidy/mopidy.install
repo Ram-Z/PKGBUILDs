@@ -1,34 +1,12 @@
-post_install() {
-  getent group mopidy &>/dev/null || groupadd -r mopidy >/dev/null
-  getent passwd mopidy &>/dev/null || useradd -r -d /var/lib/mopidy -s /bin/false -g mopidy -G audio mopidy >/dev/null
-  mkdir /var/lib/mopidy &>/dev/null
-  chown mopidy:mopidy /var/lib/mopidy
-  true
-}
-
 post_upgrade() {
-  post_install
+    getent group mopidy &>/dev/null || groupadd -g 46 mopidy >/dev/null
+    getent passwd mopidy &>/dev/null || useradd -u 46 -d /var/lib/mopidy -s /bin/false -g mopidy -G audio mopidy >/dev/null
 
-cat << _EOF
-
-==> mopidy upgrade notes:
-    ---------------------
-    Since version 0.18.1-2, mopidy's daemon run with user named 'mopidy'.
-    This means that your previous configuration file (~/.config/mopidy/mopidy) will not be used in daemon mode.
-    The path is /etc/xdg/mopidy/mopidy.conf and mopidy working directory is now /var/lib/mopidy.
-
-    Mopidy can still be run as regular user. 
-
-    It also has a system user service included, you can start the service like so:
-    $ systemctl --user start mopidy
-
-_EOF
-
-  true
+    # Remove me when updating to pkgrel -5 or a new pkgver
+    echo "It's adviced to change the ownership of /var/lib/mopidy to mopidy:mopidy."
+    echo "Otherwise some mopidy addons might not work."
 }
 
-post_remove() {
-  getent passwd mopidy &>/dev/null && userdel mopidy >/dev/null
-  getent group mopidy &>/dev/null && groupdel mopidy >/dev/null
-  true
+post_install() {
+    post_upgrade
 }

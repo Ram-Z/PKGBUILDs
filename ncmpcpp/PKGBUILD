@@ -5,7 +5,7 @@
 # Contributor: Army <uli[dot]armbruster[at]gmail[dot]com>
 
 pkgname=ncmpcpp
-pkgver=0.7.7
+pkgver=0.8.1
 pkgrel=1
 pkgdesc='Almost exact clone of ncmpc with some new features'
 arch=('i686' 'x86_64')
@@ -14,7 +14,7 @@ license=('GPL')
 depends=('curl' 'libmpdclient' 'taglib' 'ncurses' 'fftw' 'boost-libs')
 source=(http://ncmpcpp.rybczak.net/stable/$pkgname-$pkgver.tar.bz2)
         # bindings-xdg.patch::https://github.com/arybczak/ncmpcpp/commit/ace4c7d683936dd7d5e1aaf42e00439755e2bf69.patch)
-md5sums=('8a44de577fcf8b7a7063d0c5bf47298f')
+sha512sums=('2b1b615672910f6b55d4a3e1842f677b8c72659a86dca74d9c306612038d7b765f622e4b8948f14d8a3f4fa913d413d128ed8726f70d7a09cfe95d3c1fe87d15')
 
 # prepare() {
 #   cd $pkgname-$pkgver

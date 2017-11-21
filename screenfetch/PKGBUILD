@@ -4,17 +4,17 @@
 
 pkgname=screenfetch
 _pkgname=screenFetch
-pkgver=3.7.0
+pkgver=3.8.0
 pkgrel=1
 pkgdesc="Bash screenshot info grabber (DE, WM, theme, uptime, ...)"
 arch=("any")
 url="https://github.com/KittyKatt/screenfetch"
 license=('GPL')
 conflicts=('screenfetch-git')
-depends=('bash' 'xorg-utils')
+depends=('bash' 'bc' 'xorg-utils')
 optdepends=('scrot: To take screenshot')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/KittyKatt/screenfetch/archive/v$pkgver.tar.gz")
-md5sums=('f58cdda5c7d55f703893b9a80cef12cf')
+md5sums=('65254e010e26813b4dc920ebb8a56593')
 
 package() {
   cd "$srcdir/$_pkgname-$pkgver"

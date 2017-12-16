@@ -3,9 +3,9 @@
 # Contributor: Daenyth <Daenyth+Arch [AT] gmail [DOT] com>
 # Contributor: djnm <nmihalich [at} gmail dott com>
 pkgname=dwarffortress
-pkgver=0.40.24
-_pkgver=40_24
-pkgrel=2
+pkgver=0.44.02
+_pkgver=44_02
+pkgrel=1
 pkgdesc="A single-player fantasy game. You control a dwarven outpost or an adventurer in a randomly generated persistent world."
 arch=(i686 x86_64)
 url="http://www.bay12games.com/dwarves/"
@@ -30,14 +30,14 @@ source=(http://www.bay12games.com/dwarves/df_${_pkgver}_linux.tar.bz2
         dwarffortress
         dwarffortress.desktop
         dwarffortress.png)
-sha256sums=('da37c6263a679123e6ac57fe0dd6def11f1d61efee3c5913de09495c88ce9234'
+sha256sums=('504d0d9ea7d11d64cae0444ee2589bc4afdda7fbb5bb1276ddacac2ebb364bf0'
             'SKIP'
             '7dc1f0ed0d496b21f4f240334f77dc43b728823f3e1c4ea25ce768691346ec07'
             'e79e3d945c6cc0da58f4ca30a210c7bf1bc3149fd10406d1262a6214eb40445a'
             '83183abc70b11944720b0d86f4efd07468f786b03fa52fe429ca8e371f708e0f')
 
 build() {
-  cd $srcdir/dwarf_fortress_unfuck
+  cd dwarf_fortress_unfuck
 
   cmake .
   make
@@ -45,7 +45,7 @@ build() {
 
 package() {
   install -dm755 $pkgdir/opt/
-  cp -r $srcdir/df_linux $pkgdir/opt/$pkgname
+  cp -r df_linux $pkgdir/opt/$pkgname
   rm -r $pkgdir/opt/$pkgname/df $pkgdir/opt/$pkgname/libs/* $pkgdir/opt/$pkgname/g_src
 
   find $pkgdir/opt/$pkgname -type d -exec chmod 755 {} +

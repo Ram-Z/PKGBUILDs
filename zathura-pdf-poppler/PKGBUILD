@@ -5,16 +5,16 @@
 # Contributor: karnath <karnathtorjian@gmail.com>
 
 pkgname=zathura-pdf-poppler
-pkgver=0.2.7
+pkgver=0.2.8
 pkgrel=1
 pkgdesc="PDF support for Zathura (Poppler backend)"
 arch=('i686' 'x86_64')
 url="https://pwmt.org/projects/zathura/plugins/zathura-pdf-poppler/"
 license=('custom')
-depends=('poppler-glib' 'zathura')
+depends=('poppler-glib' 'zathura' 'desktop-file-utils')
 install="$pkgname.install"
 source=("https://pwmt.org/projects/zathura/plugins/download/$pkgname-$pkgver.tar.gz")
-md5sums=('6b2a4f71641b377730951be27ff176cf')
+md5sums=('74ea0eb99bb62248c9047a033671d08e')
 
 build() {
   make -C $pkgname-$pkgver

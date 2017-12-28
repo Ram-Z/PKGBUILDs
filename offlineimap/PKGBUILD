@@ -1,9 +1,9 @@
-# In chakra:
+# Maintainer:  Ram-Z <ram-z[at]chakraos[dot]org>
 # Contributor: Giuseppe Calà <  jiveaxe@gmail.com>
 # Contributor: Gris Ge <cnfourt@gmail.com>
 
 pkgname=offlineimap
-pkgver=7.0.14
+pkgver=7.1.4
 pkgrel=1
 pkgdesc='Synchronizes emails between two repositories'
 arch=('any')
@@ -12,7 +12,7 @@ license=('GPL')
 depends=('python2-six')
 makedepends=('asciidoc')
 source=($pkgname-$pkgver.tar.gz::https://github.com/OfflineIMAP/offlineimap/archive/v${pkgver}.tar.gz)
-sha256sums=('19494ecad4d7234ac69480abb7462d0cdcfcec444b55f5381651057d9fdfad44')
+sha256sums=('c6fe4a99458542b52f101d2569cb7ca6d2c758bc0eba3731d4e6263af48c6454')
 
 prepare() {
   cd "${srcdir}"/${pkgname}-${pkgver}

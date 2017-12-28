@@ -1,7 +1,7 @@
 # Maintainer: Scott Hansen (firecat53) firecat4153 at gmail
 pkgname=urlscan-git
 _gitname=urlscan
-pkgver=r78.263787e
+pkgver=r81.3922bde
 pkgrel=1
 pkgdesc="Replacement for urlview with html context and other improvements."
 arch=('any')

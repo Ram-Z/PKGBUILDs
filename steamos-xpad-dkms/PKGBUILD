@@ -6,11 +6,9 @@
 # cd steamos_kernel
 # echo "$(git rev-parse --abbrev-ref HEAD).$(git log -n 1 --pretty=format:%h -- drivers/input/joystick/xpad.c)" | sed 's/-/./g'
 
-_xpadsteamoscommit='brewmaster-4.1'
-
 _pkgbase=steamos-xpad
 pkgname=steamos-xpad-dkms
-pkgver=brewmaster.4.1.8e9ecc9
+pkgver=brewmaster.4.11
 pkgrel=1
 pkgdesc="xpad kernel module included with Valve's SteamOS"
 arch=('any')
@@ -21,7 +19,7 @@ depends=('dkms')
 conflicts=("${_pkgbase}")
 optdepends=('linux-headers: Build the module against Arch kernel'
             'linux-lts-headers: Build the module against LTS Arch kernel')
-source=("https://raw.github.com/ValveSoftware/steamos_kernel/${_xpadsteamoscommit}/drivers/input/joystick/xpad.c"
+source=("https://raw.github.com/ValveSoftware/steamos_kernel/${pkgver}/drivers/input/joystick/xpad.c"
         "Makefile"
         "change-name.patch"
         "steamos-xpad.dkms"

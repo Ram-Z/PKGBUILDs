@@ -36,8 +36,8 @@ package() {
   cd "${srcdir}/${pkgname}-${pkgver}" 
   make INSTALLROOT="${pkgdir}" install
   install -d "${pkgdir}/var/tftpboot"
-  install -D -m655 "${srcdir}/tftpd.service" "${pkgdir}/usr/lib/systemd/system/tftpd.service"
-  install -D -m655 "${srcdir}/tftpd.socket" "${pkgdir}/usr/lib/systemd/system/tftpd.socket"
+  install -D -m644 "${srcdir}/tftpd.service" "${pkgdir}/usr/lib/systemd/system/tftpd.service"
+  install -D -m644 "${srcdir}/tftpd.socket" "${pkgdir}/usr/lib/systemd/system/tftpd.socket"
   install -D -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
   rm "${pkgdir}/usr/share/man/man8/tftpd.8"

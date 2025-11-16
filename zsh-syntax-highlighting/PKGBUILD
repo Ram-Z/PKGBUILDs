@@ -4,7 +4,7 @@
 # Source: https://github.com/nicoulaj/archlinux-packages
 
 pkgname=zsh-syntax-highlighting
-pkgver=0.2.0
+pkgver=0.4.1
 pkgrel=1
 pkgdesc="Fish shell like syntax highlighting for Zsh."
 arch=("any")

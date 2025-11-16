@@ -4,7 +4,7 @@
 
 _pkgname=nbwmon
 pkgname=$_pkgname-git
-pkgver=r53.4346ec3
+pkgver=r155.f159b35
 pkgrel=1
 pkgdesc="ncurses bandwidth monitor"
 arch=('x86_64')

@@ -19,8 +19,8 @@ backup=(
 
 package() {
     cd "$srcdir/$pkgname-$pkgver"
-    install -d "$pkgdir/usr/share/webapps" "$pkgdir/usr/share/licenses/$pkgname" "$pkgdir/etc/webapps/$pkgname"
-    cp -rv * "$pkgdir/usr/share/webapps"
+    install -d "$pkgdir/usr/share/webapps/$pkgname" "$pkgdir/usr/share/licenses/$pkgname" "$pkgdir/etc/webapps/$pkgname"
+    cp -rv * "$pkgdir/usr/share/webapps/$pkgname"
     install -D "$srcdir/$pkgname-$pkgver/LICENSE" "$pkgdir/usr/share/licenses/$pkgname"
 
     mv -v '.env.example' '.env'
